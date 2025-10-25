@@ -1,0 +1,19 @@
+.toggle {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 64px;
+  background: var(--primary);
+  color: #fff;
+  z-index: 30;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(0 0, 100% 15%, 100% 85%, 0 100%);
+  border: none;
+}
+
+.left, .right { font-size: 18px; line-height: 1; }
