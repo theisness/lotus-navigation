@@ -20,8 +20,42 @@
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   letter-spacing: -0.3px;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.brandCn {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.brandEn {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.stamp {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  margin-left: auto;
+  flex-shrink: 0;
+  opacity: 0.85;
 }
 
 .currentBox { 

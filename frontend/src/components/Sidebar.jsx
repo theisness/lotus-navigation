@@ -34,7 +34,12 @@ export default function Sidebar({
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onGoHome?.(); } }}
           style={{ cursor: 'pointer' }}
         >
-          🌐 莲花导航
+          <img src="/blue-lotus.png" alt="莲花导航" className={styles.logo} />
+          <div className={styles.brandText}>
+            <span className={styles.brandCn}>莲花导航</span>
+            <span className={styles.brandEn}>Lotus Navigation</span>
+          </div>
+          <img src="/logo1.png" alt="印章" className={styles.stamp} />
         </div>
         {currentTitle && (
           <div className={styles.currentBox}>
