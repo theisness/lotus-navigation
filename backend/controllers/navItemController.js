@@ -31,6 +31,16 @@ async function createNavItem(req, res) {
   }
 }
 
+// PUT /api/nav-items/:id
+async function updateNavItem(req, res) {
+  try {
+    const item = await navItemService.updateNavItem(req.params.id, req.body, req.user);
+    res.json(item);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message || '服务器内部错误' });
+  }
+}
+
 // DELETE /api/nav-items/:id
 async function deleteNavItem(req, res) {
   try {
@@ -41,4 +51,4 @@ async function deleteNavItem(req, res) {
   }
 }
 
-module.exports = { getNavItems, createNavItem, deleteNavItem };
+module.exports = { getNavItems, createNavItem, updateNavItem, deleteNavItem };

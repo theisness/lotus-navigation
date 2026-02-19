@@ -1,6 +1,6 @@
 import styles from '../css/components/NavCard.module.css';
 
-export default function NavCard({ item, onIframeOpen }) {
+export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit }) {
   const { url, title, description, emoji, display_mode, bg_image } = item;
 
   const bgStyle = bg_image
@@ -12,6 +12,18 @@ export default function NavCard({ item, onIframeOpen }) {
       window.open(url, '_blank', 'noopener,noreferrer');
     } else {
       onIframeOpen?.(item);
+    }
+  };
+
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    onEdit?.(item);
+  };
+
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (confirm('确定删除该导航项？')) {
+      onDelete?.(item._id);
     }
   };
 
@@ -34,6 +46,12 @@ export default function NavCard({ item, onIframeOpen }) {
       <div className={styles.mode}>
         {display_mode === 'redirect' ? '↗ 新标签页' : '◫ iframe'}
       </div>
+      {canEdit && (
+        <div className={styles.actions}>
+          <button className={styles.actionBtn} onClick={handleEdit} aria-label="编辑">✎</button>
+          <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={handleDelete} aria-label="删除">✕</button>
+        </div>
+      )}
     </div>
   );
 }

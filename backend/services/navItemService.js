@@ -33,6 +33,35 @@ async function createNavItem(data, user) {
   return navItem;
 }
 
+// 编辑导航项
+async function updateNavItem(itemId, data, user) {
+  const navItem = await NavItem.findById(itemId);
+  if (!navItem) {
+    throw { status: 404, message: '导航项不存在' };
+  }
+
+  const isOwner = navItem.user_id && navItem.user_id.toString() === user.userId;
+  const isAdminEditingPublic = user.is_admin && navItem.is_public;
+
+  if (!isOwner && !isAdminEditingPublic) {
+    throw { status: 403, message: '权限不足' };
+  }
+
+  // 普通用户不能改为公共项
+  if (data.is_public && !user.is_admin) {
+    throw { status: 403, message: '权限不足' };
+  }
+
+  const allowed = ['url', 'title', 'description', 'emoji', 'display_mode', 'is_public', 'bg_image'];
+  const update = {};
+  for (const key of allowed) {
+    if (data[key] !== undefined) update[key] = data[key];
+  }
+
+  const updated = await NavItem.findByIdAndUpdate(itemId, update, { new: true });
+  return updated;
+}
+
 // 删除导航项
 async function deleteNavItem(itemId, user) {
   const navItem = await NavItem.findById(itemId);
@@ -52,4 +81,4 @@ async function deleteNavItem(itemId, user) {
   return { message: '删除成功' };
 }
 
-module.exports = { getNavItems, createNavItem, deleteNavItem };
+module.exports = { getNavItems, createNavItem, updateNavItem, deleteNavItem };

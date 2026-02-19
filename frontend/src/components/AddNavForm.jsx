@@ -1,8 +1,8 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { navApi, uploadApi } from '../api.js';
 import styles from '../css/components/AddNavForm.module.css';
 
-export default function AddNavForm({ visible, onClose, onSuccess, isAdmin }) {
+export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editItem }) {
   const [url, setUrl] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -17,6 +17,25 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin }) {
   const [fieldErrors, setFieldErrors] = useState({});
   const overlayRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  const isEdit = Boolean(editItem);
+
+  // 编辑模式下填充表单
+  useEffect(() => {
+    if (editItem) {
+      setUrl(editItem.url || '');
+      setTitle(editItem.title || '');
+      setDescription(editItem.description || '');
+      setEmoji(editItem.emoji || '🔗');
+      setDisplayMode(editItem.display_mode || 'iframe');
+      setIsPublic(editItem.is_public || false);
+      setBgImage(editItem.bg_image || '');
+      setImagePreview(editItem.bg_image ? `/images/${editItem.bg_image}` : '');
+      setImageFile(null);
+      setError('');
+      setFieldErrors({});
+    }
+  }, [editItem]);
 
   const resetForm = useCallback(() => {
     setUrl('');
@@ -63,15 +82,26 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin }) {
         uploadedImage = uploadRes.filename;
       }
 
-      await navApi.createNavItem({
-        url: url.trim(),
-        title: title.trim(),
-        description: description.trim(),
-        emoji,
-        display_mode: displayMode,
-        is_public: isAdmin ? isPublic : false,
-        bg_image: uploadedImage,
-      });
+      await (isEdit
+        ? navApi.updateNavItem(editItem._id, {
+            url: url.trim(),
+            title: title.trim(),
+            description: description.trim(),
+            emoji,
+            display_mode: displayMode,
+            is_public: isAdmin ? isPublic : false,
+            bg_image: uploadedImage,
+          })
+        : navApi.createNavItem({
+            url: url.trim(),
+            title: title.trim(),
+            description: description.trim(),
+            emoji,
+            display_mode: displayMode,
+            is_public: isAdmin ? isPublic : false,
+            bg_image: uploadedImage,
+          })
+      );
 
       resetForm();
       onSuccess?.();
@@ -81,7 +111,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin }) {
     } finally {
       setLoading(false);
     }
-  }, [validate, bgImage, imageFile, url, title, description, emoji, displayMode, isAdmin, isPublic, resetForm, onSuccess, onClose]);
+  }, [validate, bgImage, imageFile, url, title, description, emoji, displayMode, isAdmin, isPublic, resetForm, onSuccess, onClose, isEdit, editItem]);
 
   const handleOverlayClick = useCallback((e) => {
     if (e.target === overlayRef.current) {
@@ -100,7 +130,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin }) {
     <div className={styles.overlay} ref={overlayRef} onClick={handleOverlayClick}>
       <div className={styles.modal}>
         <button className={styles.closeBtn} onClick={handleClose} aria-label="关闭">✕</button>
-        <h2 className={styles.title}>添加导航项</h2>
+        <h2 className={styles.title}>{isEdit ? '编辑导航项' : '添加导航项'}</h2>
 
         {error && <div className={styles.error}>{error}</div>}
 
@@ -211,7 +241,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin }) {
           </div>
 
           <button type="submit" className={styles.submitBtn} disabled={loading}>
-            {loading ? '提交中...' : '添加'}
+            {loading ? '提交中...' : (isEdit ? '保存' : '添加')}
           </button>
         </form>
       </div>

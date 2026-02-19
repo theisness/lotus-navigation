@@ -42,7 +42,7 @@ async function sendVerificationCode(email, redisClient) {
   await transporter.sendMail({
     from: config.email.user,
     to: email,
-    subject: '导航门户 - 注册验证码',
+    subject: '莲花导航 - 注册验证码',
     text: `您的验证码是：${code}，有效期5分钟。`,
   });
 
@@ -65,9 +65,13 @@ async function register(email, password, code, redisClient) {
     throw { status: 409, message: '该邮箱已注册' };
   }
 
+  // 首位注册用户自动设为管理员
+  const userCount = await User.countDocuments();
+  const isFirstUser = userCount === 0;
+
   // bcrypt 加密密码并创建用户
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({ email, password: hashedPassword });
+  const user = await User.create({ email, password: hashedPassword, is_admin: isFirstUser });
 
   // 删除已使用的验证码
   await redisClient.del(codeKey);

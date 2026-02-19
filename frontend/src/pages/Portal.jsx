@@ -30,6 +30,7 @@ export default function Portal() {
   // 模态框状态
   const [showAuth, setShowAuth] = useState(false);
   const [showAddNav, setShowAddNav] = useState(false);
+  const [editItem, setEditItem] = useState(null);
 
   const mainRef = useRef(null);
 
@@ -118,6 +119,22 @@ export default function Portal() {
     fetchNavItems();
   }, [fetchNavItems]);
 
+  // 编辑导航项
+  const handleEdit = useCallback((item) => {
+    setEditItem(item);
+    setShowAddNav(true);
+  }, []);
+
+  // 删除导航项
+  const handleDelete = useCallback(async (id) => {
+    try {
+      await navApi.deleteNavItem(id);
+      fetchNavItems();
+    } catch (err) {
+      console.error('删除失败:', err);
+    }
+  }, [fetchNavItems]);
+
   // 侧边栏折叠
   const handleToggleSidebar = useCallback(() => setCollapsed(v => !v), []);
 
@@ -173,8 +190,10 @@ export default function Portal() {
               user={user}
               onLogin={() => setShowAuth(true)}
               onLogout={handleLogout}
-              onAddNav={() => setShowAddNav(true)}
+              onAddNav={() => { setEditItem(null); setShowAddNav(true); }}
               onIframeOpen={handleIframeOpen}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           )}
 
@@ -197,9 +216,10 @@ export default function Portal() {
 
       <AddNavForm
         visible={showAddNav}
-        onClose={() => setShowAddNav(false)}
+        onClose={() => { setShowAddNav(false); setEditItem(null); }}
         onSuccess={handleAddNavSuccess}
         isAdmin={user?.is_admin || false}
+        editItem={editItem}
       />
     </div>
   );

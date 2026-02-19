@@ -1,7 +1,7 @@
 import NavCard from '../components/NavCard.jsx';
 import styles from '../css/pages/Homepage.module.css';
 
-export default function Homepage({ navItems = [], user, onLogin, onLogout, onAddNav, onIframeOpen }) {
+export default function Homepage({ navItems = [], user, onLogin, onLogout, onAddNav, onIframeOpen, onEdit, onDelete }) {
   return (
     <div className={styles.wrap}>
       <header className={styles.topBar}>
@@ -26,7 +26,14 @@ export default function Homepage({ navItems = [], user, onLogin, onLogout, onAdd
 
       <div className={styles.grid}>
         {navItems.map((item) => (
-          <NavCard key={item._id} item={item} onIframeOpen={onIframeOpen} />
+          <NavCard
+            key={item._id}
+            item={item}
+            onIframeOpen={onIframeOpen}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            canEdit={user && (user.is_admin || (item.user_id && item.user_id === user.id))}
+          />
         ))}
         {navItems.length === 0 && (
           <div className={styles.empty}>暂无导航项</div>

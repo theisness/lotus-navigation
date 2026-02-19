@@ -11,6 +11,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// 请求/响应日志中间件
+app.use((req, res, next) => {
+  const start = Date.now();
+  const { method, originalUrl, body } = req;
+
+  console.log(`--> ${method} ${originalUrl}`, Object.keys(body || {}).length ? JSON.stringify(body) : '');
+
+  const originalJson = res.json.bind(res);
+  res.json = (data) => {
+    const duration = Date.now() - start;
+    console.log(`<-- ${method} ${originalUrl} ${res.statusCode} ${duration}ms`, JSON.stringify(data));
+    return originalJson(data);
+  };
+
+  next();
+});
+
 // 静态文件服务 - 背景图片
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

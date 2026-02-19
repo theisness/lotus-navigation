@@ -6,3 +6,4 @@ dist
 .env.*
 .vscode
 backend/config.json
+backend/images

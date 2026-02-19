@@ -84,6 +84,13 @@ export const navApi = {
       method: 'DELETE',
     });
   },
+
+  updateNavItem(id, data) {
+    return request(`/api/nav-items/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
 };
 
 // 图片上传 API
