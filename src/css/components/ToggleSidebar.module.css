@@ -1,19 +1,66 @@
-.toggle {
+/* 折叠时：固定在屏幕左侧 */
+.toggleFixed {
   position: fixed;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 24px;
-  height: 64px;
-  background: var(--primary);
-  color: #fff;
+  width: 28px;
+  height: 72px;
+  background: var(--toggle-bg);
+  backdrop-filter: blur(12px) saturate(180%);
+  color: var(--toggle-color);
   z-index: 30;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 16px var(--toggle-shadow),
+              inset 0 0 0 1px var(--toggle-border);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  clip-path: polygon(0 0, 100% 15%, 100% 85%, 0 100%);
   border: none;
+  border-radius: 0 14px 14px 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.left, .right { font-size: 18px; line-height: 1; }
+.toggleFixed:hover {
+  background: var(--toggle-bg-hover);
+  width: 32px;
+}
+
+.toggleFixed:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+/* 展开时：吸附在侧边栏内侧底部 */
+.toggleInside {
+  border: none;
+  background: var(--icon-btn-bg);
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toggleInside:hover {
+  background: var(--icon-btn-hover);
+  color: var(--text-primary);
+}
+
+.label {
+  font-size: 12px;
+}
+
+.arrow { 
+  font-size: 16px; 
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.toggleFixed:hover .arrow,
+.toggleInside:hover .arrow {
+  transform: scale(1.15);
+}

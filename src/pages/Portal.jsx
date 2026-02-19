@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import Sidebar from '../components/Sidebar.jsx';
 import ToggleSidebar from '../components/ToggleSidebar.jsx';
 import Loader from '../components/Loader.jsx';
@@ -6,9 +6,9 @@ import IframeView from '../components/IframeView.jsx';
 import styles from '../css/pages/Portal.module.css';
 
 const siteInfo = {
-  siteA: { title: '影院', url: 'https://ssbx.site' },
-  siteB: { title: '社区', url: 'https://blog.ssbx.site' },
-  siteC: { title: '命理社区', url: 'https://destiny.ssbx.site' }
+  siteA: { title: '影院', url: 'https://ssbx.site', emoji: '🎬' },
+  siteB: { title: '社区', url: 'https://blog.ssbx.site', emoji: '💬' },
+  siteC: { title: '命理社区', url: 'https://destiny.ssbx.site', emoji: '🔮' }
 };
 
 export default function Portal() {
@@ -18,14 +18,24 @@ export default function Portal() {
   const [reloadCounters, setReloadCounters] = useState({ siteA: 0, siteB: 0, siteC: 0 });
   const mainRef = useRef(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
 
   const current = useMemo(() => siteInfo[selected], [selected]);
+
+  // 主题切换
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const handleToggleTheme = useCallback(() => {
+    setTheme(t => t === 'dark' ? 'light' : 'dark');
+  }, []);
 
   const handleSelect = (site) => {
     if (site === selected) return;
     setLoaderVisible(true);
     setSelected(site);
-    // 若iframe已缓存，保障最迟也会隐藏加载
     setTimeout(() => setLoaderVisible(false), 400);
   };
 
@@ -34,9 +44,7 @@ export default function Portal() {
     setReloadCounters((prev) => ({ ...prev, [selected]: prev[selected] + 1 }));
   };
 
-  const handleToggleSidebar = () => {
-    setCollapsed((v) => !v);
-  };
+  const handleToggleSidebar = () => setCollapsed((v) => !v);
 
   const handleToggleFullscreen = async () => {
     try {
@@ -69,34 +77,27 @@ export default function Portal() {
             onRefresh={handleRefresh}
             isFullscreen={isFullscreen}
             onToggleFullscreen={handleToggleFullscreen}
+            onCollapse={handleToggleSidebar}
+            theme={theme}
+            onToggleTheme={handleToggleTheme}
           />
         </aside>
       )}
 
       <main className={styles.main} ref={mainRef}>
-        <ToggleSidebar collapsed={collapsed} onToggle={handleToggleSidebar} />
+        {!isFullscreen && <ToggleSidebar collapsed={collapsed} onToggle={handleToggleSidebar} />}
 
         <div className={styles.content}>
           <Loader visible={loaderVisible} />
-
-          <IframeView
-            visible={selected === 'siteA'}
-            url={siteInfo.siteA.url}
-            reloadKey={reloadCounters.siteA}
-            onLoad={() => setLoaderVisible(false)}
-          />
-          <IframeView
-            visible={selected === 'siteB'}
-            url={siteInfo.siteB.url}
-            reloadKey={reloadCounters.siteB}
-            onLoad={() => setLoaderVisible(false)}
-          />
-          <IframeView
-            visible={selected === 'siteC'}
-            url={siteInfo.siteC.url}
-            reloadKey={reloadCounters.siteC}
-            onLoad={() => setLoaderVisible(false)}
-          />
+          {Object.keys(siteInfo).map((key) => (
+            <IframeView
+              key={key}
+              visible={selected === key}
+              url={siteInfo[key].url}
+              reloadKey={reloadCounters[key]}
+              onLoad={() => setLoaderVisible(false)}
+            />
+          ))}
         </div>
       </main>
     </div>

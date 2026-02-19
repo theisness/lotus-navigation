@@ -1,12 +1,47 @@
 .app {
   display: flex;
   height: 100vh;
+  background: var(--bg-gradient);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s ease;
+}
+
+.app::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -20%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  animation: float 20s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.app::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -20%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, var(--accent-glow2) 0%, transparent 70%);
+  animation: float 25s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(30px, -30px); }
+  66% { transform: translate(-20px, 20px); }
 }
 
 .sidebar {
   width: 14rem;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+  z-index: 20;
+  position: relative;
 }
 
 .main {
@@ -15,10 +50,11 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #f3f4f6;
+  z-index: 1;
 }
 
 .content {
   position: relative;
   flex: 1;
+  overflow: hidden;
 }
