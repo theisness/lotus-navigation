@@ -6,7 +6,7 @@ export default function Sidebar({ selected, siteInfo, currentTitle, currentUrl, 
   return (
     <div className={styles.wrap}>
       <div className={styles.header}>
-        <div className={styles.brand}>🌐 网站集成平台</div>
+        <div className={styles.brand}>🌐 莲花导航</div>
         <div className={styles.currentBox}>
           <div className={styles.currentTitle}>{currentTitle}</div>
           <div className={styles.currentUrl}>{currentUrl}</div>
