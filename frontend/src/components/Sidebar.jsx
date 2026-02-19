@@ -1,35 +1,66 @@
 import styles from '../css/components/Sidebar.module.css';
 
-export default function Sidebar({ selected, siteInfo, currentTitle, currentUrl, onSelect, onRefresh, isFullscreen, onToggleFullscreen, onCollapse, theme, onToggleTheme }) {
-  const links = Object.keys(siteInfo);
+export default function Sidebar({
+  navItems = [],
+  selectedId,
+  currentTitle,
+  currentUrl,
+  onSelect,
+  onRefresh,
+  isFullscreen,
+  onToggleFullscreen,
+  onCollapse,
+  theme,
+  onToggleTheme,
+  onGoHome,
+}) {
+  const handleItemClick = (e, item) => {
+    e.preventDefault();
+    if (item.display_mode === 'redirect') {
+      window.open(item.url, '_blank', 'noopener,noreferrer');
+    } else {
+      onSelect?.(item);
+    }
+  };
 
   return (
     <div className={styles.wrap}>
       <div className={styles.header}>
-        <div className={styles.brand}>🌐 莲花导航</div>
-        <div className={styles.currentBox}>
-          <div className={styles.currentTitle}>{currentTitle}</div>
-          <div className={styles.currentUrl}>{currentUrl}</div>
-          <div className={styles.actions}>
-            <button className={styles.iconBtn} onClick={onRefresh} title="刷新">⟳</button>
-            <button className={styles.iconBtn} onClick={onToggleFullscreen} title="全屏">
-              {isFullscreen ? '⤓' : '⤢'}
-            </button>
-          </div>
+        <div
+          className={styles.brand}
+          onClick={onGoHome}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onGoHome?.(); } }}
+          style={{ cursor: 'pointer' }}
+        >
+          🌐 莲花导航
         </div>
+        {currentTitle && (
+          <div className={styles.currentBox}>
+            <div className={styles.currentTitle}>{currentTitle}</div>
+            <div className={styles.currentUrl}>{currentUrl}</div>
+            <div className={styles.actions}>
+              <button className={styles.iconBtn} onClick={onRefresh} title="刷新">⟳</button>
+              <button className={styles.iconBtn} onClick={onToggleFullscreen} title="全屏">
+                {isFullscreen ? '⤓' : '⤢'}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <nav className={styles.nav}>
         <ul className={styles.menu}>
-          {links.map((key) => (
-            <li key={key}>
+          {navItems.map((item) => (
+            <li key={item._id}>
               <a
                 href="#"
-                className={`${styles.link} ${selected === key ? styles.active : ''}`}
-                onClick={(e) => { e.preventDefault(); onSelect(key); }}
+                className={`${styles.link} ${selectedId === item._id ? styles.active : ''}`}
+                onClick={(e) => handleItemClick(e, item)}
               >
-                <span className={styles.linkIcon}>{siteInfo[key].emoji}</span>
-                <span>{siteInfo[key].title}</span>
+                <span className={styles.linkIcon}>{item.emoji || '🔗'}</span>
+                <span>{item.title}</span>
               </a>
             </li>
           ))}
