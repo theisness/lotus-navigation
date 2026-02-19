@@ -5,4 +5,4 @@ dist
 .env
 .env.*
 .vscode
-/config.json
+backend/config.json
