@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { navApi, uploadApi } from '../api.js';
+import { navApi, uploadApi, adminApi } from '../api.js';
 import styles from '../css/components/AddNavForm.module.css';
 
 export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editItem }) {
@@ -9,6 +9,8 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
   const [emoji, setEmoji] = useState('🔗');
   const [displayMode, setDisplayMode] = useState('iframe');
   const [isPublic, setIsPublic] = useState(false);
+  const [visibleGroupIds, setVisibleGroupIds] = useState([]);
+  const [groupsList, setGroupsList] = useState([]);
   const [bgImage, setBgImage] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
@@ -20,6 +22,15 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
 
   const isEdit = Boolean(editItem);
 
+  // 管理员：加载分组列表
+  useEffect(() => {
+    if (visible && isAdmin) {
+      adminApi.getGroups().then((data) => {
+        setGroupsList(Array.isArray(data) ? data : []);
+      }).catch(() => setGroupsList([]));
+    }
+  }, [visible, isAdmin]);
+
   // 编辑模式下填充表单
   useEffect(() => {
     if (editItem) {
@@ -29,6 +40,11 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
       setEmoji(editItem.emoji || '🔗');
       setDisplayMode(editItem.display_mode || 'iframe');
       setIsPublic(editItem.is_public || false);
+      setVisibleGroupIds(
+        editItem.visible_group_ids
+          ? editItem.visible_group_ids.map((g) => (typeof g === 'object' && g !== null ? g._id || g.id : g))
+          : []
+      );
       setBgImage(editItem.bg_image || '');
       setImagePreview(editItem.bg_image ? `/images/${editItem.bg_image}` : '');
       setImageFile(null);
@@ -44,6 +60,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
     setEmoji('🔗');
     setDisplayMode('iframe');
     setIsPublic(false);
+    setVisibleGroupIds([]);
     setBgImage('');
     setImageFile(null);
     setImagePreview('');
@@ -82,25 +99,21 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
         uploadedImage = uploadRes.filename;
       }
 
+      const payload = {
+        url: url.trim(),
+        title: title.trim(),
+        description: description.trim(),
+        emoji,
+        display_mode: displayMode,
+        is_public: isAdmin ? isPublic : false,
+        bg_image: uploadedImage,
+      };
+      if (isAdmin) {
+        payload.visible_group_ids = visibleGroupIds;
+      }
       await (isEdit
-        ? navApi.updateNavItem(editItem._id, {
-            url: url.trim(),
-            title: title.trim(),
-            description: description.trim(),
-            emoji,
-            display_mode: displayMode,
-            is_public: isAdmin ? isPublic : false,
-            bg_image: uploadedImage,
-          })
-        : navApi.createNavItem({
-            url: url.trim(),
-            title: title.trim(),
-            description: description.trim(),
-            emoji,
-            display_mode: displayMode,
-            is_public: isAdmin ? isPublic : false,
-            bg_image: uploadedImage,
-          })
+        ? navApi.updateNavItem(editItem._id, payload)
+        : navApi.createNavItem(payload)
       );
 
       resetForm();
@@ -111,7 +124,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
     } finally {
       setLoading(false);
     }
-  }, [validate, bgImage, imageFile, url, title, description, emoji, displayMode, isAdmin, isPublic, resetForm, onSuccess, onClose, isEdit, editItem]);
+  }, [validate, bgImage, imageFile, url, title, description, emoji, displayMode, isAdmin, isPublic, visibleGroupIds, resetForm, onSuccess, onClose, isEdit, editItem]);
 
   const handleOverlayClick = useCallback((e) => {
     if (e.target === overlayRef.current) {
@@ -213,6 +226,39 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
                 </span>
                 公共项目（所有用户可见）
               </label>
+            </div>
+          )}
+
+          {isAdmin && (
+            <div className={styles.field}>
+              <label className={styles.label}>对以下分组成员可见</label>
+              <p className={styles.hint}>不勾选公共项目时，仅所选分组的成员可见此导航项</p>
+              {groupsList.length > 0 ? (
+                <div className={styles.groupCheckboxList}>
+                  {groupsList.map((g) => {
+                    const gid = g._id || g.id;
+                    const checked = visibleGroupIds.includes(gid);
+                    return (
+                      <label key={gid} className={styles.checkboxItem}>
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setVisibleGroupIds((ids) => [...ids, gid]);
+                            } else {
+                              setVisibleGroupIds((ids) => ids.filter((id) => id !== gid));
+                            }
+                          }}
+                        />
+                        <span>{g.name}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className={styles.hint}>暂无分组，请先在成员分组中创建</p>
+              )}
             </div>
           )}
 

@@ -97,7 +97,14 @@ async function login(email, password) {
 
   return {
     token,
-    user: { id: user._id, email: user.email, is_admin: user.is_admin },
+    user: {
+      id: user._id,
+      email: user.email,
+      is_admin: user.is_admin,
+      nickname: user.nickname || '',
+      avatar: user.avatar || '',
+      bio: user.bio || '',
+    },
   };
 }
 

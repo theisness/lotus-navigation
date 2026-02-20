@@ -1,16 +1,104 @@
+import { useState, useRef, useEffect } from 'react';
 import NavCard from '../components/NavCard.jsx';
 import styles from '../css/pages/Homepage.module.css';
 
-export default function Homepage({ navItems = [], user, onLogin, onLogout, onAddNav, onIframeOpen, onEdit, onDelete }) {
+function DefaultAvatar({ name }) {
+  const letter = (name && name.trim() ? name : '?').charAt(0).toUpperCase();
+  return <span className={styles.defaultAvatar}>{letter}</span>;
+}
+
+export default function Homepage({
+  navItems = [],
+  user,
+  onLogin,
+  onLogout,
+  onAddNav,
+  onIframeOpen,
+  onEdit,
+  onDelete,
+  onOpenProfile,
+  onOpenMemberManage,
+  onOpenGroupManage,
+}) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   return (
     <div className={styles.wrap}>
       <header className={styles.topBar}>
-        <h1 className={styles.brand}>🌐 莲花导航</h1>
-        <div className={styles.userArea}>
+        <div className={styles.topBarLeft} />
+        <div className={styles.userArea} ref={menuRef}>
           {user ? (
             <>
-              <span className={styles.email}>{user.email}</span>
-              <button className={styles.btn} onClick={onLogout}>登出</button>
+              <button
+                type="button"
+                className={styles.avatarBtn}
+                onClick={() => setMenuOpen((v) => !v)}
+                aria-haspopup="true"
+                aria-expanded={menuOpen}
+                aria-label="用户菜单"
+              >
+                {user.avatar ? (
+                  <img
+                    src={user.avatar.startsWith('/') ? user.avatar : `/images/${user.avatar}`}
+                    alt=""
+                    className={styles.avatarImg}
+                  />
+                ) : (
+                  <DefaultAvatar name={user.nickname || user.email} />
+                )}
+              </button>
+              <button type="button" className={styles.logoutBtn} onClick={onLogout}>
+                登出
+              </button>
+              {menuOpen && (
+                <div className={styles.dropdown}>
+                  <button
+                    type="button"
+                    className={styles.menuItem}
+                    onClick={() => {
+                      setMenuOpen(false);
+                      onOpenProfile?.();
+                    }}
+                  >
+                    个人信息
+                  </button>
+                  {user.is_admin && (
+                    <>
+                      <button
+                        type="button"
+                        className={styles.menuItem}
+                        onClick={() => {
+                          setMenuOpen(false);
+                          onOpenMemberManage?.();
+                        }}
+                      >
+                        成员管理
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.menuItem}
+                        onClick={() => {
+                          setMenuOpen(false);
+                          onOpenGroupManage?.();
+                        }}
+                      >
+                        成员分组
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
             </>
           ) : (
             <button className={styles.btn} onClick={onLogin}>登录</button>

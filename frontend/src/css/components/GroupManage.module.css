@@ -1,0 +1,266 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background: var(--sidebar-bg);
+  border: 1px solid var(--sidebar-border);
+  border-radius: 16px;
+  padding: 32px;
+  width: 560px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.3s ease-out;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.closeBtn:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.title {
+  margin: 0 0 20px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.createRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--accent);
+}
+
+.btnPrimary {
+  padding: 10px 16px;
+  font-size: 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btnPrimary:hover {
+  opacity: 0.9;
+}
+
+.loading,
+.empty {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.groupList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.groupCard {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.groupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.groupName {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.inputInline {
+  background: var(--sidebar-bg);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: var(--text-primary);
+  width: 180px;
+  outline: none;
+}
+
+.groupActions {
+  display: flex;
+  gap: 6px;
+}
+
+.btnSmall {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px solid var(--surface-border);
+  background: var(--icon-btn-bg);
+  color: var(--text-primary);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btnSmall:hover {
+  background: var(--icon-btn-hover);
+}
+
+.btnSmallDanger {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btnSmallDanger:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.memberList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.memberLabel {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.memberTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--icon-btn-bg);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  color: var(--text-primary);
+}
+
+.removeTag {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.removeTag:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.btnAddMember {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px dashed var(--surface-border);
+  background: none;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btnAddMember:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.addDropdown {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.addOption {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px solid var(--surface-border);
+  background: var(--icon-btn-bg);
+  color: var(--text-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.addOption:hover {
+  background: var(--icon-btn-hover);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

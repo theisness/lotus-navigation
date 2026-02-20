@@ -79,8 +79,60 @@
   color: var(--text-secondary);
 }
 
+.avatarRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatarWrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--surface);
+  border: 2px dashed var(--surface-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.avatarWrap:hover {
+  border-color: var(--accent);
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.defaultAvatar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--surface-border);
+}
+
+.avatarHint {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.fileInput {
+  display: none;
+}
+
 .input,
-.select {
+.textarea {
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: 8px;
@@ -90,136 +142,23 @@
   outline: none;
   transition: all 0.2s ease;
   width: 100%;
+  font-family: inherit;
 }
 
-.input::placeholder {
+.textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.input::placeholder,
+.textarea::placeholder {
   color: var(--text-muted);
 }
 
 .input:focus,
-.select:focus {
+.textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-glow);
-}
-
-.inputError {
-  border-color: #f87171;
-}
-
-.fieldError {
-  font-size: 12px;
-  color: #f87171;
-}
-
-.row {
-  display: flex;
-  gap: 12px;
-}
-
-.switchField {
-  padding: 4px 0;
-}
-
-.switchLabel {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  color: var(--text-secondary);
-  cursor: pointer;
-}
-
-.checkbox {
-  display: none;
-}
-
-.switchTrack {
-  position: relative;
-  width: 40px;
-  height: 22px;
-  background: var(--surface-border);
-  border-radius: 11px;
-  transition: background 0.2s ease;
-  flex-shrink: 0;
-}
-
-.checkbox:checked + .switchTrack {
-  background: var(--accent);
-}
-
-.switchThumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 18px;
-  height: 18px;
-  background: #fff;
-  border-radius: 50%;
-  transition: transform 0.2s ease;
-}
-
-.checkbox:checked + .switchTrack .switchThumb {
-  transform: translateX(18px);
-}
-
-.hint {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin: 4px 0 8px;
-}
-
-.groupCheckboxList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 16px;
-}
-
-.checkboxItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  color: var(--text-secondary);
-  cursor: pointer;
-}
-
-.checkboxItem input {
-  width: 16px;
-  height: 16px;
-}
-
-.uploadArea {
-  background: var(--surface);
-  border: 2px dashed var(--surface-border);
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.uploadArea:hover {
-  border-color: var(--accent);
-}
-
-.uploadHint {
-  color: var(--text-muted);
-  font-size: 14px;
-}
-
-.preview {
-  max-width: 100%;
-  max-height: 120px;
-  border-radius: 6px;
-  object-fit: cover;
-}
-
-.fileInput {
-  display: none;
 }
 
 .submitBtn {

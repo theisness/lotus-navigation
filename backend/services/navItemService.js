@@ -1,12 +1,18 @@
 const NavItem = require('../models/NavItem');
+const UserGroup = require('../models/UserGroup');
 
 // 获取导航项列表
 async function getNavItems(userId) {
   if (userId) {
-    // 已登录：公共项 + 该用户私有项
-    return NavItem.find({
-      $or: [{ is_public: true }, { user_id: userId }],
-    }).sort({ created_at: -1 });
+    const userGroupIds = await UserGroup.find({ user_id: userId }).distinct('group_id');
+    const conditions = [
+      { is_public: true },
+      { user_id: userId },
+    ];
+    if (userGroupIds.length > 0) {
+      conditions.push({ visible_group_ids: { $in: userGroupIds } });
+    }
+    return NavItem.find({ $or: conditions }).sort({ created_at: -1 });
   }
   // 未登录：仅公共项
   return NavItem.find({ is_public: true }).sort({ created_at: -1 });
@@ -19,7 +25,7 @@ async function createNavItem(data, user) {
     throw { status: 403, message: '权限不足' };
   }
 
-  const navItem = await NavItem.create({
+  const payload = {
     url: data.url,
     title: data.title,
     description: data.description || '',
@@ -28,8 +34,11 @@ async function createNavItem(data, user) {
     is_public: data.is_public || false,
     user_id: data.is_public ? null : user.userId,
     bg_image: data.bg_image || '',
-  });
-
+  };
+  if (user.is_admin && Array.isArray(data.visible_group_ids)) {
+    payload.visible_group_ids = data.visible_group_ids;
+  }
+  const navItem = await NavItem.create(payload);
   return navItem;
 }
 
@@ -53,6 +62,7 @@ async function updateNavItem(itemId, data, user) {
   }
 
   const allowed = ['url', 'title', 'description', 'emoji', 'display_mode', 'is_public', 'bg_image'];
+  if (user.is_admin) allowed.push('visible_group_ids');
   const update = {};
   for (const key of allowed) {
     if (data[key] !== undefined) update[key] = data[key];

@@ -14,7 +14,7 @@ async function getNavItems(req, res) {
 // POST /api/nav-items
 async function createNavItem(req, res) {
   try {
-    const { url, title, description, emoji, display_mode, is_public, bg_image } = req.body;
+    const { url, title, description, emoji, display_mode, is_public, bg_image, visible_group_ids } = req.body;
     if (!url || !title) {
       const fields = [];
       if (!url) fields.push('url');
@@ -22,7 +22,7 @@ async function createNavItem(req, res) {
       return res.status(400).json({ error: '缺少必填字段', fields });
     }
     const item = await navItemService.createNavItem(
-      { url, title, description, emoji, display_mode, is_public, bg_image },
+      { url, title, description, emoji, display_mode, is_public, bg_image, visible_group_ids },
       req.user
     );
     res.status(201).json(item);

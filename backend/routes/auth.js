@@ -15,4 +15,7 @@ router.post('/login', authController.login);
 // GET /api/auth/me - 获取当前用户信息（需登录）
 router.get('/me', authMiddleware, authController.getMe);
 
+// PUT /api/auth/profile - 更新当前用户个人信息（需登录）
+router.put('/profile', authMiddleware, authController.updateProfile);
+
 module.exports = router;

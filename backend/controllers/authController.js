@@ -52,10 +52,47 @@ async function getMe(req, res) {
     if (!user) {
       return res.status(404).json({ error: '用户不存在' });
     }
-    res.json({ id: user._id, email: user.email, is_admin: user.is_admin });
+    res.json({
+      id: user._id,
+      email: user.email,
+      is_admin: user.is_admin,
+      nickname: user.nickname || '',
+      avatar: user.avatar || '',
+      bio: user.bio || '',
+    });
   } catch (err) {
     res.status(500).json({ error: '服务器内部错误' });
   }
 }
 
-module.exports = { sendCode, register, login, getMe };
+// PUT /api/auth/profile - 更新当前用户个人信息
+async function updateProfile(req, res) {
+  try {
+    const { nickname, bio, avatar } = req.body;
+    const update = {};
+    if (nickname !== undefined) update.nickname = nickname;
+    if (bio !== undefined) update.bio = bio;
+    if (avatar !== undefined) update.avatar = avatar;
+
+    const user = await User.findByIdAndUpdate(
+      req.user.userId,
+      { $set: update },
+      { new: true }
+    ).select('-password');
+    if (!user) {
+      return res.status(404).json({ error: '用户不存在' });
+    }
+    res.json({
+      id: user._id,
+      email: user.email,
+      is_admin: user.is_admin,
+      nickname: user.nickname || '',
+      avatar: user.avatar || '',
+      bio: user.bio || '',
+    });
+  } catch (err) {
+    res.status(500).json({ error: '服务器内部错误' });
+  }
+}
+
+module.exports = { sendCode, register, login, getMe, updateProfile };

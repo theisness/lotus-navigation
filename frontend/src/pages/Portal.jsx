@@ -6,6 +6,9 @@ import IframeView from '../components/IframeView.jsx';
 import Homepage from './Homepage.jsx';
 import AuthForm from '../components/AuthForm.jsx';
 import AddNavForm from '../components/AddNavForm.jsx';
+import ProfileForm from '../components/ProfileForm.jsx';
+import MemberManage from '../components/MemberManage.jsx';
+import GroupManage from '../components/GroupManage.jsx';
 import { authApi, navApi, getToken, removeToken } from '../api.js';
 import styles from '../css/pages/Portal.module.css';
 
@@ -30,6 +33,9 @@ export default function Portal() {
   // 模态框状态
   const [showAuth, setShowAuth] = useState(false);
   const [showAddNav, setShowAddNav] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showMemberManage, setShowMemberManage] = useState(false);
+  const [showGroupManage, setShowGroupManage] = useState(false);
   const [editItem, setEditItem] = useState(null);
 
   const mainRef = useRef(null);
@@ -194,6 +200,9 @@ export default function Portal() {
               onIframeOpen={handleIframeOpen}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              onOpenProfile={() => setShowProfile(true)}
+              onOpenMemberManage={() => setShowMemberManage(true)}
+              onOpenGroupManage={() => setShowGroupManage(true)}
             />
           )}
 
@@ -220,6 +229,23 @@ export default function Portal() {
         onSuccess={handleAddNavSuccess}
         isAdmin={user?.is_admin || false}
         editItem={editItem}
+      />
+
+      <ProfileForm
+        visible={showProfile}
+        onClose={() => setShowProfile(false)}
+        user={user}
+        onSuccess={(updatedUser) => setUser(updatedUser)}
+      />
+
+      <MemberManage
+        visible={showMemberManage}
+        onClose={() => setShowMemberManage(false)}
+      />
+
+      <GroupManage
+        visible={showGroupManage}
+        onClose={() => setShowGroupManage(false)}
       />
     </div>
   );

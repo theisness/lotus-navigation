@@ -8,6 +8,7 @@ const navItemSchema = new mongoose.Schema({
   display_mode: { type: String, enum: ['iframe', 'redirect'], required: true },
   is_public: { type: Boolean, default: false },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+  visible_group_ids: { type: [mongoose.Schema.Types.ObjectId], ref: 'Group', default: [] },
   bg_image: { type: String, default: '' },
   created_at: { type: Date, default: Date.now },
 });

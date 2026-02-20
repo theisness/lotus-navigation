@@ -64,6 +64,13 @@ export const authApi = {
   getMe() {
     return request('/api/auth/me');
   },
+
+  updateProfile(data) {
+    return request('/api/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
 };
 
 // 导航项相关 API
@@ -101,6 +108,46 @@ export const uploadApi = {
     return request('/api/upload/image', {
       method: 'POST',
       body: formData,
+    });
+  },
+};
+
+// 管理员 API（需登录且为管理员）
+export const adminApi = {
+  getMembers() {
+    return request('/api/admin/members');
+  },
+  getMemberById(id) {
+    return request(`/api/admin/members/${id}`);
+  },
+  deleteMember(id) {
+    return request(`/api/admin/members/${id}`, { method: 'DELETE' });
+  },
+  getGroups() {
+    return request('/api/admin/groups');
+  },
+  createGroup(name) {
+    return request('/api/admin/groups', {
+      method: 'POST',
+      body: JSON.stringify({ name }),
+    });
+  },
+  updateGroup(id, name) {
+    return request(`/api/admin/groups/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ name }),
+    });
+  },
+  deleteGroup(id) {
+    return request(`/api/admin/groups/${id}`, { method: 'DELETE' });
+  },
+  getUserGroups(userId) {
+    return request(`/api/admin/users/${userId}/groups`);
+  },
+  setUserGroups(userId, groupIds) {
+    return request(`/api/admin/users/${userId}/groups`, {
+      method: 'PUT',
+      body: JSON.stringify({ groupIds }),
     });
   },
 };
