@@ -32,7 +32,7 @@ async function createNavItem(data, user) {
     emoji: data.emoji || '🔗',
     display_mode: data.display_mode,
     is_public: data.is_public || false,
-    user_id: data.is_public ? null : user.userId,
+    user_id: user.userId,
     bg_image: data.bg_image || '',
   };
   if (user.is_admin && Array.isArray(data.visible_group_ids)) {
@@ -50,9 +50,8 @@ async function updateNavItem(itemId, data, user) {
   }
 
   const isOwner = navItem.user_id && navItem.user_id.toString() === user.userId;
-  const isAdminEditingPublic = user.is_admin && navItem.is_public;
 
-  if (!isOwner && !isAdminEditingPublic) {
+  if (!isOwner && !user.is_admin) {
     throw { status: 403, message: '权限不足' };
   }
 
