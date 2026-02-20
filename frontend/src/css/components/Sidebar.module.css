@@ -1,5 +1,6 @@
 .wrap { 
   height: 100%; 
+  position: relative;
   background: var(--sidebar-bg);
   backdrop-filter: blur(24px) saturate(180%);
   border-right: 1px solid var(--sidebar-border);
@@ -9,9 +10,12 @@
   transition: background 0.4s ease, border-color 0.4s ease;
 }
 
-.header { 
-  padding: 24px 20px;
+.header {
+  padding: 24px 10px;
   border-bottom: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .brand { 
@@ -20,13 +24,13 @@
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0px;
   letter-spacing: -0.3px;
 }
 
 .logo {
-  width: 36px;
-  height: 40px;
+  width: 48px;
+  height: 52px;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -35,11 +39,13 @@
   display: flex;
   flex-direction: column;
   line-height: 1.2;
+  min-width: 0;
 }
 
 .brandCn {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .brandCnRow {
@@ -129,12 +135,12 @@
 .link { 
   display: flex; 
   align-items: center;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: 8px;
   color: var(--text-secondary);
   transition: all 0.2s ease;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 }
 
@@ -144,12 +150,12 @@
 }
 
 .linkIcon { 
-  width: 24px;
+  width: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
-  font-size: 16px;
+  font-size: 20px;
   transition: transform 0.2s ease;
 }
 
@@ -207,6 +213,34 @@
 
 .pickerWrap {
   position: relative;
+}
+
+.collapseBtn {
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 56px;
+  background: var(--sidebar-bg);
+  border: 1px solid var(--sidebar-border);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.collapseBtn:hover {
+  background: var(--icon-btn-hover);
+  color: var(--text-primary);
+  width: 18px;
 }
 
 @keyframes slideIn {

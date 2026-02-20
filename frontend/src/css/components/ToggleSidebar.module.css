@@ -1,64 +1,33 @@
-/* 折叠时：固定在屏幕左侧 */
+/* 折叠时：吸附在屏幕左侧，与侧边栏收起按钮样式一致 */
 .toggleFixed {
   position: fixed;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 28px;
-  height: 72px;
-  background: #4a5568;
-  color: #fff;
-  z-index: 30;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  width: 14px;
+  height: 56px;
+  background: var(--sidebar-bg);
+  border: 1px solid var(--sidebar-border);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  color: var(--text-muted);
+  font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  border-radius: 0 14px 14px 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 30;
+  transition: all 0.2s ease;
+  padding: 0;
 }
 
 .toggleFixed:hover {
-  background: #2d3748;
-  width: 32px;
-}
-
-.toggleFixed:active {
-  transform: translateY(-50%) scale(0.96);
-}
-
-/* 展开时：吸附在侧边栏内侧底部 */
-.toggleInside {
-  border: none;
-  background: var(--icon-btn-bg);
-  cursor: pointer;
-  color: var(--text-secondary);
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.toggleInside:hover {
   background: var(--icon-btn-hover);
   color: var(--text-primary);
-}
-
-.label {
-  font-size: 12px;
+  width: 18px;
 }
 
 .arrow { 
-  font-size: 16px; 
+  font-size: 14px; 
   line-height: 1;
-  transition: transform 0.2s ease;
-}
-
-.toggleFixed:hover .arrow,
-.toggleInside:hover .arrow {
-  transform: scale(1.15);
 }

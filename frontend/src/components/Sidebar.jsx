@@ -114,10 +114,11 @@ export default function Sidebar({
             />
           </div>
         )}
-        <button className={styles.footerBtn} onClick={onCollapse} title="收起侧栏">
-          ‹ <span className={styles.footerLabel}>收起</span>
-        </button>
       </div>
+
+      <button className={styles.collapseBtn} onClick={onCollapse} title="收起侧栏" aria-label="收起侧栏">
+        ‹
+      </button>
     </div>
   );
 }

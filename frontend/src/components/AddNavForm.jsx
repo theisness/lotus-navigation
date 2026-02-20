@@ -12,6 +12,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
   const [visibleGroupIds, setVisibleGroupIds] = useState([]);
   const [groupsList, setGroupsList] = useState([]);
   const [bgImage, setBgImage] = useState('');
+  const [bgPosition, setBgPosition] = useState('center');
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [loading, setLoading] = useState(false);
@@ -46,6 +47,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
           : []
       );
       setBgImage(editItem.bg_image || '');
+      setBgPosition(editItem.bg_position || 'center');
       setImagePreview(editItem.bg_image ? `/images/${editItem.bg_image}` : '');
       setImageFile(null);
       setError('');
@@ -62,6 +64,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
     setIsPublic(false);
     setVisibleGroupIds([]);
     setBgImage('');
+    setBgPosition('center');
     setImageFile(null);
     setImagePreview('');
     setError('');
@@ -107,6 +110,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
         display_mode: displayMode,
         is_public: isAdmin ? isPublic : false,
         bg_image: uploadedImage,
+        bg_position: bgPosition,
       };
       if (isAdmin && !isPublic) {
         payload.visible_group_ids = visibleGroupIds;
@@ -124,7 +128,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
     } finally {
       setLoading(false);
     }
-  }, [validate, bgImage, imageFile, url, title, description, emoji, displayMode, isAdmin, isPublic, visibleGroupIds, resetForm, onSuccess, onClose, isEdit, editItem]);
+  }, [validate, bgImage, imageFile, url, title, description, emoji, displayMode, isAdmin, isPublic, visibleGroupIds, bgPosition, resetForm, onSuccess, onClose, isEdit, editItem]);
 
   const handleOverlayClick = useCallback((e) => {
     if (e.target === overlayRef.current) {
@@ -284,6 +288,30 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
               onChange={handleImageChange}
               className={styles.fileInput}
             />
+            {imagePreview && (
+              <div className={styles.positionPicker}>
+                <label className={styles.label}>图片显示位置（点击选择焦点）</label>
+                <div
+                  className={styles.positionPreview}
+                  onClick={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
+                    const y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
+                    setBgPosition(`${x}% ${y}%`);
+                  }}
+                  style={{ backgroundImage: `url(${imagePreview})`, backgroundPosition: bgPosition }}
+                >
+                  <div
+                    className={styles.positionDot}
+                    style={{
+                      left: bgPosition.includes('%') ? bgPosition.split(' ')[0] : '50%',
+                      top: bgPosition.includes('%') && bgPosition.split(' ')[1] ? bgPosition.split(' ')[1] : '50%',
+                    }}
+                  />
+                </div>
+                <div className={styles.positionHint}>当前: {bgPosition}</div>
+              </div>
+            )}
           </div>
 
           <button type="submit" className={styles.submitBtn} disabled={loading}>

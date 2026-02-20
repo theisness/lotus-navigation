@@ -10,6 +10,7 @@ const navItemSchema = new mongoose.Schema({
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   visible_group_ids: { type: [mongoose.Schema.Types.ObjectId], ref: 'Group', default: [] },
   bg_image: { type: String, default: '' },
+  bg_position: { type: String, default: 'center' },
   created_at: { type: Date, default: Date.now },
 });
 

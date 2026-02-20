@@ -222,6 +222,40 @@
   display: none;
 }
 
+.positionPicker {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.positionPreview {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  border-radius: 8px;
+  background-size: cover;
+  cursor: crosshair;
+  border: 1px solid var(--surface-border);
+}
+
+.positionDot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.positionHint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
 .submitBtn {
   background: var(--accent);
   border: none;

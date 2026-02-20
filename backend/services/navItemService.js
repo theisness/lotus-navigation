@@ -34,6 +34,7 @@ async function createNavItem(data, user) {
     is_public: data.is_public || false,
     user_id: user.userId,
     bg_image: data.bg_image || '',
+    bg_position: data.bg_position || 'center',
   };
   if (user.is_admin && Array.isArray(data.visible_group_ids)) {
     payload.visible_group_ids = data.visible_group_ids;
@@ -60,7 +61,7 @@ async function updateNavItem(itemId, data, user) {
     throw { status: 403, message: '权限不足' };
   }
 
-  const allowed = ['url', 'title', 'description', 'emoji', 'display_mode', 'is_public', 'bg_image'];
+  const allowed = ['url', 'title', 'description', 'emoji', 'display_mode', 'is_public', 'bg_image', 'bg_position'];
   if (user.is_admin) allowed.push('visible_group_ids');
   const update = {};
   for (const key of allowed) {

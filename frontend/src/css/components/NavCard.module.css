@@ -10,7 +10,12 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   align-items: center;
-  min-height: 250px;
+  min-height: 220px;
+}
+
+.cardThemed {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bg-hover) 100%);
+  border-color: var(--accent-bg-hover);
 }
 
 .card:hover {
@@ -56,18 +61,18 @@
 }
 
 .emoji {
-  font-size: 26px;
+  font-size: 32px;
   flex-shrink: 0;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .title {
   margin: 0;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   white-space: nowrap;
+  letter-spacing: 0.5px;
 }
 
 .desc {

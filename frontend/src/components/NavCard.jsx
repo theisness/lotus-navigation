@@ -1,11 +1,13 @@
 import styles from '../css/components/NavCard.module.css';
 
 export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit }) {
-  const { url, title, description, emoji, display_mode, bg_image } = item;
+  const { url, title, description, emoji, display_mode, bg_image, bg_position } = item;
 
   const bgStyle = bg_image
-    ? { backgroundImage: `url(/images/${bg_image})` }
+    ? { backgroundImage: `url(/images/${bg_image})`, backgroundPosition: bg_position || 'center' }
     : {};
+
+  const cardClass = `${styles.card} ${!bg_image ? styles.cardThemed : ''}`;
 
   const handleClick = () => {
     if (display_mode === 'redirect') {
@@ -29,7 +31,7 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit 
 
   return (
     <div
-      className={styles.card}
+      className={cardClass}
       style={bgStyle}
       onClick={handleClick}
       role="link"
