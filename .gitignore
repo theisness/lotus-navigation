@@ -7,3 +7,4 @@ dist
 .vscode
 backend/config.json
 backend/images
+*.zip
