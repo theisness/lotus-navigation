@@ -18,8 +18,12 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
+  const [iconFile, setIconFile] = useState(null);
+  const [iconPreview, setIconPreview] = useState('');
+  const [iconValue, setIconValue] = useState('');
   const overlayRef = useRef(null);
   const fileInputRef = useRef(null);
+  const iconInputRef = useRef(null);
 
   const isEdit = Boolean(editItem);
 
@@ -50,6 +54,9 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
       setBgPosition(editItem.bg_position || 'center');
       setImagePreview(editItem.bg_image ? `/images/${editItem.bg_image}` : '');
       setImageFile(null);
+      setIconValue(editItem.icon || '');
+      setIconPreview(editItem.icon ? `/images/${editItem.icon}` : '');
+      setIconFile(null);
       setError('');
       setFieldErrors({});
     }
@@ -67,6 +74,9 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
     setBgPosition('center');
     setImageFile(null);
     setImagePreview('');
+    setIconValue('');
+    setIconFile(null);
+    setIconPreview('');
     setError('');
     setFieldErrors({});
   }, []);
@@ -86,6 +96,19 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
     setImagePreview(URL.createObjectURL(file));
   }, []);
 
+  const handleIconChange = useCallback((e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIconFile(file);
+    setIconPreview(URL.createObjectURL(file));
+  }, []);
+
+  const handleRemoveIcon = useCallback(() => {
+    setIconFile(null);
+    setIconPreview('');
+    setIconValue('');
+  }, []);
+
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -95,6 +118,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
 
     try {
       let uploadedImage = bgImage;
+      let uploadedIcon = iconValue;
 
       // 如果选择了图片文件，先上传
       if (imageFile) {
@@ -102,11 +126,18 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
         uploadedImage = uploadRes.filename;
       }
 
+      // 如果选择了图标文件，先上传
+      if (iconFile) {
+        const uploadRes = await uploadApi.uploadImage(iconFile);
+        uploadedIcon = uploadRes.filename;
+      }
+
       const payload = {
         url: url.trim(),
         title: title.trim(),
         description: description.trim(),
         emoji,
+        icon: uploadedIcon,
         display_mode: displayMode,
         is_public: isAdmin ? isPublic : false,
         bg_image: uploadedImage,
@@ -128,7 +159,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
     } finally {
       setLoading(false);
     }
-  }, [validate, bgImage, imageFile, url, title, description, emoji, displayMode, isAdmin, isPublic, visibleGroupIds, bgPosition, resetForm, onSuccess, onClose, isEdit, editItem]);
+  }, [validate, bgImage, imageFile, iconFile, iconValue, url, title, description, emoji, displayMode, isAdmin, isPublic, visibleGroupIds, bgPosition, resetForm, onSuccess, onClose, isEdit, editItem]);
 
   const handleOverlayClick = useCallback((e) => {
     if (e.target === overlayRef.current) {
@@ -214,6 +245,36 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
                 <option value="redirect">新标签页打开</option>
               </select>
             </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>自定义图标（优先于 Emoji）</label>
+            <div className={styles.iconRow}>
+              <div
+                className={styles.iconUploadArea}
+                onClick={() => iconInputRef.current?.click()}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); iconInputRef.current?.click(); } }}
+              >
+                {iconPreview ? (
+                  <img src={iconPreview} alt="图标预览" className={styles.iconPreview} />
+                ) : (
+                  <span className={styles.uploadHint}>上传图标</span>
+                )}
+              </div>
+              {iconPreview && (
+                <button type="button" className={styles.iconRemoveBtn} onClick={handleRemoveIcon}>移除</button>
+              )}
+              <span className={styles.iconHint}>建议 64×64 以上的正方形图片</span>
+            </div>
+            <input
+              ref={iconInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+              onChange={handleIconChange}
+              className={styles.fileInput}
+            />
           </div>
 
           {isAdmin && (

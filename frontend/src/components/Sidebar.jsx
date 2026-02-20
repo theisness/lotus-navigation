@@ -84,7 +84,11 @@ export default function Sidebar({
                 className={`${styles.link} ${selectedId === item._id ? styles.active : ''}`}
                 onClick={(e) => handleItemClick(e, item)}
               >
-                <span className={styles.linkIcon}>{item.emoji || '🔗'}</span>
+                <span className={styles.linkIcon}>
+                  {item.icon
+                    ? <img src={`/images/${item.icon}`} alt="" className={styles.linkIconImg} />
+                    : (item.emoji || '🔗')}
+                </span>
                 <span>{item.title}</span>
               </a>
             </li>

@@ -5,6 +5,7 @@ const navItemSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, default: '' },
   emoji: { type: String, default: '🔗' },
+  icon: { type: String, default: '' },
   display_mode: { type: String, enum: ['iframe', 'redirect'], required: true },
   is_public: { type: Boolean, default: false },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },

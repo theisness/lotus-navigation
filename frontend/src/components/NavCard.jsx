@@ -1,7 +1,7 @@
 import styles from '../css/components/NavCard.module.css';
 
 export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit }) {
-  const { url, title, description, emoji, display_mode, bg_image, bg_position } = item;
+  const { url, title, description, emoji, icon, display_mode, bg_image, bg_position } = item;
 
   const bgStyle = bg_image
     ? { backgroundImage: `url(/images/${bg_image})`, backgroundPosition: bg_position || 'center' }
@@ -41,7 +41,9 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit 
     >
       <div className={styles.overlay} />
       <div className={styles.content}>
-        <span className={styles.emoji}>{emoji || '🔗'}</span>
+        <span className={styles.emoji}>
+          {icon ? <img src={`/images/${icon}`} alt="" className={styles.iconImg} /> : (emoji || '🔗')}
+        </span>
         <div>
           <h3 className={styles.title}>{title}</h3>
           {description && <p className={styles.desc}>{description}</p>}
