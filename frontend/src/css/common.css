@@ -3,6 +3,7 @@
   --bg-base: #0f0c29;
   --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
   --sidebar-bg: rgba(15, 12, 41, 0.85);
+  --menu-bg: #16133a;
   --sidebar-border: rgba(255, 255, 255, 0.06);
   --text-primary: rgba(255, 255, 255, 0.95);
   --text-secondary: rgba(255, 255, 255, 0.6);
@@ -32,6 +33,7 @@
   --bg-base: #f0f2f5;
   --bg-gradient: linear-gradient(135deg, #e8ecf1 0%, #d5dce6 50%, #e2e8f0 100%);
   --sidebar-bg: rgba(255, 255, 255, 0.92);
+  --menu-bg: #ffffff;
   --sidebar-border: rgba(0, 0, 0, 0.06);
   --text-primary: #1a202c;
   --text-secondary: #4a5568;

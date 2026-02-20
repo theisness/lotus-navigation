@@ -9,6 +9,7 @@ router.use(adminMiddleware);
 // 成员
 router.get('/members', adminController.getMembers);
 router.get('/members/:id', adminController.getMemberById);
+router.put('/members/:id', adminController.updateMember);
 router.delete('/members/:id', adminController.deleteMember);
 
 // 分组

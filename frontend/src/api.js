@@ -120,6 +120,12 @@ export const adminApi = {
   getMemberById(id) {
     return request(`/api/admin/members/${id}`);
   },
+  updateMember(id, data) {
+    return request(`/api/admin/members/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
   deleteMember(id) {
     return request(`/api/admin/members/${id}`, { method: 'DELETE' });
   },

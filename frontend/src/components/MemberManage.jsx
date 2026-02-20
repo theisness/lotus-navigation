@@ -7,13 +7,16 @@ function DefaultAvatar({ name }) {
   return <span className={styles.defaultAvatar}>{letter}</span>;
 }
 
-export default function MemberManage({ visible, onClose }) {
+export default function MemberManage({ visible, onClose, currentUser }) {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [detailUser, setDetailUser] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [updatingAdminId, setUpdatingAdminId] = useState(null);
   const overlayRef = useRef(null);
+
+  const currentUserId = currentUser?.id || currentUser?._id;
 
   const fetchList = useCallback(async () => {
     setLoading(true);
@@ -41,6 +44,30 @@ export default function MemberManage({ visible, onClose }) {
       setError(err.message || '获取详情失败');
     }
   }, []);
+
+  const handleToggleAdmin = useCallback(async (id, currentIsAdmin) => {
+    const isSelf = id === currentUserId;
+    if (isSelf && currentIsAdmin) return;
+    setUpdatingAdminId(id);
+    setError('');
+    try {
+      const updated = await adminApi.updateMember(id, { is_admin: !currentIsAdmin });
+      setList((prev) =>
+        prev.map((u) => {
+          const uid = u._id || u.id;
+          if (uid !== id) return u;
+          return { ...u, is_admin: updated.is_admin };
+        })
+      );
+      if (detailUser && (detailUser._id === id || detailUser.id === id)) {
+        setDetailUser((u) => (u ? { ...u, is_admin: updated.is_admin } : null));
+      }
+    } catch (err) {
+      setError(err.message || '设置失败');
+    } finally {
+      setUpdatingAdminId(null);
+    }
+  }, [currentUserId, detailUser]);
 
   const handleDelete = useCallback(async (id) => {
     if (!window.confirm('确定要删除该成员吗？此操作不可恢复。')) return;
@@ -89,7 +116,10 @@ export default function MemberManage({ visible, onClose }) {
                       )}
                     </div>
                     <div className={styles.info}>
-                      <span className={styles.name}>{u.nickname || u.email || '—'}</span>
+                      <span className={styles.name}>
+                        {u.nickname || u.email || '—'}
+                        {u.is_admin && <span className={styles.adminBadge}>管理员</span>}
+                      </span>
                       <span className={styles.email}>{u.email}</span>
                       {u.groups && u.groups.length > 0 && (
                         <span className={styles.groups}>
@@ -98,6 +128,20 @@ export default function MemberManage({ visible, onClose }) {
                       )}
                     </div>
                     <div className={styles.actions}>
+                      <label className={styles.adminSwitch}>
+                        <input
+                          type="checkbox"
+                          checked={!!u.is_admin}
+                          disabled={updatingAdminId === uid || (uid === currentUserId && u.is_admin)}
+                          onChange={() => handleToggleAdmin(uid, !!u.is_admin)}
+                        />
+                        <span className={styles.switchTrack}>
+                          <span className={styles.switchThumb} />
+                        </span>
+                        <span className={styles.adminSwitchLabel}>
+                          {updatingAdminId === uid ? '...' : u.is_admin ? '管理员' : '设为管理员'}
+                        </span>
+                      </label>
                       <button type="button" className={styles.btnSecondary} onClick={() => handleViewDetail(uid)}>
                         查看
                       </button>

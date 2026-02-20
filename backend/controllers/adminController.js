@@ -23,6 +23,21 @@ async function getMemberById(req, res) {
   }
 }
 
+// PUT /api/admin/members/:id
+async function updateMember(req, res) {
+  try {
+    const { is_admin } = req.body;
+    const member = await adminService.updateMember(
+      req.params.id,
+      { is_admin },
+      req.user.userId
+    );
+    res.json(member);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message || '服务器内部错误' });
+  }
+}
+
 // DELETE /api/admin/members/:id
 async function deleteMember(req, res) {
   try {
@@ -99,6 +114,7 @@ async function setUserGroups(req, res) {
 module.exports = {
   getMembers,
   getMemberById,
+  updateMember,
   deleteMember,
   getGroups,
   createGroup,

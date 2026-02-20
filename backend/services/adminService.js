@@ -37,6 +37,22 @@ async function getMemberById(id) {
   };
 }
 
+// 更新成员（如 is_admin，仅管理员可调）
+async function updateMember(id, data, currentUserId) {
+  const user = await User.findById(id);
+  if (!user) {
+    throw { status: 404, message: '用户不存在' };
+  }
+  if (data.is_admin !== undefined) {
+    if (id.toString() === currentUserId.toString() && !data.is_admin) {
+      throw { status: 403, message: '不能取消自己的管理员身份' };
+    }
+    user.is_admin = Boolean(data.is_admin);
+    await user.save();
+  }
+  return User.findById(id).select('-password').lean();
+}
+
 // 删除成员（同时删除其 UserGroup、其创建的私有 NavItem）
 async function deleteMember(id) {
   const user = await User.findById(id);
@@ -106,6 +122,7 @@ async function setUserGroups(userId, groupIds) {
 module.exports = {
   getMembers,
   getMemberById,
+  updateMember,
   deleteMember,
   getGroups,
   createGroup,

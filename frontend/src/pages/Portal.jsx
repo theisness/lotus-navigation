@@ -241,6 +241,7 @@ export default function Portal() {
       <MemberManage
         visible={showMemberManage}
         onClose={() => setShowMemberManage(false)}
+        currentUser={user}
       />
 
       <GroupManage

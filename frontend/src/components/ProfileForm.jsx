@@ -110,6 +110,19 @@ export default function ProfileForm({ visible, onClose, user, onSuccess }) {
             />
           </div>
 
+          {user?.email && (
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="profile-email">邮箱</label>
+              <input
+                id="profile-email"
+                className={styles.input}
+                type="email"
+                value={user.email}
+                readOnly
+              />
+            </div>
+          )}
+
           <div className={styles.field}>
             <label className={styles.label} htmlFor="profile-nickname">昵称</label>
             <input
