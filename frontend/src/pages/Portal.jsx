@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar.jsx';
 import ToggleSidebar from '../components/ToggleSidebar.jsx';
 import Loader from '../components/Loader.jsx';
@@ -13,10 +14,24 @@ import NavSortModal from '../components/NavSortModal.jsx';
 import { authApi, navApi, settingsApi, getToken, removeToken } from '../api.js';
 import styles from '../css/pages/Portal.module.css';
 
+// 从 URL 提取 slug：https://a.b.c.com/path → a.b.c
+function urlToSlug(url) {
+  try {
+    const hostname = new URL(url).hostname;
+    // 去掉最后一段 TLD（如 .com .site .org）
+    const parts = hostname.split('.');
+    if (parts.length > 1) {
+      return parts.slice(0, -1).join('.');
+    }
+    return hostname;
+  } catch {
+    return url;
+  }
+}
+
 export default function Portal() {
-  // 视图状态: 'homepage' | 'iframe'
-  const [view, setView] = useState('homepage');
-  const [selectedItem, setSelectedItem] = useState(null);
+  const { navId } = useParams();
+  const navigate = useNavigate();
 
   // 用户状态
   const [user, setUser] = useState(null);
@@ -24,13 +39,17 @@ export default function Portal() {
   // 导航列表
   const [navItems, setNavItems] = useState([]);
 
+  // iframe 缓存：已打开过的导航项列表
+  const [openedItems, setOpenedItems] = useState([]);
+  const [activeId, setActiveId] = useState(null);
+
   // UI 状态
   const [collapsed, setCollapsed] = useState(false);
   const [loaderVisible, setLoaderVisible] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   const [colorTheme, setColorTheme] = useState('purple');
+  const [layoutMode, setLayoutMode] = useState(() => localStorage.getItem('layoutMode') || 'list');
 
   // 模态框状态
   const [showAuth, setShowAuth] = useState(false);
@@ -43,13 +62,16 @@ export default function Portal() {
 
   const mainRef = useRef(null);
 
+  // 判断当前视图
+  const isHomepage = !navId;
+  const selectedItem = navItems.find(it => it._id === activeId) || null;
+
   // 主题切换
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // 颜色主题
   useEffect(() => {
     document.documentElement.setAttribute('data-color-theme', colorTheme);
   }, [colorTheme]);
@@ -58,14 +80,18 @@ export default function Portal() {
     setTheme(t => t === 'dark' ? 'light' : 'dark');
   }, []);
 
-  // 管理员设置颜色主题
   const handleColorThemeChange = useCallback(async (key) => {
     setColorTheme(key);
-    try {
-      await settingsApi.setTheme(key);
-    } catch (err) {
-      console.error('保存主题失败:', err);
-    }
+    try { await settingsApi.setTheme(key); } catch {}
+  }, []);
+
+  // 布局切换
+  const handleToggleLayout = useCallback(() => {
+    setLayoutMode(m => {
+      const next = m === 'list' ? 'grid' : 'list';
+      localStorage.setItem('layoutMode', next);
+      return next;
+    });
   }, []);
 
   // 获取导航列表
@@ -78,10 +104,9 @@ export default function Portal() {
     }
   }, []);
 
-  // 初始化：检查登录状态 + 获取导航列表 + 获取站点主题
+  // 初始化
   useEffect(() => {
     const init = async () => {
-      // 获取站点颜色主题
       try {
         const themeData = await settingsApi.getTheme();
         if (themeData.theme) setColorTheme(themeData.theme);
@@ -92,83 +117,101 @@ export default function Portal() {
         try {
           const data = await authApi.getMe();
           setUser(data.user || data);
-        } catch {
-          removeToken();
-        }
+        } catch { removeToken(); }
       }
       fetchNavItems();
     };
     init();
   }, [fetchNavItems]);
 
-  // 登录成功
+  // URL 参数变化时同步 activeId 和 openedItems
+  useEffect(() => {
+    if (navId && navItems.length > 0) {
+      const item = navItems.find(it => urlToSlug(it.url) === navId);
+      if (item) {
+        setActiveId(item._id);
+        setOpenedItems(prev => {
+          if (prev.some(it => it._id === item._id)) return prev;
+          return [...prev, item];
+        });
+      }
+    } else if (!navId) {
+      setActiveId(null);
+    }
+  }, [navId, navItems]);
+
+  // 选择导航项（iframe 模式）
+  const handleSelectItem = useCallback((item) => {
+    if (item.display_mode === 'redirect') {
+      window.open(item.url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    setOpenedItems(prev => {
+      if (prev.some(it => it._id === item._id)) return prev;
+      return [...prev, item];
+    });
+    setActiveId(item._id);
+    navigate(`/nav/${urlToSlug(item.url)}`);
+  }, [navigate]);
+
+  // 回到主页
+  const handleGoHome = useCallback(() => {
+    setActiveId(null);
+    navigate('/');
+  }, [navigate]);
+
   const handleLoginSuccess = useCallback((userData) => {
     setUser(userData);
     fetchNavItems();
   }, [fetchNavItems]);
 
-  // 登出
   const handleLogout = useCallback(() => {
     removeToken();
     setUser(null);
-    setView('homepage');
-    setSelectedItem(null);
+    setActiveId(null);
+    setOpenedItems([]);
+    navigate('/');
     fetchNavItems();
-  }, [fetchNavItems]);
+  }, [fetchNavItems, navigate]);
 
-  // 侧边栏选择导航项（iframe 模式）
-  const handleSelectItem = useCallback((item) => {
-    setLoaderVisible(true);
-    setSelectedItem(item);
-    setView('iframe');
-    setTimeout(() => setLoaderVisible(false), 400);
-  }, []);
-
-  // 主页卡片点击 iframe 打开
-  const handleIframeOpen = useCallback((item) => {
-    setLoaderVisible(true);
-    setSelectedItem(item);
-    setView('iframe');
-    setTimeout(() => setLoaderVisible(false), 400);
-  }, []);
-
-  // 回到主页
-  const handleGoHome = useCallback(() => {
-    setView('homepage');
-    setSelectedItem(null);
-  }, []);
-
-  // 刷新 iframe
   const handleRefresh = useCallback(() => {
-    setLoaderVisible(true);
-    setReloadKey(k => k + 1);
-  }, []);
+    if (!activeId) return;
+    // 移除再重新添加来强制刷新
+    setOpenedItems(prev => {
+      const item = prev.find(it => it._id === activeId);
+      if (!item) return prev;
+      const filtered = prev.filter(it => it._id !== activeId);
+      // 用 setTimeout 重新添加
+      setTimeout(() => {
+        setOpenedItems(p => [...p, item]);
+      }, 50);
+      return filtered;
+    });
+  }, [activeId]);
 
-  // 添加导航项成功
-  const handleAddNavSuccess = useCallback(() => {
-    fetchNavItems();
-  }, [fetchNavItems]);
+  const handleAddNavSuccess = useCallback(() => { fetchNavItems(); }, [fetchNavItems]);
 
-  // 编辑导航项
   const handleEdit = useCallback((item) => {
     setEditItem(item);
     setShowAddNav(true);
   }, []);
 
-  // 删除导航项
   const handleDelete = useCallback(async (id) => {
     try {
       await navApi.deleteNavItem(id);
+      setOpenedItems(prev => prev.filter(it => it._id !== id));
+      if (activeId === id) {
+        setActiveId(null);
+        navigate('/');
+      }
       fetchNavItems();
     } catch (err) {
       console.error('删除失败:', err);
     }
-  }, [fetchNavItems]);
+  }, [fetchNavItems, activeId, navigate]);
 
-  // 侧边栏折叠
   const handleToggleSidebar = useCallback(() => setCollapsed(v => !v), []);
 
-  // 全屏
   const handleToggleFullscreen = useCallback(async () => {
     try {
       if (!document.fullscreenElement && mainRef.current) {
@@ -176,9 +219,7 @@ export default function Portal() {
       } else if (document.exitFullscreen) {
         await document.exitFullscreen();
       }
-    } catch (err) {
-      console.error('全屏切换错误:', err);
-    }
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -193,9 +234,9 @@ export default function Portal() {
         <aside className={styles.sidebar}>
           <Sidebar
             navItems={navItems}
-            selectedId={selectedItem?._id}
-            currentTitle={view === 'iframe' ? selectedItem?.title : ''}
-            currentUrl={view === 'iframe' ? selectedItem?.url : ''}
+            selectedId={activeId}
+            currentTitle={!isHomepage ? selectedItem?.title : ''}
+            currentUrl={!isHomepage ? selectedItem?.url : ''}
             onSelect={handleSelectItem}
             onRefresh={handleRefresh}
             isFullscreen={isFullscreen}
@@ -207,6 +248,8 @@ export default function Portal() {
             isAdmin={user?.is_admin || false}
             colorTheme={colorTheme}
             onColorThemeChange={handleColorThemeChange}
+            layoutMode={layoutMode}
+            onToggleLayout={handleToggleLayout}
           />
         </aside>
       )}
@@ -217,28 +260,28 @@ export default function Portal() {
         <div className={styles.content}>
           <Loader visible={loaderVisible} />
 
-          {view === 'homepage' && (
+          {isHomepage && (
             <Homepage
               navItems={navItems}
               user={user}
               onLogin={() => setShowAuth(true)}
               onLogout={handleLogout}
               onAddNav={() => { setEditItem(null); setShowAddNav(true); }}
-              onIframeOpen={handleIframeOpen}
+              onIframeOpen={handleSelectItem}
               onEdit={handleEdit}
               onDelete={handleDelete}
               onOpenProfile={() => setShowProfile(true)}
               onOpenMemberManage={() => setShowMemberManage(true)}
               onOpenGroupManage={() => setShowGroupManage(true)}
               onOpenNavSort={() => setShowNavSort(true)}
+              layoutMode={layoutMode}
             />
           )}
 
-          {view === 'iframe' && selectedItem && (
+          {openedItems.length > 0 && (
             <IframeView
-              visible
-              url={selectedItem.url}
-              reloadKey={reloadKey}
+              openedItems={openedItems}
+              activeId={isHomepage ? null : activeId}
               onLoad={() => setLoaderVisible(false)}
             />
           )}
@@ -250,7 +293,6 @@ export default function Portal() {
         onClose={() => setShowAuth(false)}
         onLoginSuccess={handleLoginSuccess}
       />
-
       <AddNavForm
         visible={showAddNav}
         onClose={() => { setShowAddNav(false); setEditItem(null); }}
@@ -258,25 +300,21 @@ export default function Portal() {
         isAdmin={user?.is_admin || false}
         editItem={editItem}
       />
-
       <ProfileForm
         visible={showProfile}
         onClose={() => setShowProfile(false)}
         user={user}
         onSuccess={(updatedUser) => setUser(updatedUser)}
       />
-
       <MemberManage
         visible={showMemberManage}
         onClose={() => setShowMemberManage(false)}
         currentUser={user}
       />
-
       <GroupManage
         visible={showGroupManage}
         onClose={() => setShowGroupManage(false)}
       />
-
       <NavSortModal
         visible={showNavSort}
         onClose={() => setShowNavSort(false)}

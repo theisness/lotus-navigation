@@ -76,6 +76,8 @@
   border-radius: 10px;
   border: 1px solid var(--surface-border);
   transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .currentBox:hover {
@@ -87,12 +89,15 @@
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 2px;
+  text-align: left;
 }
 
 .currentUrl { 
   font-size: 11px; 
   color: var(--text-muted);
   font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+  text-align: left;
+  word-break: break-all;
 }
 
 .actions { 
@@ -186,36 +191,33 @@
 
 /* 底部区域 */
 .footer {
-  padding: 8px;
+  padding: 8px 10px;
   border-top: 1px solid var(--sidebar-border);
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 6px;
 }
 
-.footerBtn {
+.footerIconBtn {
   border: none;
   background: var(--icon-btn-bg);
   cursor: pointer;
   color: var(--text-secondary);
-  padding: 6px 8px;
+  width: 34px;
+  height: 34px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 16px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 4px;
-  white-space: nowrap;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-.footerBtn:hover {
+.footerIconBtn:hover {
   background: var(--icon-btn-hover);
   color: var(--text-primary);
-}
-
-.footerLabel {
-  font-size: 11px;
 }
 
 .pickerWrap {

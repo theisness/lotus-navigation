@@ -20,6 +20,7 @@ export default function Homepage({
   onOpenMemberManage,
   onOpenGroupManage,
   onOpenNavSort,
+  layoutMode,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -119,7 +120,7 @@ export default function Homepage({
         </div>
       </header>
 
-      <div className={styles.grid}>
+      <div className={layoutMode === 'grid' ? styles.gridMode : styles.grid}>
         {navItems.map((item) => (
           <NavCard
             key={item._id}

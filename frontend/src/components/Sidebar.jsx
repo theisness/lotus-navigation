@@ -18,6 +18,8 @@ export default function Sidebar({
   isAdmin,
   colorTheme,
   onColorThemeChange,
+  layoutMode,
+  onToggleLayout,
 }) {
   const [showPicker, setShowPicker] = useState(false);
   const pickerRef = useRef(null);
@@ -31,6 +33,7 @@ export default function Sidebar({
     document.addEventListener('click', handleClick);
     return () => document.removeEventListener('click', handleClick);
   }, []);
+
   const handleItemClick = (e, item) => {
     e.preventDefault();
     if (item.display_mode === 'redirect') {
@@ -59,7 +62,6 @@ export default function Sidebar({
             </div>
             <span className={styles.brandEn}>Lotus Navigation</span>
           </div>
-          
         </div>
         {currentTitle && (
           <div className={styles.currentBox}>
@@ -97,19 +99,17 @@ export default function Sidebar({
       </nav>
 
       <div className={styles.footer}>
-        <button className={styles.footerBtn} onClick={onToggleTheme} title="切换主题">
-          {theme === 'dark' ? '☀️' : '🌙'}
-          <span className={styles.footerLabel}>{theme === 'dark' ? '日间' : '夜间'}</span>
+        <button className={styles.footerIconBtn} onClick={onGoHome} title="主页">🏠</button>
+        <button className={styles.footerIconBtn} onClick={onToggleLayout} title={layoutMode === 'grid' ? '切换为列表' : '切换为宫格'}>
+          {layoutMode === 'grid' ? '☰' : '▦'}
         </button>
         {isAdmin && (
           <div className={styles.pickerWrap} ref={pickerRef}>
             <button
-              className={styles.footerBtn}
+              className={styles.footerIconBtn}
               onClick={() => setShowPicker(v => !v)}
               title="主题颜色"
-            >
-              🎨 <span className={styles.footerLabel}>配色</span>
-            </button>
+            >🎨</button>
             <ThemePicker
               visible={showPicker}
               currentColorTheme={colorTheme}
@@ -118,6 +118,9 @@ export default function Sidebar({
             />
           </div>
         )}
+        <button className={styles.footerIconBtn} onClick={onToggleTheme} title={theme === 'dark' ? '切换日间模式' : '切换夜间模式'}>
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
       </div>
 
       <button className={styles.collapseBtn} onClick={onCollapse} title="收起侧栏" aria-label="收起侧栏">

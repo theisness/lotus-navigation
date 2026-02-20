@@ -1,18 +1,23 @@
-import React from 'react';
 import styles from '../css/components/IframeView.module.css';
 
-export default function IframeView({ url, visible, onLoad, reloadKey }) {
+export default function IframeView({ openedItems, activeId, onLoad }) {
   return (
-    <div className={`${styles.wrap} ${visible ? '' : styles.hidden}`}> 
-      <iframe
-        key={reloadKey}
-        src={url}
-        className={styles.iframe}
-        frameBorder="0"
-        allowFullScreen
-        onLoad={onLoad}
-        title={url}
-      />
+    <div className={styles.wrap}>
+      {openedItems.map((item) => (
+        <div
+          key={item._id}
+          className={`${styles.frame} ${item._id === activeId ? styles.frameActive : styles.frameHidden}`}
+        >
+          <iframe
+            src={item.url}
+            className={styles.iframe}
+            frameBorder="0"
+            allowFullScreen
+            onLoad={() => { if (item._id === activeId) onLoad?.(); }}
+            title={item.title || item.url}
+          />
+        </div>
+      ))}
     </div>
   );
 }
