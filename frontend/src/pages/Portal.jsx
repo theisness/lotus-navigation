@@ -9,7 +9,7 @@ import AddNavForm from '../components/AddNavForm.jsx';
 import ProfileForm from '../components/ProfileForm.jsx';
 import MemberManage from '../components/MemberManage.jsx';
 import GroupManage from '../components/GroupManage.jsx';
-import { authApi, navApi, getToken, removeToken } from '../api.js';
+import { authApi, navApi, settingsApi, getToken, removeToken } from '../api.js';
 import styles from '../css/pages/Portal.module.css';
 
 export default function Portal() {
@@ -29,6 +29,7 @@ export default function Portal() {
   const [reloadKey, setReloadKey] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [colorTheme, setColorTheme] = useState('purple');
 
   // 模态框状态
   const [showAuth, setShowAuth] = useState(false);
@@ -46,8 +47,23 @@ export default function Portal() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  // 颜色主题
+  useEffect(() => {
+    document.documentElement.setAttribute('data-color-theme', colorTheme);
+  }, [colorTheme]);
+
   const handleToggleTheme = useCallback(() => {
     setTheme(t => t === 'dark' ? 'light' : 'dark');
+  }, []);
+
+  // 管理员设置颜色主题
+  const handleColorThemeChange = useCallback(async (key) => {
+    setColorTheme(key);
+    try {
+      await settingsApi.setTheme(key);
+    } catch (err) {
+      console.error('保存主题失败:', err);
+    }
   }, []);
 
   // 获取导航列表
@@ -60,9 +76,15 @@ export default function Portal() {
     }
   }, []);
 
-  // 初始化：检查登录状态 + 获取导航列表
+  // 初始化：检查登录状态 + 获取导航列表 + 获取站点主题
   useEffect(() => {
     const init = async () => {
+      // 获取站点颜色主题
+      try {
+        const themeData = await settingsApi.getTheme();
+        if (themeData.theme) setColorTheme(themeData.theme);
+      } catch {}
+
       const token = getToken();
       if (token) {
         try {
@@ -180,6 +202,9 @@ export default function Portal() {
             theme={theme}
             onToggleTheme={handleToggleTheme}
             onGoHome={handleGoHome}
+            isAdmin={user?.is_admin || false}
+            colorTheme={colorTheme}
+            onColorThemeChange={handleColorThemeChange}
           />
         </aside>
       )}

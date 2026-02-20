@@ -158,4 +158,17 @@ export const adminApi = {
   },
 };
 
+// 站点设置 API
+export const settingsApi = {
+  getTheme() {
+    return request('/api/settings/theme');
+  },
+  setTheme(theme) {
+    return request('/api/settings/theme', {
+      method: 'PUT',
+      body: JSON.stringify({ theme }),
+    });
+  },
+};
+
 export { getToken, setToken, removeToken };

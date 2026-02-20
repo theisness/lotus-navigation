@@ -36,7 +36,9 @@ export default function Homepage({
   return (
     <div className={styles.wrap}>
       <header className={styles.topBar}>
-        <div className={styles.topBarLeft} />
+        <div className={styles.topBarLeft}>
+          {user && <button className={styles.addBtn} onClick={onAddNav}>＋ 添加导航</button>}
+        </div>
         <div className={styles.userArea} ref={menuRef}>
           {user ? (
             <>
@@ -105,12 +107,6 @@ export default function Homepage({
           )}
         </div>
       </header>
-
-      {user && (
-        <div className={styles.actions}>
-          <button className={styles.addBtn} onClick={onAddNav}>＋ 添加导航</button>
-        </div>
-      )}
 
       <div className={styles.grid}>
         {navItems.map((item) => (

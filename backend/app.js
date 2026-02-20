@@ -35,6 +35,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/nav-items', require('./routes/navItem'));
 app.use('/api/upload', require('./routes/upload'));
+app.use('/api/settings', require('./routes/siteSetting'));
 app.use('/api/admin', require('./routes/admin'));
 
 // Redis 客户端

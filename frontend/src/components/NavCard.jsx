@@ -40,8 +40,10 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit 
       <div className={styles.overlay} />
       <div className={styles.content}>
         <span className={styles.emoji}>{emoji || '🔗'}</span>
-        <h3 className={styles.title}>{title}</h3>
-        {description && <p className={styles.desc}>{description}</p>}
+        <div>
+          <h3 className={styles.title}>{title}</h3>
+          {description && <p className={styles.desc}>{description}</p>}
+        </div>
       </div>
       <div className={styles.mode}>
         {display_mode === 'redirect' ? '↗ 新标签页' : '◫ iframe'}

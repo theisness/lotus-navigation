@@ -1,3 +1,5 @@
+import { useState, useRef, useEffect } from 'react';
+import ThemePicker from './ThemePicker.jsx';
 import styles from '../css/components/Sidebar.module.css';
 
 export default function Sidebar({
@@ -13,7 +15,22 @@ export default function Sidebar({
   theme,
   onToggleTheme,
   onGoHome,
+  isAdmin,
+  colorTheme,
+  onColorThemeChange,
 }) {
+  const [showPicker, setShowPicker] = useState(false);
+  const pickerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (pickerRef.current && !pickerRef.current.contains(e.target)) {
+        setShowPicker(false);
+      }
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
   const handleItemClick = (e, item) => {
     e.preventDefault();
     if (item.display_mode === 'redirect') {
@@ -36,10 +53,13 @@ export default function Sidebar({
         >
           <img src="/blue-lotus.png" alt="莲花导航" className={styles.logo} />
           <div className={styles.brandText}>
-            <span className={styles.brandCn}>莲花导航</span>
+            <div className={styles.brandCnRow}>
+              <span className={styles.brandCn}>莲花导航</span>
+              <img src="/logo1.png" alt="印章" className={styles.stamp} />
+            </div>
             <span className={styles.brandEn}>Lotus Navigation</span>
           </div>
-          <img src="/logo1.png" alt="印章" className={styles.stamp} />
+          
         </div>
         {currentTitle && (
           <div className={styles.currentBox}>
@@ -77,6 +97,23 @@ export default function Sidebar({
           {theme === 'dark' ? '☀️' : '🌙'}
           <span className={styles.footerLabel}>{theme === 'dark' ? '日间' : '夜间'}</span>
         </button>
+        {isAdmin && (
+          <div className={styles.pickerWrap} ref={pickerRef}>
+            <button
+              className={styles.footerBtn}
+              onClick={() => setShowPicker(v => !v)}
+              title="主题颜色"
+            >
+              🎨 <span className={styles.footerLabel}>配色</span>
+            </button>
+            <ThemePicker
+              visible={showPicker}
+              currentColorTheme={colorTheme}
+              onSelect={(key) => { onColorThemeChange?.(key); setShowPicker(false); }}
+              onClose={() => setShowPicker(false)}
+            />
+          </div>
+        )}
         <button className={styles.footerBtn} onClick={onCollapse} title="收起侧栏">
           ‹ <span className={styles.footerLabel}>收起</span>
         </button>

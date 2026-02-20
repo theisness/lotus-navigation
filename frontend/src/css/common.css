@@ -30,9 +30,9 @@
 }
 
 [data-theme="light"] {
-  --bg-base: #f0f2f5;
-  --bg-gradient: linear-gradient(135deg, #e8ecf1 0%, #d5dce6 50%, #e2e8f0 100%);
-  --sidebar-bg: rgba(255, 255, 255, 0.92);
+  --bg-base: #ffffff;
+  --bg-gradient: linear-gradient(135deg, #ffffff 0%, #f8f9fb 50%, #ffffff 100%);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
   --menu-bg: #ffffff;
   --sidebar-border: rgba(0, 0, 0, 0.06);
   --text-primary: #1a202c;
@@ -79,3 +79,145 @@ ul { margin: 0; padding: 0; list-style: none; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
+/* 颜色主题预设 — 暗色模式 */
+[data-theme="dark"][data-color-theme="purple"] {
+  --bg-base: #0f0c29;
+  --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  --sidebar-bg: rgba(15, 12, 41, 0.85);
+  --menu-bg: #16133a;
+  --accent: #667eea;
+  --accent-bg: rgba(102, 126, 234, 0.2);
+  --accent-bg-hover: rgba(102, 126, 234, 0.25);
+  --accent-glow: rgba(102, 126, 234, 0.15);
+  --icon-btn-hover: rgba(102, 126, 234, 0.3);
+}
+
+[data-theme="dark"][data-color-theme="blue"] {
+  --bg-base: #0a1628;
+  --bg-gradient: linear-gradient(135deg, #0a1628 0%, #1e3a5f 50%, #162d50 100%);
+  --sidebar-bg: rgba(10, 22, 40, 0.85);
+  --menu-bg: #0e1f38;
+  --accent: #3b82f6;
+  --accent-bg: rgba(59, 130, 246, 0.2);
+  --accent-bg-hover: rgba(59, 130, 246, 0.25);
+  --accent-glow: rgba(59, 130, 246, 0.15);
+  --icon-btn-hover: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"][data-color-theme="green"] {
+  --bg-base: #071a12;
+  --bg-gradient: linear-gradient(135deg, #071a12 0%, #14532d 50%, #0f3d22 100%);
+  --sidebar-bg: rgba(7, 26, 18, 0.85);
+  --menu-bg: #0b2418;
+  --accent: #10b981;
+  --accent-bg: rgba(16, 185, 129, 0.2);
+  --accent-bg-hover: rgba(16, 185, 129, 0.25);
+  --accent-glow: rgba(16, 185, 129, 0.15);
+  --icon-btn-hover: rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="dark"][data-color-theme="orange"] {
+  --bg-base: #1a1008;
+  --bg-gradient: linear-gradient(135deg, #1a1008 0%, #4a3520 50%, #3a2a18 100%);
+  --sidebar-bg: rgba(26, 16, 8, 0.85);
+  --menu-bg: #221a0e;
+  --accent: #f59e0b;
+  --accent-bg: rgba(245, 158, 11, 0.2);
+  --accent-bg-hover: rgba(245, 158, 11, 0.25);
+  --accent-glow: rgba(245, 158, 11, 0.15);
+  --icon-btn-hover: rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="dark"][data-color-theme="red"] {
+  --bg-base: #1a0a0a;
+  --bg-gradient: linear-gradient(135deg, #1a0a0a 0%, #4a1c1c 50%, #3a1515 100%);
+  --sidebar-bg: rgba(26, 10, 10, 0.85);
+  --menu-bg: #221010;
+  --accent: #ef4444;
+  --accent-bg: rgba(239, 68, 68, 0.2);
+  --accent-bg-hover: rgba(239, 68, 68, 0.25);
+  --accent-glow: rgba(239, 68, 68, 0.15);
+  --icon-btn-hover: rgba(239, 68, 68, 0.3);
+}
+
+[data-theme="dark"][data-color-theme="pink"] {
+  --bg-base: #1a0a14;
+  --bg-gradient: linear-gradient(135deg, #1a0a14 0%, #4a1c3a 50%, #3a152e 100%);
+  --sidebar-bg: rgba(26, 10, 20, 0.85);
+  --menu-bg: #22101a;
+  --accent: #ec4899;
+  --accent-bg: rgba(236, 72, 153, 0.2);
+  --accent-bg-hover: rgba(236, 72, 153, 0.25);
+  --accent-glow: rgba(236, 72, 153, 0.15);
+  --icon-btn-hover: rgba(236, 72, 153, 0.3);
+}
+
+[data-theme="dark"][data-color-theme="teal"] {
+  --bg-base: #071a18;
+  --bg-gradient: linear-gradient(135deg, #071a18 0%, #134e4a 50%, #0f3d3a 100%);
+  --sidebar-bg: rgba(7, 26, 24, 0.85);
+  --menu-bg: #0b2422;
+  --accent: #14b8a6;
+  --accent-bg: rgba(20, 184, 166, 0.2);
+  --accent-bg-hover: rgba(20, 184, 166, 0.25);
+  --accent-glow: rgba(20, 184, 166, 0.15);
+  --icon-btn-hover: rgba(20, 184, 166, 0.3);
+}
+
+/* 颜色主题预设 — 亮色模式 */
+[data-theme="light"][data-color-theme="purple"] {
+  --accent: #5a67d8;
+  --accent-bg: rgba(90, 103, 216, 0.1);
+  --accent-bg-hover: rgba(90, 103, 216, 0.15);
+  --accent-glow: rgba(90, 103, 216, 0.08);
+  --icon-btn-hover: rgba(90, 103, 216, 0.15);
+}
+
+[data-theme="light"][data-color-theme="blue"] {
+  --accent: #2563eb;
+  --accent-bg: rgba(37, 99, 235, 0.1);
+  --accent-bg-hover: rgba(37, 99, 235, 0.15);
+  --accent-glow: rgba(37, 99, 235, 0.08);
+  --icon-btn-hover: rgba(37, 99, 235, 0.15);
+}
+
+[data-theme="light"][data-color-theme="green"] {
+  --accent: #059669;
+  --accent-bg: rgba(5, 150, 105, 0.1);
+  --accent-bg-hover: rgba(5, 150, 105, 0.15);
+  --accent-glow: rgba(5, 150, 105, 0.08);
+  --icon-btn-hover: rgba(5, 150, 105, 0.15);
+}
+
+[data-theme="light"][data-color-theme="orange"] {
+  --accent: #d97706;
+  --accent-bg: rgba(217, 119, 6, 0.1);
+  --accent-bg-hover: rgba(217, 119, 6, 0.15);
+  --accent-glow: rgba(217, 119, 6, 0.08);
+  --icon-btn-hover: rgba(217, 119, 6, 0.15);
+}
+
+[data-theme="light"][data-color-theme="red"] {
+  --accent: #dc2626;
+  --accent-bg: rgba(220, 38, 38, 0.1);
+  --accent-bg-hover: rgba(220, 38, 38, 0.15);
+  --accent-glow: rgba(220, 38, 38, 0.08);
+  --icon-btn-hover: rgba(220, 38, 38, 0.15);
+}
+
+[data-theme="light"][data-color-theme="pink"] {
+  --accent: #db2777;
+  --accent-bg: rgba(219, 39, 119, 0.1);
+  --accent-bg-hover: rgba(219, 39, 119, 0.15);
+  --accent-glow: rgba(219, 39, 119, 0.08);
+  --icon-btn-hover: rgba(219, 39, 119, 0.15);
+}
+
+[data-theme="light"][data-color-theme="teal"] {
+  --accent: #0d9488;
+  --accent-bg: rgba(13, 148, 136, 0.1);
+  --accent-bg-hover: rgba(13, 148, 136, 0.15);
+  --accent-glow: rgba(13, 148, 136, 0.08);
+  --icon-btn-hover: rgba(13, 148, 136, 0.15);
+}
