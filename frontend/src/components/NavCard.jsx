@@ -41,9 +41,6 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit 
     >
       <div className={styles.overlay} />
       <div className={styles.content}>
-        <span className={styles.emoji}>
-          {icon ? <img src={`/images/${icon}`} alt="" className={styles.iconImg} /> : (emoji || '🔗')}
-        </span>
         <div>
           <h3 className={styles.title}>{title}</h3>
           {description && <p className={styles.desc}>{description}</p>}

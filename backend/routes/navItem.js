@@ -13,6 +13,8 @@ router.post('/', authMiddleware, navItemController.createNavItem);
 router.delete('/:id', authMiddleware, navItemController.deleteNavItem);
 
 // PUT /api/nav-items/:id - 编辑导航项（需登录）
+router.put('/reorder', authMiddleware, navItemController.reorderNavItems);
+
 router.put('/:id', authMiddleware, navItemController.updateNavItem);
 
 module.exports = router;

@@ -12,10 +12,10 @@ async function getNavItems(userId) {
     if (userGroupIds.length > 0) {
       conditions.push({ visible_group_ids: { $in: userGroupIds } });
     }
-    return NavItem.find({ $or: conditions }).sort({ created_at: -1 });
+    return NavItem.find({ $or: conditions }).sort({ sort_order: 1, created_at: -1 });
   }
   // 未登录：仅公共项
-  return NavItem.find({ is_public: true }).sort({ created_at: -1 });
+  return NavItem.find({ is_public: true }).sort({ sort_order: 1, created_at: -1 });
 }
 
 // 创建导航项
@@ -62,7 +62,7 @@ async function updateNavItem(itemId, data, user) {
     throw { status: 403, message: '权限不足' };
   }
 
-  const allowed = ['url', 'title', 'description', 'emoji', 'icon', 'display_mode', 'is_public', 'bg_image', 'bg_position'];
+  const allowed = ['url', 'title', 'description', 'emoji', 'icon', 'display_mode', 'is_public', 'bg_image', 'bg_position', 'sort_order'];
   if (user.is_admin) allowed.push('visible_group_ids');
   const update = {};
   for (const key of allowed) {
@@ -92,4 +92,19 @@ async function deleteNavItem(itemId, user) {
   return { message: '删除成功' };
 }
 
-module.exports = { getNavItems, createNavItem, updateNavItem, deleteNavItem };
+// 批量排序导航项
+async function reorderNavItems(orders, user) {
+  if (!user.is_admin) {
+    throw { status: 403, message: '权限不足' };
+  }
+  const ops = orders.map(({ id, sort_order }) => ({
+    updateOne: {
+      filter: { _id: id },
+      update: { $set: { sort_order } },
+    },
+  }));
+  await NavItem.bulkWrite(ops);
+  return { message: '排序成功' };
+}
+
+module.exports = { getNavItems, createNavItem, updateNavItem, deleteNavItem, reorderNavItems };

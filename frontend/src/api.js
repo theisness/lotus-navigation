@@ -98,6 +98,13 @@ export const navApi = {
       body: JSON.stringify(data),
     });
   },
+
+  reorderNavItems(orders) {
+    return request('/api/nav-items/reorder', {
+      method: 'PUT',
+      body: JSON.stringify({ orders }),
+    });
+  },
 };
 
 // 图片上传 API

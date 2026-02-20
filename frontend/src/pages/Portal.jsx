@@ -9,6 +9,7 @@ import AddNavForm from '../components/AddNavForm.jsx';
 import ProfileForm from '../components/ProfileForm.jsx';
 import MemberManage from '../components/MemberManage.jsx';
 import GroupManage from '../components/GroupManage.jsx';
+import NavSortModal from '../components/NavSortModal.jsx';
 import { authApi, navApi, settingsApi, getToken, removeToken } from '../api.js';
 import styles from '../css/pages/Portal.module.css';
 
@@ -37,6 +38,7 @@ export default function Portal() {
   const [showProfile, setShowProfile] = useState(false);
   const [showMemberManage, setShowMemberManage] = useState(false);
   const [showGroupManage, setShowGroupManage] = useState(false);
+  const [showNavSort, setShowNavSort] = useState(false);
   const [editItem, setEditItem] = useState(null);
 
   const mainRef = useRef(null);
@@ -228,6 +230,7 @@ export default function Portal() {
               onOpenProfile={() => setShowProfile(true)}
               onOpenMemberManage={() => setShowMemberManage(true)}
               onOpenGroupManage={() => setShowGroupManage(true)}
+              onOpenNavSort={() => setShowNavSort(true)}
             />
           )}
 
@@ -272,6 +275,13 @@ export default function Portal() {
       <GroupManage
         visible={showGroupManage}
         onClose={() => setShowGroupManage(false)}
+      />
+
+      <NavSortModal
+        visible={showNavSort}
+        onClose={() => setShowNavSort(false)}
+        navItems={navItems}
+        onSuccess={fetchNavItems}
       />
     </div>
   );

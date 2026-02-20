@@ -51,4 +51,18 @@ async function deleteNavItem(req, res) {
   }
 }
 
-module.exports = { getNavItems, createNavItem, updateNavItem, deleteNavItem };
+// PUT /api/nav-items/reorder
+async function reorderNavItems(req, res) {
+  try {
+    const { orders } = req.body;
+    if (!Array.isArray(orders)) {
+      return res.status(400).json({ error: '参数错误' });
+    }
+    const result = await navItemService.reorderNavItems(orders, req.user);
+    res.json(result);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message || '服务器内部错误' });
+  }
+}
+
+module.exports = { getNavItems, createNavItem, updateNavItem, deleteNavItem, reorderNavItems };

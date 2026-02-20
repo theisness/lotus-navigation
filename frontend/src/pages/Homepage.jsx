@@ -19,6 +19,7 @@ export default function Homepage({
   onOpenProfile,
   onOpenMemberManage,
   onOpenGroupManage,
+  onOpenNavSort,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -96,6 +97,16 @@ export default function Homepage({
                         }}
                       >
                         成员分组
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.menuItem}
+                        onClick={() => {
+                          setMenuOpen(false);
+                          onOpenNavSort?.();
+                        }}
+                      >
+                        导航排序
                       </button>
                     </>
                   )}
