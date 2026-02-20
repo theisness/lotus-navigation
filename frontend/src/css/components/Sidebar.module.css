@@ -24,7 +24,7 @@
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 0px;
+  gap: 5px;
   letter-spacing: -0.3px;
 }
 
