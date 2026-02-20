@@ -108,7 +108,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
         is_public: isAdmin ? isPublic : false,
         bg_image: uploadedImage,
       };
-      if (isAdmin) {
+      if (isAdmin && !isPublic) {
         payload.visible_group_ids = visibleGroupIds;
       }
       await (isEdit
@@ -229,7 +229,7 @@ export default function AddNavForm({ visible, onClose, onSuccess, isAdmin, editI
             </div>
           )}
 
-          {isAdmin && (
+          {isAdmin && !isPublic && (
             <div className={styles.field}>
               <label className={styles.label}>对以下分组成员可见</label>
               <p className={styles.hint}>不勾选公共项目时，仅所选分组的成员可见此导航项</p>
