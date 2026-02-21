@@ -41,7 +41,12 @@ export default function Portal() {
   const [collapsed, setCollapsed] = useState(false);
   const [loaderVisible, setLoaderVisible] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    const h = new Date().getHours();
+    return (h >= 7 && h < 21) ? 'light' : 'dark';
+  });
   const [colorTheme, setColorTheme] = useState('purple');
   const [layoutMode, setLayoutMode] = useState(() => localStorage.getItem('layoutMode') || 'list');
 

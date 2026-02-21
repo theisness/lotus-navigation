@@ -30,7 +30,12 @@ export default function MobilePortal() {
   const [openedItems, setOpenedItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
   const [loaderVisible, setLoaderVisible] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    const h = new Date().getHours();
+    return (h >= 7 && h < 21) ? 'light' : 'dark';
+  });
   const [colorTheme, setColorTheme] = useState('purple');
 
   const [showAuth, setShowAuth] = useState(false);
