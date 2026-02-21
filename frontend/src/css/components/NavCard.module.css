@@ -160,3 +160,20 @@
 .deleteBtn:hover {
   background: rgba(239, 68, 68, 0.7);
 }
+
+/* 宫格紧凑模式 */
+.compact {
+  min-height: unset;
+}
+
+.compact .title {
+  font-size: clamp(18px, 2.2vw, 32px);
+}
+
+.compact .desc {
+  font-size: clamp(12px, 1.2vw, 18px);
+}
+
+.compact .content {
+  padding: 12px 16px;
+}

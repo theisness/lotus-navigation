@@ -1,13 +1,13 @@
 import styles from '../css/components/NavCard.module.css';
 
-export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit }) {
+export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit, compact }) {
   const { url, title, description, emoji, icon, display_mode, bg_image, bg_position } = item;
 
   const bgStyle = bg_image
     ? { backgroundImage: `url(/images/${bg_image})`, backgroundPosition: bg_position || 'center' }
     : {};
 
-  const cardClass = `${styles.card} ${!bg_image ? styles.cardThemed : ''}`;
+  const cardClass = `${styles.card} ${!bg_image ? styles.cardThemed : ''} ${compact ? styles.compact : ''}`;
 
   const handleClick = () => {
     if (display_mode === 'redirect') {

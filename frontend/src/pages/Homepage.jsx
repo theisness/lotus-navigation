@@ -129,6 +129,7 @@ export default function Homepage({
             onEdit={onEdit}
             onDelete={onDelete}
             canEdit={user && (user.is_admin || (item.user_id && item.user_id === user.id))}
+            compact={layoutMode === 'grid'}
           />
         ))}
         {navItems.length === 0 && (
