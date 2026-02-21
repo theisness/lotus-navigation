@@ -6,7 +6,7 @@
   background-color: var(--surface);
   background-size: cover;
   background-position: center;
-  border: 1px solid var(--surface-border);
+  border: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   align-items: center;
@@ -15,7 +15,7 @@
 
 .cardThemed {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bg-hover) 100%);
-  border-color: var(--accent-bg-hover);
+  border-color: transparent;
 }
 
 .card:hover {

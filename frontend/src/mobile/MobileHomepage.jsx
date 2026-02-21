@@ -45,7 +45,13 @@ export default function MobileHomepage({
       <header className={styles.topBar}>
         <div className={styles.topBarLeft}>
           <img src="/blue-lotus.png" alt="莲花导航" className={styles.logo} />
-          <span className={styles.brandName}>莲花导航</span>
+          <div className={styles.brandText}>
+            <div className={styles.brandCnRow}>
+              <span className={styles.brandName}>莲花导航</span>
+              <img src="/logo1.png" alt="印章" className={styles.stamp} />
+            </div>
+            <span className={styles.brandEn}>Lotus Navigation</span>
+          </div>
         </div>
         <div className={styles.userArea} ref={menuRef}>
           {user ? (
