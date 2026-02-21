@@ -28,8 +28,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// 静态文件服务 - 背景图片
-app.use('/images', express.static(path.join(__dirname, 'images')));
+// 静态文件服务 - 背景图片（强缓存30天）
+app.use('/images', express.static(path.join(__dirname, 'images'), {
+  maxAge: '30d',
+  immutable: true,
+}));
 
 // 路由挂载
 app.use('/api/auth', require('./routes/auth'));
