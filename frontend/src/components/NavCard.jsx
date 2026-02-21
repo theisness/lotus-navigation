@@ -8,7 +8,6 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit,
     : {};
 
   const cardClass = `${styles.card} ${!bg_image ? styles.cardThemed : ''} ${compact ? styles.compact : ''}`;
-
   const handleClick = () => {
     if (display_mode === 'redirect') {
       window.open(url, '_blank', 'noopener,noreferrer');
@@ -32,13 +31,13 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit,
   return (
     <div
       className={cardClass}
-      style={bgStyle}
       onClick={handleClick}
       role="link"
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } }}
       aria-label={`${title} - ${description || ''}`}
     >
+      {bg_image && <div className={styles.bgLayer} style={bgStyle} />}
       <div className={styles.overlay} />
       <div className={styles.content}>
         <div>

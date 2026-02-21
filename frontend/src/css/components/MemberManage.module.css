@@ -291,3 +291,122 @@
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ===== 移动端适配 ===== */
+@media (max-width: 768px) {
+  .modal {
+    width: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    height: 100%;
+    border-radius: 0;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .title {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .list {
+    gap: 6px;
+  }
+
+  .row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .avatarWrap {
+    width: 32px;
+    height: 32px;
+  }
+
+  .defaultAvatar {
+    font-size: 13px;
+  }
+
+  .info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .name {
+    font-size: 13px;
+  }
+
+  .adminBadge {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+
+  .email {
+    font-size: 11px;
+  }
+
+  .groups {
+    font-size: 11px;
+  }
+
+  .actions {
+    width: 100%;
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .adminSwitch {
+    gap: 4px;
+    font-size: 11px;
+  }
+
+  .adminSwitchLabel {
+    min-width: unset;
+    font-size: 11px;
+  }
+
+  .adminSwitch .switchTrack {
+    width: 28px;
+    height: 16px;
+  }
+
+  .adminSwitch .switchThumb {
+    width: 12px;
+    height: 12px;
+  }
+
+  .adminSwitch input:checked + .switchTrack .switchThumb {
+    transform: translateX(12px);
+  }
+
+  .btnSecondary,
+  .btnDanger {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .detailModal {
+    width: 92vw;
+    max-width: 92vw;
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .detailTitle {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .detailRow {
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+
+  .detailLabel {
+    width: 60px;
+    font-size: 12px;
+  }
+}

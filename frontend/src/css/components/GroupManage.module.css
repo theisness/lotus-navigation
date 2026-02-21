@@ -264,3 +264,95 @@
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ===== 移动端适配 ===== */
+@media (max-width: 768px) {
+  .modal {
+    width: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    height: 100%;
+    border-radius: 0;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  .title {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  .createRow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .btnPrimary {
+    width: 100%;
+    text-align: center;
+  }
+
+  .groupCard {
+    padding: 10px 12px;
+  }
+
+  .groupHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .inputInline {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .groupActions {
+    width: 100%;
+    display: flex;
+  }
+
+  .groupActions .btnSmall,
+  .groupActions .btnSmallDanger {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 13px;
+  }
+
+  .memberList {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .memberTag {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .addDropdown {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .addOption {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .btnAddMember {
+    width: 100%;
+    padding: 8px 0;
+    font-size: 13px;
+    text-align: center;
+  }
+}
