@@ -14,16 +14,10 @@ import NavSortModal from '../components/NavSortModal.jsx';
 import { authApi, navApi, settingsApi, getToken, removeToken } from '../api.js';
 import styles from '../css/pages/Portal.module.css';
 
-// 从 URL 提取 slug：https://a.b.c.com/path → a.b.c
+// 从 URL 提取 slug：直接用完整 hostname
 function urlToSlug(url) {
   try {
-    const hostname = new URL(url).hostname;
-    // 去掉最后一段 TLD（如 .com .site .org）
-    const parts = hostname.split('.');
-    if (parts.length > 1) {
-      return parts.slice(0, -1).join('.');
-    }
-    return hostname;
+    return new URL(url).hostname;
   } catch {
     return url;
   }

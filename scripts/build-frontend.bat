@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 >nul
-@REM echo [1/3] 安装依赖...
-@REM cd /d "%~dp0..\frontend"
+echo [1/3] 安装依赖...
+cd /d "%~dp0..\frontend"
 @REM call npm install
 @REM if %errorlevel% neq 0 (
 @REM     echo 安装依赖失败

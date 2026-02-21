@@ -15,10 +15,7 @@ import styles from './css/MobilePortal.module.css';
 
 function urlToSlug(url) {
   try {
-    const hostname = new URL(url).hostname;
-    const parts = hostname.split('.');
-    if (parts.length > 1) return parts.slice(0, -1).join('.');
-    return hostname;
+    return new URL(url).hostname;
   } catch {
     return url;
   }
