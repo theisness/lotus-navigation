@@ -1,6 +1,19 @@
 import { useEffect, useRef } from 'react';
 import styles from '../css/components/DownloadPage.module.css';
 
+function getThemeColors() {
+  const cs = getComputedStyle(document.documentElement);
+  const accent = cs.getPropertyValue('--accent').trim() || '#667eea';
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  return { accent, isDark };
+}
+
+function hexToRgb(hex) {
+  const m = hex.replace('#', '').match(/.{2}/g);
+  if (!m) return [102, 126, 234];
+  return m.map(c => parseInt(c, 16));
+}
+
 export default function DownloadPage({ onEnterWeb }) {
   const canvasRef = useRef(null);
 
@@ -34,12 +47,6 @@ export default function DownloadPage({ onEnterWeb }) {
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
         if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
       }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${this.opacity})`;
-        ctx.fill();
-      }
     }
 
     const count = Math.min(60, Math.floor((canvas.width * canvas.height) / 10000));
@@ -47,7 +54,18 @@ export default function DownloadPage({ onEnterWeb }) {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (const p of particles) { p.update(); p.draw(); }
+      const { accent, isDark } = getThemeColors();
+      const [r, g, b] = hexToRgb(accent);
+      const pAlpha = isDark ? 1 : 0.9;
+      const lAlpha = isDark ? 0.1 : 0.8;
+
+      for (const p of particles) {
+        p.update();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},${p.opacity * pAlpha})`;
+        ctx.fill();
+      }
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -55,7 +73,7 @@ export default function DownloadPage({ onEnterWeb }) {
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(255,255,255,${0.06 * (1 - dist / 100)})`;
+            ctx.strokeStyle = `rgba(${r},${g},${b},${lAlpha * (1 - dist / 100)})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
