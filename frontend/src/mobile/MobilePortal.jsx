@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import MobileHomepage from './MobileHomepage.jsx';
 import MobileBottomBar from './MobileBottomBar.jsx';
 import Loader from '../components/Loader.jsx';
@@ -25,6 +25,7 @@ function urlToSlug(url) {
 export default function MobilePortal() {
   const { navId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [user, setUser] = useState(null);
   const [navItems, setNavItems] = useState([]);
@@ -45,10 +46,10 @@ export default function MobilePortal() {
   const [showMemberManage, setShowMemberManage] = useState(false);
   const [showGroupManage, setShowGroupManage] = useState(false);
   const [showNavSort, setShowNavSort] = useState(false);
-  const [showDownload, setShowDownload] = useState(false);
   const [editItem, setEditItem] = useState(null);
 
-  const isHomepage = !navId;
+  const isDownload = location.pathname === '/download';
+  const isHomepage = !navId && !isDownload;
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -125,7 +126,6 @@ export default function MobilePortal() {
 
   const handleGoHome = useCallback(() => {
     setActiveId(null);
-    setShowDownload(false);
     navigate('/');
   }, [navigate]);
 
@@ -166,11 +166,11 @@ export default function MobilePortal() {
       <div className={styles.content}>
         <Loader visible={loaderVisible} />
 
-        {showDownload && (
-          <DownloadPage onEnterWeb={() => setShowDownload(false)} />
+        {isDownload && (
+          <DownloadPage onEnterWeb={() => navigate('/')} />
         )}
 
-        {isHomepage && !showDownload && (
+        {isHomepage && (
           <MobileHomepage
             navItems={navItems}
             user={user}
@@ -189,11 +189,11 @@ export default function MobilePortal() {
             colorTheme={colorTheme}
             onColorThemeChange={handleColorThemeChange}
             isAdmin={user?.is_admin || false}
-            onOpenDownload={() => setShowDownload(true)}
+            onOpenDownload={() => navigate('/download')}
           />
         )}
 
-        {openedItems.length > 0 && !showDownload && (
+        {openedItems.length > 0 && !isDownload && (
           <IframeView
             openedItems={openedItems}
             activeId={isHomepage ? null : activeId}

@@ -23,6 +23,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Page />} />
+        <Route path="/download" element={<Page />} />
         <Route path="/nav/:navId/*" element={<Page />} />
       </Routes>
     </BrowserRouter>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar.jsx';
 import ToggleSidebar from '../components/ToggleSidebar.jsx';
 import Loader from '../components/Loader.jsx';
@@ -27,6 +27,7 @@ function urlToSlug(url) {
 export default function Portal() {
   const { navId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 用户状态
   const [user, setUser] = useState(null);
@@ -58,13 +59,13 @@ export default function Portal() {
   const [showMemberManage, setShowMemberManage] = useState(false);
   const [showGroupManage, setShowGroupManage] = useState(false);
   const [showNavSort, setShowNavSort] = useState(false);
-  const [showDownload, setShowDownload] = useState(false);
   const [editItem, setEditItem] = useState(null);
 
   const mainRef = useRef(null);
 
   // 判断当前视图
-  const isHomepage = !navId;
+  const isDownload = location.pathname === '/download';
+  const isHomepage = !navId && !isDownload;
   const selectedItem = navItems.find(it => it._id === activeId) || null;
 
   // 主题切换
@@ -147,7 +148,6 @@ export default function Portal() {
       window.open(item.url, '_blank', 'noopener,noreferrer');
       return;
     }
-    setShowDownload(false);
     setOpenedItems(prev => {
       if (prev.some(it => it._id === item._id)) return prev;
       return [...prev, item];
@@ -159,7 +159,6 @@ export default function Portal() {
   // 回到主页
   const handleGoHome = useCallback(() => {
     setActiveId(null);
-    setShowDownload(false);
     navigate('/');
   }, [navigate]);
 
@@ -253,7 +252,7 @@ export default function Portal() {
             onColorThemeChange={handleColorThemeChange}
             layoutMode={layoutMode}
             onToggleLayout={handleToggleLayout}
-            onOpenDownload={() => setShowDownload(true)}
+            onOpenDownload={() => navigate('/download')}
           />
         </aside>
       )}
@@ -264,11 +263,11 @@ export default function Portal() {
         <div className={styles.content}>
           <Loader visible={loaderVisible} />
 
-          {showDownload && (
-            <DownloadPage onEnterWeb={() => setShowDownload(false)} />
+          {isDownload && (
+            <DownloadPage onEnterWeb={() => navigate('/')} />
           )}
 
-          {isHomepage && !showDownload && (
+          {isHomepage && (
             <Homepage
               navItems={navItems}
               user={user}
@@ -286,7 +285,7 @@ export default function Portal() {
             />
           )}
 
-          {openedItems.length > 0 && !showDownload && (
+          {openedItems.length > 0 && !isDownload && (
             <IframeView
               openedItems={openedItems}
               activeId={isHomepage ? null : activeId}
