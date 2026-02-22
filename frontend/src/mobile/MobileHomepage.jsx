@@ -25,6 +25,7 @@ export default function MobileHomepage({
   colorTheme,
   onColorThemeChange,
   isAdmin,
+  onOpenDownload,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
@@ -158,7 +159,7 @@ export default function MobileHomepage({
               className={styles.settingBtn}
               onClick={() => setShowPicker(v => !v)}
             >
-              🎨 主题颜色
+              🎨主题颜色
             </button>
             <ThemePicker
               visible={showPicker}
@@ -169,7 +170,10 @@ export default function MobileHomepage({
           </div>
         )}
         <button className={styles.settingBtn} onClick={onToggleTheme}>
-          {theme === 'dark' ? '☀️ 日间模式' : '🌙 夜间模式'}
+          {theme === 'dark' ? '☀️日间模式' : '🌙夜间模式'}
+        </button>
+        <button className={styles.settingBtn} onClick={onOpenDownload}>
+          ⬇下载客户端
         </button>
       </div>
     </div>

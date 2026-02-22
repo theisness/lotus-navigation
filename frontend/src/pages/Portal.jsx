@@ -11,6 +11,7 @@ import ProfileForm from '../components/ProfileForm.jsx';
 import MemberManage from '../components/MemberManage.jsx';
 import GroupManage from '../components/GroupManage.jsx';
 import NavSortModal from '../components/NavSortModal.jsx';
+import DownloadPage from '../components/DownloadPage.jsx';
 import { authApi, navApi, settingsApi, getToken, removeToken } from '../api.js';
 import styles from '../css/pages/Portal.module.css';
 
@@ -57,6 +58,7 @@ export default function Portal() {
   const [showMemberManage, setShowMemberManage] = useState(false);
   const [showGroupManage, setShowGroupManage] = useState(false);
   const [showNavSort, setShowNavSort] = useState(false);
+  const [showDownload, setShowDownload] = useState(false);
   const [editItem, setEditItem] = useState(null);
 
   const mainRef = useRef(null);
@@ -145,6 +147,7 @@ export default function Portal() {
       window.open(item.url, '_blank', 'noopener,noreferrer');
       return;
     }
+    setShowDownload(false);
     setOpenedItems(prev => {
       if (prev.some(it => it._id === item._id)) return prev;
       return [...prev, item];
@@ -156,6 +159,7 @@ export default function Portal() {
   // 回到主页
   const handleGoHome = useCallback(() => {
     setActiveId(null);
+    setShowDownload(false);
     navigate('/');
   }, [navigate]);
 
@@ -249,6 +253,7 @@ export default function Portal() {
             onColorThemeChange={handleColorThemeChange}
             layoutMode={layoutMode}
             onToggleLayout={handleToggleLayout}
+            onOpenDownload={() => setShowDownload(true)}
           />
         </aside>
       )}
@@ -259,7 +264,11 @@ export default function Portal() {
         <div className={styles.content}>
           <Loader visible={loaderVisible} />
 
-          {isHomepage && (
+          {showDownload && (
+            <DownloadPage onEnterWeb={() => setShowDownload(false)} />
+          )}
+
+          {isHomepage && !showDownload && (
             <Homepage
               navItems={navItems}
               user={user}
@@ -277,7 +286,7 @@ export default function Portal() {
             />
           )}
 
-          {openedItems.length > 0 && (
+          {openedItems.length > 0 && !showDownload && (
             <IframeView
               openedItems={openedItems}
               activeId={isHomepage ? null : activeId}

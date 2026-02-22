@@ -20,6 +20,7 @@ export default function Sidebar({
   onColorThemeChange,
   layoutMode,
   onToggleLayout,
+  onOpenDownload,
 }) {
   const [showPicker, setShowPicker] = useState(false);
   const pickerRef = useRef(null);
@@ -121,6 +122,7 @@ export default function Sidebar({
         <button className={styles.footerIconBtn} onClick={onToggleTheme} title={theme === 'dark' ? '切换日间模式' : '切换夜间模式'}>
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>
+        <button className={styles.footerIconBtn} onClick={onOpenDownload} title="下载客户端">⬇</button>
       </div>
 
       <button className={styles.collapseBtn} onClick={onCollapse} title="收起侧栏" aria-label="收起侧栏">

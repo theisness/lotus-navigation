@@ -10,6 +10,7 @@ import ProfileForm from '../components/ProfileForm.jsx';
 import MemberManage from '../components/MemberManage.jsx';
 import GroupManage from '../components/GroupManage.jsx';
 import NavSortModal from '../components/NavSortModal.jsx';
+import DownloadPage from '../components/DownloadPage.jsx';
 import { authApi, navApi, settingsApi, getToken, removeToken } from '../api.js';
 import styles from './css/MobilePortal.module.css';
 
@@ -44,6 +45,7 @@ export default function MobilePortal() {
   const [showMemberManage, setShowMemberManage] = useState(false);
   const [showGroupManage, setShowGroupManage] = useState(false);
   const [showNavSort, setShowNavSort] = useState(false);
+  const [showDownload, setShowDownload] = useState(false);
   const [editItem, setEditItem] = useState(null);
 
   const isHomepage = !navId;
@@ -123,6 +125,7 @@ export default function MobilePortal() {
 
   const handleGoHome = useCallback(() => {
     setActiveId(null);
+    setShowDownload(false);
     navigate('/');
   }, [navigate]);
 
@@ -163,7 +166,11 @@ export default function MobilePortal() {
       <div className={styles.content}>
         <Loader visible={loaderVisible} />
 
-        {isHomepage && (
+        {showDownload && (
+          <DownloadPage onEnterWeb={() => setShowDownload(false)} />
+        )}
+
+        {isHomepage && !showDownload && (
           <MobileHomepage
             navItems={navItems}
             user={user}
@@ -182,10 +189,11 @@ export default function MobilePortal() {
             colorTheme={colorTheme}
             onColorThemeChange={handleColorThemeChange}
             isAdmin={user?.is_admin || false}
+            onOpenDownload={() => setShowDownload(true)}
           />
         )}
 
-        {openedItems.length > 0 && (
+        {openedItems.length > 0 && !showDownload && (
           <IframeView
             openedItems={openedItems}
             activeId={isHomepage ? null : activeId}
