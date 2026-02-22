@@ -10,7 +10,7 @@ cd /d "%~dp0..\backend"
 
 echo [2/2] 打包 backend.zip...
 if exist backend.zip del backend.zip
-powershell -Command "Get-ChildItem -Exclude 'backend.zip','node_modules','images','.env','package-lock.json' | Compress-Archive -DestinationPath 'backend.zip' -Force"
+powershell -Command "Get-ChildItem -Exclude 'backend.zip','node_modules','images','.env','package-lock.json','config.json' | Compress-Archive -DestinationPath 'backend.zip' -Force"
 if %errorlevel% neq 0 (
     echo 打包失败
     exit /b 1
