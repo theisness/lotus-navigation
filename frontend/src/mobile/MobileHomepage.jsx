@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import ThemePicker from '../components/ThemePicker.jsx';
+import { IconEdit, IconDelete, IconSun, IconMoon, IconDownload } from '../components/Icons.jsx';
 import styles from './css/MobileHomepage.module.css';
 
 function DefaultAvatar({ name }) {
@@ -86,7 +87,7 @@ export default function MobileHomepage({
                         成员管理
                       </button>
                       <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onOpenGroupManage?.(); }}>
-                        成员分组
+                        管理分组
                       </button>
                       <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onOpenNavSort?.(); }}>
                         导航排序
@@ -140,8 +141,8 @@ export default function MobileHomepage({
               </div>
               {user && (user.is_admin || (item.user_id && item.user_id === user.id)) && (
                 <div className={styles.cardActions}>
-                  <button className={styles.cardActionBtn} onClick={(e) => { e.stopPropagation(); onEdit?.(item); }} aria-label="编辑">✎</button>
-                  <button className={`${styles.cardActionBtn} ${styles.deleteBtn}`} onClick={(e) => { e.stopPropagation(); if (confirm('确定删除该导航项？')) onDelete?.(item._id); }} aria-label="删除">✕</button>
+                  <button className={styles.cardActionBtn} onClick={(e) => { e.stopPropagation(); onEdit?.(item); }} aria-label="编辑"><IconEdit size={13} /></button>
+                  <button className={`${styles.cardActionBtn} ${styles.deleteBtn}`} onClick={(e) => { e.stopPropagation(); if (confirm('确定删除该导航项？')) onDelete?.(item._id); }} aria-label="删除"><IconDelete size={13} /></button>
                 </div>
               )}
             </div>
@@ -159,7 +160,7 @@ export default function MobileHomepage({
               className={styles.settingBtn}
               onClick={() => setShowPicker(v => !v)}
             >
-              🎨主题颜色
+              主题颜色
             </button>
             <ThemePicker
               visible={showPicker}
@@ -170,10 +171,10 @@ export default function MobileHomepage({
           </div>
         )}
         <button className={styles.settingBtn} onClick={onToggleTheme}>
-          {theme === 'dark' ? '☀️日间模式' : '🌙夜间模式'}
+          {theme === 'dark' ? '日间模式' : '夜间模式'}
         </button>
         <button className={styles.settingBtn} onClick={onOpenDownload}>
-          ⬇下载客户端
+          下载客户端
         </button>
       </div>
     </div>

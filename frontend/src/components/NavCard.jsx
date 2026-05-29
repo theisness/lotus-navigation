@@ -1,3 +1,4 @@
+import { IconEdit, IconDelete, IconExternalLink, IconIframe } from './Icons.jsx';
 import styles from '../css/components/NavCard.module.css';
 
 export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit, compact }) {
@@ -46,12 +47,16 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit,
         </div>
       </div>
       <div className={styles.mode}>
-        {display_mode === 'redirect' ? '↗ 新标签页' : '◫ iframe'}
+        {display_mode === 'redirect' ? (
+          <><IconExternalLink size={11} /> 新标签页</>
+        ) : (
+          <><IconIframe size={11} /> iframe</>
+        )}
       </div>
       {canEdit && (
         <div className={styles.actions}>
-          <button className={styles.actionBtn} onClick={handleEdit} aria-label="编辑">✎</button>
-          <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={handleDelete} aria-label="删除">✕</button>
+          <button className={styles.actionBtn} onClick={handleEdit} aria-label="编辑"><IconEdit size={13} /></button>
+          <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={handleDelete} aria-label="删除"><IconDelete size={13} /></button>
         </div>
       )}
     </div>

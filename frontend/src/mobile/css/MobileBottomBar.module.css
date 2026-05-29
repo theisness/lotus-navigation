@@ -46,11 +46,15 @@
 }
 
 .icon {
-  font-size: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.2s ease;
+  color: var(--text-secondary);
+}
+
+.tab:hover .icon {
+  color: var(--text-primary);
 }
 
 .iconImg {

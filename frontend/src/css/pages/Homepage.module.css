@@ -140,7 +140,7 @@
   transform: translateY(-1px);
 }
 
-.grid {
+.listMode {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -148,12 +148,17 @@
 
 .gridMode {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(var(--col-count, 2), 1fr);
   gap: 20px;
 }
 
 .gridMode > * {
   aspect-ratio: 16 / 9;
+  min-height: unset;
+}
+
+.listMode > * {
+  aspect-ratio: unset;
   min-height: unset;
 }
 

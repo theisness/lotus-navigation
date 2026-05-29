@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "node --watch app.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "deploy": "bash ../scripts/deploy-backend.sh"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

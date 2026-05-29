@@ -97,7 +97,7 @@ export default function Homepage({
                           onOpenGroupManage?.();
                         }}
                       >
-                        成员分组
+                        管理分组
                       </button>
                       <button
                         type="button"
@@ -120,7 +120,10 @@ export default function Homepage({
         </div>
       </header>
 
-      <div className={layoutMode === 'grid' ? styles.gridMode : styles.grid}>
+      <div
+        className={layoutMode === 1 ? styles.listMode : styles.gridMode}
+        style={layoutMode !== 1 ? { '--col-count': layoutMode } : undefined}
+      >
         {navItems.map((item) => (
           <NavCard
             key={item._id}
@@ -129,7 +132,7 @@ export default function Homepage({
             onEdit={onEdit}
             onDelete={onDelete}
             canEdit={user && (user.is_admin || (item.user_id && item.user_id === user.id))}
-            compact={layoutMode === 'grid'}
+            compact={layoutMode > 1}
           />
         ))}
         {navItems.length === 0 && (

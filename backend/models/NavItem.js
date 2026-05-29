@@ -13,6 +13,7 @@ const navItemSchema = new mongoose.Schema({
   bg_image: { type: String, default: '' },
   bg_position: { type: String, default: 'center' },
   sort_order: { type: Number, default: 0 },
+  nav_group_id: { type: mongoose.Schema.Types.ObjectId, ref: 'NavGroup', default: null },
   created_at: { type: Date, default: Date.now },
 });
 

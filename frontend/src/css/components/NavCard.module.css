@@ -14,20 +14,20 @@
   min-height: 220px;
 }
 
-/* 2. 渐变边框光晕 — 用伪元素做底层发光边框 */
+/* 2. 渐变边框光晕 — 用伪元素做底层发光边框，更微妙 */
 .card::before {
   content: '';
   position: absolute;
-  inset: -2px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, var(--accent), transparent 40%, transparent 60%, var(--accent));
+  inset: -1px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, var(--accent), transparent 50%);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease;
   z-index: -1;
 }
 
 .card:hover::before {
-  opacity: 0.6;
+  opacity: 0.35;
 }
 
 /* 3. 背景图容器 — 用于视差缩放 */
@@ -40,7 +40,7 @@
 }
 
 .card:hover .bgLayer {
-  transform: scale(1.06);
+  transform: scale(1.04);
 }
 
 .cardThemed {
@@ -48,9 +48,9 @@
 }
 
 .card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.15),
     0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
@@ -119,7 +119,7 @@
 
 .title {
   margin: 0;
-  font-size: 40px;
+  font-size: 28px;
   font-weight: 700;
   color: #fff;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
@@ -152,6 +152,9 @@
   border-radius: 6px;
   opacity: 0;
   transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .card:hover .mode {
@@ -205,11 +208,11 @@
 }
 
 .compact .title {
-  font-size: clamp(18px, 2.2vw, 32px);
+  font-size: clamp(14px, 1.5vw, 22px);
 }
 
 .compact .desc {
-  font-size: clamp(12px, 1.2vw, 18px);
+  font-size: clamp(11px, 1vw, 16px);
 }
 
 .compact .content {

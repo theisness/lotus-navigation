@@ -41,6 +41,7 @@ app.use('/api/upload', require('./routes/upload'));
 app.use('/api/settings', require('./routes/siteSetting'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/download', require('./routes/download'));
+app.use('/api/nav-groups', require('./routes/navGroup'));
 
 // Redis 客户端
 const redisClient = createClient({

@@ -178,4 +178,14 @@ export const settingsApi = {
   },
 };
 
+// 导航分组 API
+export const navGroupApi = {
+  getGroups: () => request('/api/nav-groups'),
+  createGroup: (title) => request('/api/nav-groups', { method: 'POST', body: JSON.stringify({ title }) }),
+  updateGroup: (id, title) => request(`/api/nav-groups/${id}`, { method: 'PUT', body: JSON.stringify({ title }) }),
+  deleteGroup: (id) => request(`/api/nav-groups/${id}`, { method: 'DELETE' }),
+  reorderGroups: (orders) => request('/api/nav-groups/reorder', { method: 'PUT', body: JSON.stringify({ orders }) }),
+  setItemGroup: (itemId, nav_group_id) => request(`/api/nav-items/${itemId}/group`, { method: 'PUT', body: JSON.stringify({ nav_group_id }) }),
+};
+
 export { getToken, setToken, removeToken };

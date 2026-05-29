@@ -65,4 +65,15 @@ async function reorderNavItems(req, res) {
   }
 }
 
-module.exports = { getNavItems, createNavItem, updateNavItem, deleteNavItem, reorderNavItems };
+// PUT /api/nav-items/:id/group
+async function setItemGroup(req, res) {
+  try {
+    const { nav_group_id } = req.body;
+    const item = await navItemService.setItemGroup(req.params.id, { nav_group_id });
+    res.json(item);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message || '服务器内部错误' });
+  }
+}
+
+module.exports = { getNavItems, createNavItem, updateNavItem, deleteNavItem, reorderNavItems, setItemGroup };

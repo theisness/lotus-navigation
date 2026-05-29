@@ -16,5 +16,6 @@ router.delete('/:id', authMiddleware, navItemController.deleteNavItem);
 router.put('/reorder', authMiddleware, navItemController.reorderNavItems);
 
 router.put('/:id', authMiddleware, navItemController.updateNavItem);
+router.put('/:id/group', authMiddleware, navItemController.setItemGroup);
 
 module.exports = router;

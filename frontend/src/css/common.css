@@ -167,6 +167,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* 颜色主题预设 — 亮色模式 */
 [data-theme="light"][data-color-theme="purple"] {
+  --bg-base: #f8f9fb;
+  --bg-gradient: linear-gradient(135deg, #f8f9fb 0%, #eef1f8 50%, #f8f9fb 100%);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --menu-bg: #ffffff;
   --accent: #5a67d8;
   --accent-bg: rgba(90, 103, 216, 0.1);
   --accent-bg-hover: rgba(90, 103, 216, 0.15);
@@ -175,6 +179,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 [data-theme="light"][data-color-theme="blue"] {
+  --bg-base: #f0f7ff;
+  --bg-gradient: linear-gradient(135deg, #f0f7ff 0%, #dbeafe 50%, #f0f7ff 100%);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --menu-bg: #ffffff;
   --accent: #2563eb;
   --accent-bg: rgba(37, 99, 235, 0.1);
   --accent-bg-hover: rgba(37, 99, 235, 0.15);
@@ -183,6 +191,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 [data-theme="light"][data-color-theme="green"] {
+  --bg-base: #f0fdf4;
+  --bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #f0fdf4 100%);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --menu-bg: #ffffff;
   --accent: #059669;
   --accent-bg: rgba(5, 150, 105, 0.1);
   --accent-bg-hover: rgba(5, 150, 105, 0.15);
@@ -191,6 +203,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 [data-theme="light"][data-color-theme="orange"] {
+  --bg-base: #fffbeb;
+  --bg-gradient: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fffbeb 100%);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --menu-bg: #ffffff;
   --accent: #d97706;
   --accent-bg: rgba(217, 119, 6, 0.1);
   --accent-bg-hover: rgba(217, 119, 6, 0.15);
@@ -199,6 +215,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 [data-theme="light"][data-color-theme="red"] {
+  --bg-base: #fef2f2;
+  --bg-gradient: linear-gradient(135deg, #fef2f2 0%, #fee2e2 50%, #fef2f2 100%);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --menu-bg: #ffffff;
   --accent: #dc2626;
   --accent-bg: rgba(220, 38, 38, 0.1);
   --accent-bg-hover: rgba(220, 38, 38, 0.15);
@@ -207,6 +227,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 [data-theme="light"][data-color-theme="pink"] {
+  --bg-base: #fdf2f8;
+  --bg-gradient: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fdf2f8 100%);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --menu-bg: #ffffff;
   --accent: #db2777;
   --accent-bg: rgba(219, 39, 119, 0.1);
   --accent-bg-hover: rgba(219, 39, 119, 0.15);
@@ -215,6 +239,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 [data-theme="light"][data-color-theme="teal"] {
+  --bg-base: #f0fdfa;
+  --bg-gradient: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 50%, #f0fdfa 100%);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --menu-bg: #ffffff;
   --accent: #0d9488;
   --accent-bg: rgba(13, 148, 136, 0.1);
   --accent-bg-hover: rgba(13, 148, 136, 0.15);

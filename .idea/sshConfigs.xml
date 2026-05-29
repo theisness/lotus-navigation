@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="192.140.163.100" id="0282bed3-deac-4305-a7d6-ce73bd5253a7" keyPath="\\wsl$\Ubuntu-22.04\home\pyf\.ssh\id_ed25519" port="60000" customName="free.ssbx.site" nameFormat="CUSTOM" username="root" useOpenSSHConfig="true">
+        <option name="customName" value="free.ssbx.site" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>

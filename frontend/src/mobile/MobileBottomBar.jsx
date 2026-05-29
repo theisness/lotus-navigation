@@ -1,3 +1,4 @@
+import { IconHome, IconLink } from '../components/Icons.jsx';
 import styles from './css/MobileBottomBar.module.css';
 
 export default function MobileBottomBar({ navItems = [], activeId, onGoHome, onSelect, isHomepage }) {
@@ -8,7 +9,7 @@ export default function MobileBottomBar({ navItems = [], activeId, onGoHome, onS
         onClick={onGoHome}
         aria-label="主页"
       >
-        <span className={styles.icon}>🏠</span>
+        <span className={styles.icon}><IconHome size={18} /></span>
       </button>
       {navItems.map((item) => (
         <button
@@ -20,7 +21,8 @@ export default function MobileBottomBar({ navItems = [], activeId, onGoHome, onS
           <span className={styles.icon}>
             {item.icon
               ? <img src={`/images/${item.icon}`} alt="" className={styles.iconImg} />
-              : (item.emoji || '🔗')}
+              : <IconLink size={18} />
+            }
           </span>
         </button>
       ))}
