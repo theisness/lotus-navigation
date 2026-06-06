@@ -19,6 +19,7 @@ export default function Homepage({
   onOpenProfile,
   onOpenMemberManage,
   onOpenGroupManage,
+  onOpenPermGroupManage,
   onOpenNavSort,
   layoutMode,
 }) {
@@ -97,7 +98,17 @@ export default function Homepage({
                           onOpenGroupManage?.();
                         }}
                       >
-                        管理分组
+                        菜单栏分组
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.menuItem}
+                        onClick={() => {
+                          setMenuOpen(false);
+                          onOpenPermGroupManage?.();
+                        }}
+                      >
+                        权限分组
                       </button>
                       <button
                         type="button"

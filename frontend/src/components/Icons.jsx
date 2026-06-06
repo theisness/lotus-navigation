@@ -30,10 +30,11 @@ export const IconList = ({ size = 16 }) => (
 
 export const IconPalette = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12.83" cy="12.83" r="2" />
-    <path d="M20.77 17.14l-.71 1.43A10 10 0 0 1 4.44 12 10 10 0 0 1 8 4.24l1.43-.71" />
-    <path d="M15.5 3.5a2.5 2.5 0 0 1 0 5L15 10" />
-    <path d="M12 12a2 2 0 0 0-2 2c0 .73.4 1.37 1 1.72V17h2v-2.28c.6-.35 1-.99 1-1.72a2 2 0 0 0-2-2z" />
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c.93 0 1.68-.75 1.68-1.68 0-.44-.17-.83-.44-1.13-.27-.29-.44-.66-.44-1.1a1.68 1.68 0 0 1 1.68-1.68H16.5c3.04 0 5.5-2.46 5.5-5.5C22 6.01 17.52 2 12 2z" />
+    <circle cx="6.5" cy="11.5" r="1.2" fill="currentColor" stroke="none" />
+    <circle cx="9.5" cy="7" r="1.2" fill="currentColor" stroke="none" />
+    <circle cx="14.5" cy="7" r="1.2" fill="currentColor" stroke="none" />
+    <circle cx="17.5" cy="11.5" r="1.2" fill="currentColor" stroke="none" />
   </svg>
 );
 

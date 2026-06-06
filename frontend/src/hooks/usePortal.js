@@ -34,7 +34,8 @@ export function usePortal() {
   const [showAddNav, setShowAddNav] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showMemberManage, setShowMemberManage] = useState(false);
-  const [showGroupManage, setShowGroupManage] = useState(false);
+  const [showGroupManage, setShowGroupManage] = useState(false);      // 菜单栏分组（NavGroup）
+  const [showPermGroupManage, setShowPermGroupManage] = useState(false); // 权限分组（成员可见性）
   const [showNavSort, setShowNavSort] = useState(false);
   const [editItem, setEditItem] = useState(null);
 
@@ -220,6 +221,7 @@ export function usePortal() {
     showProfile,
     showMemberManage,
     showGroupManage,
+    showPermGroupManage,
     showNavSort,
     editItem,
     // 分组
@@ -243,6 +245,7 @@ export function usePortal() {
     setShowProfile,
     setShowMemberManage,
     setShowGroupManage,
+    setShowPermGroupManage,
     setShowNavSort,
     // handlers
     fetchNavItems,

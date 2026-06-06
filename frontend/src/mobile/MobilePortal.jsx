@@ -31,6 +31,7 @@ export default function MobilePortal() {
     showProfile,
     showMemberManage,
     showGroupManage,
+    showPermGroupManage,
     showNavSort,
     editItem,
     isDownload,
@@ -41,7 +42,10 @@ export default function MobilePortal() {
     setShowProfile,
     setShowMemberManage,
     setShowGroupManage,
+    setShowPermGroupManage,
     setShowNavSort,
+    fetchNavItems,
+    fetchGroups,
     setEditItem,
     handleToggleTheme,
     handleColorThemeChange,
@@ -53,6 +57,8 @@ export default function MobilePortal() {
     handleEdit,
     handleDelete,
   } = usePortal();
+
+  const handleGroupChange = () => { fetchNavItems(); fetchGroups(); };
 
   return (
     <div className={styles.app}>
@@ -76,6 +82,7 @@ export default function MobilePortal() {
             onOpenProfile={() => setShowProfile(true)}
             onOpenMemberManage={() => setShowMemberManage(true)}
             onOpenGroupManage={() => setShowGroupManage(true)}
+            onOpenPermGroupManage={() => setShowPermGroupManage(true)}
             onOpenNavSort={() => setShowNavSort(true)}
             theme={theme}
             onToggleTheme={handleToggleTheme}
@@ -127,14 +134,14 @@ export default function MobilePortal() {
         currentUser={user}
       />
       <GroupManage
-        visible={showGroupManage}
-        onClose={() => setShowGroupManage(false)}
+        visible={showPermGroupManage}
+        onClose={() => setShowPermGroupManage(false)}
       />
       <GroupManageModal
         visible={showGroupManage}
         onClose={() => setShowGroupManage(false)}
         navItems={navItems}
-        onSuccess={handleAddNavSuccess}
+        onSuccess={handleGroupChange}
       />
       <NavSortModal
         visible={showNavSort}

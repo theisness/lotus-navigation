@@ -20,6 +20,7 @@ export default function MobileHomepage({
   onOpenProfile,
   onOpenMemberManage,
   onOpenGroupManage,
+  onOpenPermGroupManage,
   onOpenNavSort,
   theme,
   onToggleTheme,
@@ -87,7 +88,10 @@ export default function MobileHomepage({
                         成员管理
                       </button>
                       <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onOpenGroupManage?.(); }}>
-                        管理分组
+                        菜单栏分组
+                      </button>
+                      <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onOpenPermGroupManage?.(); }}>
+                        权限分组
                       </button>
                       <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onOpenNavSort?.(); }}>
                         导航排序

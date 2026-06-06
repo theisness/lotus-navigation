@@ -43,16 +43,19 @@ export default function Portal() {
     showProfile,
     showMemberManage,
     showGroupManage,
+    showPermGroupManage,
     showNavSort,
     editItem,
     isDownload,
     isHomepage,
     selectedItem,
+    setUser,
     setShowAuth,
     setShowAddNav,
     setShowProfile,
     setShowMemberManage,
     setShowGroupManage,
+    setShowPermGroupManage,
     setShowNavSort,
     // 分组
     groups,
@@ -60,6 +63,8 @@ export default function Portal() {
     toggleGroup,
     expandAll,
     collapseAll,
+    fetchNavItems,
+    fetchGroups,
     setEditItem,
     handleToggleTheme,
     handleColorThemeChange,
@@ -80,6 +85,12 @@ export default function Portal() {
   }, []);
 
   const handleToggleSidebar = useCallback(() => setCollapsed(v => !v), []);
+
+  // 菜单栏分组增删改 / 移动导航项后，刷新导航项与分组，使侧边栏即时更新
+  const handleGroupChange = useCallback(() => {
+    fetchNavItems();
+    fetchGroups();
+  }, [fetchNavItems, fetchGroups]);
 
   const handleToggleFullscreen = useCallback(async () => {
     try {
@@ -152,6 +163,7 @@ export default function Portal() {
               onOpenProfile={() => setShowProfile(true)}
               onOpenMemberManage={() => setShowMemberManage(true)}
               onOpenGroupManage={() => setShowGroupManage(true)}
+              onOpenPermGroupManage={() => setShowPermGroupManage(true)}
               onOpenNavSort={() => setShowNavSort(true)}
               layoutMode={layoutMode}
             />
@@ -191,14 +203,14 @@ export default function Portal() {
         currentUser={user}
       />
       <GroupManage
-        visible={showGroupManage}
-        onClose={() => setShowGroupManage(false)}
+        visible={showPermGroupManage}
+        onClose={() => setShowPermGroupManage(false)}
       />
       <GroupManageModal
         visible={showGroupManage}
         onClose={() => setShowGroupManage(false)}
         navItems={navItems}
-        onSuccess={handleAddNavSuccess}
+        onSuccess={handleGroupChange}
       />
       <NavSortModal
         visible={showNavSort}

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="petal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7db8ff"/>
+      <stop offset="1" stop-color="#2f6fe0"/>
+    </linearGradient>
+    <linearGradient id="petalOuter" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5a9bf5"/>
+      <stop offset="1" stop-color="#1f56c4"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fd0ff"/>
+      <stop offset="1" stop-color="#6db0fb"/>
+    </linearGradient>
+  </defs>
+
+  <!-- outer petals -->
+  <g>
+    <path d="M256,360 C198,300 198,200 256,135 C314,200 314,300 256,360 Z"
+          fill="url(#petalOuter)" transform="rotate(-68 256 360)"/>
+    <path d="M256,360 C198,300 198,200 256,135 C314,200 314,300 256,360 Z"
+          fill="url(#petalOuter)" transform="rotate(68 256 360)"/>
+  </g>
+  <!-- mid petals -->
+  <g>
+    <path d="M256,360 C206,305 206,205 256,140 C306,205 306,305 256,360 Z"
+          fill="url(#petal)" transform="rotate(-35 256 360)"/>
+    <path d="M256,360 C206,305 206,205 256,140 C306,205 306,305 256,360 Z"
+          fill="url(#petal)" transform="rotate(35 256 360)"/>
+  </g>
+  <!-- center petal -->
+  <path d="M256,362 C212,310 212,205 256,138 C300,205 300,310 256,362 Z"
+        fill="url(#petal)"/>
+
+  <!-- bookmark / archive mark in the heart of the lotus -->
+  <g>
+    <path d="M226,196 h60 a10,10 0 0 1 10,10 v86 l-40,-26 -40,26 v-86 a10,10 0 0 1 10,-10 Z"
+          fill="#ffffff"/>
+    <path d="M226,196 h60 a10,10 0 0 1 10,10 v86 l-40,-26 -40,26 v-86 a10,10 0 0 1 10,-10 Z"
+          fill="none" stroke="#1f56c4" stroke-width="6" stroke-linejoin="round"/>
+  </g>
+
+  <!-- water line -->
+  <path d="M150,372 C190,358 322,358 362,372 C322,392 190,392 150,372 Z" fill="url(#water)"/>
+</svg>
