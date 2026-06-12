@@ -42,7 +42,7 @@ async function sendVerificationCode(email, redisClient) {
   await transporter.sendMail({
     from: config.email.user,
     to: email,
-    subject: '莲花导航 - 注册验证码',
+    subject: '莲花导航 - 验证码',
     text: `您的验证码是：${code}，有效期5分钟。`,
   });
 
@@ -108,4 +108,30 @@ async function login(email, password) {
   };
 }
 
-module.exports = { generateCode, sendVerificationCode, register, login };
+// 重置密码（通过邮箱验证码）
+async function resetPassword(email, password, code, redisClient) {
+  // 验证验证码
+  const codeKey = `verify_code:${email}`;
+  const storedCode = await redisClient.get(codeKey);
+
+  if (!storedCode || storedCode !== code) {
+    throw { status: 400, message: '验证码错误或已过期' };
+  }
+
+  // 账号必须已注册
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw { status: 404, message: '该邮箱未注册' };
+  }
+
+  // bcrypt 加密新密码并更新
+  user.password = await bcrypt.hash(password, 10);
+  await user.save();
+
+  // 删除已使用的验证码
+  await redisClient.del(codeKey);
+
+  return { message: '密码重置成功' };
+}
+
+module.exports = { generateCode, sendVerificationCode, register, login, resetPassword };

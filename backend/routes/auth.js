@@ -12,6 +12,9 @@ router.post('/register', authController.register);
 // POST /api/auth/login - 登录
 router.post('/login', authController.login);
 
+// POST /api/auth/reset-password - 通过邮箱验证码重置密码
+router.post('/reset-password', authController.resetPassword);
+
 // GET /api/auth/me - 获取当前用户信息（需登录）
 router.get('/me', authMiddleware, authController.getMe);
 

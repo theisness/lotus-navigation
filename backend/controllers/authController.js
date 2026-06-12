@@ -45,6 +45,21 @@ async function login(req, res) {
   }
 }
 
+// POST /api/auth/reset-password
+async function resetPassword(req, res) {
+  try {
+    const { email, password, code } = req.body;
+    if (!email || !password || !code) {
+      return res.status(400).json({ error: '缺少必填字段', fields: ['email', 'password', 'code'].filter(f => !req.body[f]) });
+    }
+    const redisClient = req.app.locals.redisClient;
+    const result = await authService.resetPassword(email, password, code, redisClient);
+    res.json(result);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message || '服务器内部错误' });
+  }
+}
+
 // GET /api/auth/me
 async function getMe(req, res) {
   try {
@@ -95,4 +110,4 @@ async function updateProfile(req, res) {
   }
 }
 
-module.exports = { sendCode, register, login, getMe, updateProfile };
+module.exports = { sendCode, register, login, resetPassword, getMe, updateProfile };

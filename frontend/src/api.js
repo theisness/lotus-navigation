@@ -61,6 +61,13 @@ export const authApi = {
     });
   },
 
+  resetPassword(email, password, code) {
+    return request('/api/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ email, password, code }),
+    });
+  },
+
   getMe() {
     return request('/api/auth/me');
   },

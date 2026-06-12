@@ -3,7 +3,7 @@ import { authApi, setToken } from '../api.js';
 import styles from '../css/components/AuthForm.module.css';
 
 export default function AuthForm({ visible, onClose, onLoginSuccess }) {
-  const [mode, setMode] = useState('login'); // 'login' | 'register'
+  const [mode, setMode] = useState('login'); // 'login' | 'register' | 'reset'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
@@ -31,6 +31,12 @@ export default function AuthForm({ visible, onClose, onLoginSuccess }) {
   // 切换模式
   const handleSwitchMode = useCallback(() => {
     setMode(m => m === 'login' ? 'register' : 'login');
+    resetForm();
+  }, [resetForm]);
+
+  // 切到指定模式（登录↔忘记密码）
+  const goMode = useCallback((target) => {
+    setMode(target);
     resetForm();
   }, [resetForm]);
 
@@ -66,9 +72,15 @@ export default function AuthForm({ visible, onClose, onLoginSuccess }) {
         const data = await authApi.login(email, password);
         setToken(data.token);
         onLoginSuccess?.(data.user);
-      } else {
+      } else if (mode === 'register') {
         await authApi.register(email, password, code);
         // 注册成功后自动登录
+        const data = await authApi.login(email, password);
+        setToken(data.token);
+        onLoginSuccess?.(data.user);
+      } else {
+        // 重置密码后自动登录
+        await authApi.resetPassword(email, password, code);
         const data = await authApi.login(email, password);
         setToken(data.token);
         onLoginSuccess?.(data.user);
@@ -96,7 +108,7 @@ export default function AuthForm({ visible, onClose, onLoginSuccess }) {
       <div className={styles.modal}>
         <button className={styles.closeBtn} onClick={onClose} aria-label="关闭">✕</button>
 
-        <h2 className={styles.title}>{mode === 'login' ? '登录' : '注册'}</h2>
+        <h2 className={styles.title}>{mode === 'login' ? '登录' : mode === 'register' ? '注册' : '重置密码'}</h2>
 
         {error && <div className={styles.error}>{error}</div>}
 
@@ -116,20 +128,22 @@ export default function AuthForm({ visible, onClose, onLoginSuccess }) {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="auth-password">密码</label>
+            <label className={styles.label} htmlFor="auth-password">
+              {mode === 'reset' ? '新密码' : '密码'}
+            </label>
             <input
               id="auth-password"
               className={styles.input}
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              placeholder="请输入密码"
+              placeholder={mode === 'reset' ? '请输入新密码' : '请输入密码'}
               required
               autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
             />
           </div>
 
-          {mode === 'register' && (
+          {(mode === 'register' || mode === 'reset') && (
             <div className={styles.field}>
               <label className={styles.label} htmlFor="auth-code">验证码</label>
               <div className={styles.codeRow}>
@@ -156,18 +170,40 @@ export default function AuthForm({ visible, onClose, onLoginSuccess }) {
             </div>
           )}
 
+          {mode === 'login' && (
+            <button
+              type="button"
+              className={styles.switchBtn}
+              style={{ alignSelf: 'flex-end' }}
+              onClick={() => goMode('reset')}
+            >
+              忘记密码？
+            </button>
+          )}
+
           <button type="submit" className={styles.submitBtn} disabled={loading}>
-            {loading ? '处理中...' : (mode === 'login' ? '登录' : '注册')}
+            {loading ? '处理中...' : (mode === 'login' ? '登录' : mode === 'register' ? '注册' : '重置密码')}
           </button>
         </form>
 
         <div className={styles.switchRow}>
-          <span className={styles.switchText}>
-            {mode === 'login' ? '没有账号？' : '已有账号？'}
-          </span>
-          <button type="button" className={styles.switchBtn} onClick={handleSwitchMode}>
-            {mode === 'login' ? '去注册' : '去登录'}
-          </button>
+          {mode === 'reset' ? (
+            <>
+              <span className={styles.switchText}>想起密码了？</span>
+              <button type="button" className={styles.switchBtn} onClick={() => goMode('login')}>
+                去登录
+              </button>
+            </>
+          ) : (
+            <>
+              <span className={styles.switchText}>
+                {mode === 'login' ? '没有账号？' : '已有账号？'}
+              </span>
+              <button type="button" className={styles.switchBtn} onClick={handleSwitchMode}>
+                {mode === 'login' ? '去注册' : '去登录'}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
