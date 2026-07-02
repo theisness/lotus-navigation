@@ -165,6 +165,19 @@ ul { margin: 0; padding: 0; list-style: none; }
   --icon-btn-hover: rgba(20, 184, 166, 0.3);
 }
 
+[data-theme="dark"][data-color-theme="lotus"] {
+  --bg-base: #0a1330;
+  --bg-gradient: linear-gradient(135deg, #070d22 0%, #16295c 55%, #23406e 100%);
+  --sidebar-bg: rgba(7, 13, 34, 0.85);
+  --menu-bg: #0d1938;
+  --accent: #d9b96c;
+  --accent-bg: rgba(217, 185, 108, 0.2);
+  --accent-bg-hover: rgba(217, 185, 108, 0.25);
+  --accent-glow: rgba(217, 185, 108, 0.15);
+  --accent-glow2: rgba(80, 130, 230, 0.12);
+  --icon-btn-hover: rgba(217, 185, 108, 0.3);
+}
+
 /* 颜色主题预设 — 亮色模式 */
 [data-theme="light"][data-color-theme="purple"] {
   --bg-base: #f8f9fb;
@@ -248,4 +261,17 @@ ul { margin: 0; padding: 0; list-style: none; }
   --accent-bg-hover: rgba(13, 148, 136, 0.15);
   --accent-glow: rgba(13, 148, 136, 0.08);
   --icon-btn-hover: rgba(13, 148, 136, 0.15);
+}
+
+[data-theme="light"][data-color-theme="lotus"] {
+  --bg-base: #f7f5ef;
+  --bg-gradient: linear-gradient(135deg, #f7f5ef 0%, #eee7d8 50%, #f7f5ef 100%);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --menu-bg: #ffffff;
+  --accent: #b3903f;
+  --accent-bg: rgba(179, 144, 63, 0.1);
+  --accent-bg-hover: rgba(179, 144, 63, 0.15);
+  --accent-glow: rgba(179, 144, 63, 0.08);
+  --accent-glow2: rgba(120, 150, 210, 0.06);
+  --icon-btn-hover: rgba(179, 144, 63, 0.15);
 }

@@ -1,0 +1,194 @@
+/* 品牌登录门 — 云上净土 · 琉璃天光。独立 token，不读/不污染登录态的 data-theme 变量体系。
+   满屏一页（hero + footer），不展示任何站点数据，唯一出口是登录按钮。 */
+
+.page {
+  --gp-gold: #d9b96c;
+  --gp-gold-bright: #eed9a0;
+  --gp-text: rgba(232, 238, 255, 0.92);
+  --gp-text-secondary: rgba(232, 238, 255, 0.62);
+  --gp-text-muted: rgba(232, 238, 255, 0.4);
+  --gp-transition: 220ms ease;
+
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #070d22 0%, #0d1938 35%, #16295c 70%, #23406e 100%);
+  color: var(--gp-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.serif {
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'STSong', serif;
+}
+
+/* ===== 顶栏（仅品牌标识，登录入口在 hero 内） ===== */
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px clamp(20px, 4vw, 56px);
+}
+
+.brandLogo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.brandText {
+  composes: serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--gp-text-secondary);
+}
+
+/* ===== Hero（满屏，唯一内容区） ===== */
+.hero {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0 20px;
+}
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(110, 160, 255, 0.18), transparent 60%);
+  pointer-events: none;
+}
+
+.heroLotusWrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(120vw, 1400px);
+  aspect-ratio: 2560 / 1311;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.heroLotus {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(ellipse 55% 60% at 50% 48%, #000 0%, rgba(0, 0, 0, 0.5) 55%, transparent 78%);
+  mask-image: radial-gradient(ellipse 55% 60% at 50% 48%, #000 0%, rgba(0, 0, 0, 0.5) 55%, transparent 78%);
+  animation: gp-breathe 6s ease-in-out infinite alternate;
+}
+
+@keyframes gp-breathe {
+  from { transform: scale(1); opacity: 0.5; }
+  to { transform: scale(1.03); opacity: 0.62; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroLotus { animation: none; }
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  composes: serif;
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-weight: 900;
+  font-size: clamp(44px, 7vw, 84px);
+  letter-spacing: 0.18em;
+  background: linear-gradient(180deg, var(--gp-gold-bright) 0%, #c9a961 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stamp {
+  width: clamp(20px, 3vw, 32px);
+  height: clamp(20px, 3vw, 32px);
+  object-fit: contain;
+  opacity: 0.92;
+}
+
+.subtitleEn {
+  margin-top: 14px;
+  font-size: 12px;
+  letter-spacing: 0.5em;
+  color: var(--gp-text-muted);
+  padding-left: 0.5em; /* 视觉补偿超大 letter-spacing 造成的居中偏移 */
+}
+
+.slogan {
+  margin-top: 22px;
+  font-size: 17px;
+  letter-spacing: 0.35em;
+  color: var(--gp-text-secondary);
+  padding-left: 0.35em;
+}
+
+/* 醒目的金边登录按钮——整个页面唯一出口 */
+.loginBtn {
+  composes: serif;
+  margin-top: 44px;
+  padding: 14px 52px;
+  border: 1.5px solid var(--gp-gold);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--gp-gold-bright);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  cursor: pointer;
+  transition: background var(--gp-transition), box-shadow var(--gp-transition), transform var(--gp-transition);
+}
+
+.loginBtn:hover {
+  background: rgba(217, 185, 108, 0.14);
+  box-shadow: 0 0 32px rgba(217, 185, 108, 0.35);
+  transform: translateY(-2px);
+}
+
+/* ===== 页脚 ===== */
+.footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px 20px 28px;
+  color: var(--gp-text-muted);
+  font-size: 12px;
+}
+
+.footerOrnament {
+  color: var(--gp-gold);
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+/* ===== 移动端 ===== */
+@media (max-width: 767px) {
+  .subtitleEn { letter-spacing: 0.35em; }
+  .slogan { letter-spacing: 0.2em; font-size: 15px; }
+  .loginBtn { padding: 12px 40px; font-size: 15px; }
+}

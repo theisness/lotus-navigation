@@ -14,7 +14,7 @@ import DownloadPage from '../components/DownloadPage.jsx';
 import { usePortal } from '../hooks/usePortal.js';
 import styles from './css/MobilePortal.module.css';
 
-export default function MobilePortal() {
+export default function MobilePortal({ onLoggedOut }) {
   const navigate = useNavigate();
 
   // ===== 使用共享 hook =====
@@ -56,7 +56,7 @@ export default function MobilePortal() {
     handleAddNavSuccess,
     handleEdit,
     handleDelete,
-  } = usePortal();
+  } = usePortal({ onLogout: onLoggedOut });
 
   const handleGroupChange = () => { fetchNavItems(); fetchGroups(); };
 

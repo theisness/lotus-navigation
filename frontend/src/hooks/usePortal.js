@@ -10,7 +10,7 @@ export function urlToSlug(url) {
   }
 }
 
-export function usePortal() {
+export function usePortal({ onLogout: onLogoutCallback } = {}) {
   const { navId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,13 +21,11 @@ export function usePortal() {
   const [openedItems, setOpenedItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
   const [loaderVisible, setLoaderVisible] = useState(false);
-  const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved) return saved;
-    const h = new Date().getHours();
-    return (h >= 7 && h < 21) ? 'light' : 'dark';
-  });
-  const [colorTheme, setColorTheme] = useState('purple');
+  // 默认深色（不再按小时自动切换）；本地手动切换过的持久化在 localStorage，优先生效
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  // colorTheme 个人本地覆盖优先于服务端全站设置：localStorage 有值用它，
+  // 否则用 'lotus' 作为初始值，稍后被 settingsApi.getTheme() 的站内全局值覆盖（见下方 init）
+  const [colorTheme, setColorTheme] = useState(() => localStorage.getItem('colorTheme') || 'lotus');
 
   // 模态框状态
   const [showAuth, setShowAuth] = useState(false);
@@ -64,7 +62,8 @@ export function usePortal() {
 
   const handleColorThemeChange = useCallback(async (key) => {
     setColorTheme(key);
-    try { await settingsApi.setTheme(key); } catch {}
+    localStorage.setItem('colorTheme', key); // 个人本地覆盖，此后优先于站内全局设置
+    try { await settingsApi.setTheme(key); } catch {} // 管理员点选时仍会尝试写全站设置，非管理员会被后端拒绝但已 catch
   }, []);
 
   // ===== 数据获取 =====
@@ -105,10 +104,13 @@ export function usePortal() {
   // ===== 初始化 =====
   useEffect(() => {
     const init = async () => {
-      try {
-        const themeData = await settingsApi.getTheme();
-        if (themeData.theme) setColorTheme(themeData.theme);
-      } catch {}
+      // 个人本地覆盖优先：只有没有本地选择时才用服务端全站设置
+      if (!localStorage.getItem('colorTheme')) {
+        try {
+          const themeData = await settingsApi.getTheme();
+          if (themeData.theme) setColorTheme(themeData.theme);
+        } catch {}
+      }
 
       const token = getToken();
       if (token) {
@@ -170,7 +172,8 @@ export function usePortal() {
     setOpenedItems([]);
     navigate('/');
     fetchNavItems();
-  }, [fetchNavItems, navigate]);
+    onLogoutCallback?.(); // 通知 App 级路由：退回品牌登录门（GuestPortal）
+  }, [fetchNavItems, navigate, onLogoutCallback]);
 
   const handleRefresh = useCallback(() => {
     if (!activeId) return;

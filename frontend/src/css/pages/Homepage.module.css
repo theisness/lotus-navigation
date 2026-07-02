@@ -13,6 +13,21 @@
 
 .topBarLeft {
   flex: 1;
+  min-width: 0;
+}
+
+.greeting {
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'STSong', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.dateText {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
 }
 
 .userArea {
@@ -41,19 +56,24 @@
   background: var(--icon-btn-hover);
 }
 
-.logoutBtn {
+.addIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
   background: var(--icon-btn-bg);
-  border: 1px solid var(--surface-border);
-  border-radius: 8px;
-  padding: 7px 16px;
-  font-size: 13px;
-  color: var(--text-primary);
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.logoutBtn:hover {
+.addIconBtn:hover {
   background: var(--icon-btn-hover);
+  color: var(--text-primary);
 }
 
 .avatarImg {
@@ -104,6 +124,12 @@
   background: var(--icon-btn-hover);
 }
 
+.menuDivider {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--surface-border);
+}
+
 .btn {
   background: var(--icon-btn-bg);
   border: 1px solid var(--surface-border);
@@ -119,25 +145,48 @@
   background: var(--icon-btn-hover);
 }
 
-.actions {
-  margin-bottom: 20px;
+.section {
+  margin-bottom: 44px;
+  /* 侧栏点组滚动定位的目标锚点顶部预留一点空隙，别紧贴 topBar */
+  scroll-margin-top: 12px;
 }
 
-.addBtn {
-  background: var(--accent);
-  border: none;
-  border-radius: 8px;
-  padding: 8px 18px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.section:last-child {
+  margin-bottom: 0;
 }
 
-.addBtn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 0 0 24px;
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'STSong', serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.sectionLine {
+  flex: 1;
+  max-width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-bg-hover));
+}
+
+.sectionTitle .sectionLine:last-of-type {
+  background: linear-gradient(90deg, var(--accent-bg-hover), transparent);
+}
+
+.sectionOrnament {
+  font-size: 12px;
+  color: var(--accent);
+  opacity: 0.85;
+}
+
+.sectionLabel {
+  padding: 0 2px;
+  white-space: nowrap;
 }
 
 .listMode {

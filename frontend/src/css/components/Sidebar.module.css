@@ -172,6 +172,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
 }
 
 .groupCount {
@@ -275,10 +280,10 @@
   transform: scale(1.15);
 }
 
-.active { 
+.active {
   background: var(--accent-bg);
   color: var(--text-primary);
-  box-shadow: inset 3px 0 0 var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent), inset 0 0 24px var(--accent-glow);
 }
 
 .active .linkIcon {

@@ -31,6 +31,7 @@ export default function Sidebar({
   groups = [],
   collapsedGroups = {},
   onToggleGroup,
+  onGroupNavigate,
   onExpandAll,
   onCollapseAll,
 }) {
@@ -102,7 +103,10 @@ export default function Sidebar({
           const isCollapsed = collapsedGroups[group._id];
           return (
             <div key={group._id} className={styles.groupSection}>
-              <div className={styles.groupHeader} onClick={() => onToggleGroup?.(group._id)}>
+              <div
+                className={styles.groupHeader}
+                onClick={() => { onToggleGroup?.(group._id); onGroupNavigate?.(group._id); }}
+              >
                 <span className={`${styles.chevron} ${isCollapsed ? styles.chevronCollapsed : ''}`}>
                   <IconChevronRight size={14} />
                 </span>

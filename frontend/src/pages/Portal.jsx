@@ -16,7 +16,7 @@ import DownloadPage from '../components/DownloadPage.jsx';
 import { usePortal } from '../hooks/usePortal.js';
 import styles from '../css/pages/Portal.module.css';
 
-export default function Portal() {
+export default function Portal({ onLoggedOut }) {
   const navigate = useNavigate();
   const mainRef = useRef(null);
 
@@ -26,7 +26,7 @@ export default function Portal() {
   const [layoutMode, setLayoutMode] = useState(() => {
     const saved = localStorage.getItem('layoutMode');
     const num = Number(saved);
-    return isNaN(num) || num < 1 || num > 5 ? 2 : num;
+    return isNaN(num) || num < 1 || num > 5 ? 3 : num; // 默认三列，用户手动选过的仍从 localStorage 读
   });
 
   // ===== 使用共享 hook =====
@@ -76,7 +76,7 @@ export default function Portal() {
     handleAddNavSuccess,
     handleEdit,
     handleDelete,
-  } = usePortal();
+  } = usePortal({ onLogout: onLoggedOut });
 
   // ===== 桌面端独有 handlers =====
   const handleToggleLayout = useCallback((n) => {
@@ -91,6 +91,11 @@ export default function Portal() {
     fetchNavItems();
     fetchGroups();
   }, [fetchNavItems, fetchGroups]);
+
+  // 侧栏点组名：平滑滚动主区到对应区块（不影响侧栏自身的展开/折叠逻辑）
+  const handleGroupNavigate = useCallback((groupId) => {
+    document.getElementById(`group-section-${groupId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   const handleToggleFullscreen = useCallback(async () => {
     try {
@@ -134,6 +139,7 @@ export default function Portal() {
             groups={groups}
             collapsedGroups={collapsedGroups}
             onToggleGroup={toggleGroup}
+            onGroupNavigate={handleGroupNavigate}
             onExpandAll={expandAll}
             onCollapseAll={collapseAll}
           />
@@ -153,6 +159,7 @@ export default function Portal() {
           {isHomepage && (
             <Homepage
               navItems={navItems}
+              groups={groups}
               user={user}
               onLogin={() => setShowAuth(true)}
               onLogout={handleLogout}

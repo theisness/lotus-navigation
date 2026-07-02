@@ -9,6 +9,7 @@ const COLOR_THEMES = [
   { key: 'red', color: '#ef4444', label: '红色' },
   { key: 'pink', color: '#ec4899', label: '粉色' },
   { key: 'teal', color: '#14b8a6', label: '青色' },
+  { key: 'lotus', color: '#d9b96c', label: '云上净土' },
 ];
 
 export default function ThemePicker({ currentColorTheme, onSelect, visible, onClose }) {

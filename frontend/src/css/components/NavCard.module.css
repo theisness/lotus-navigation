@@ -12,6 +12,17 @@
   display: flex;
   align-items: center;
   min-height: 220px;
+  animation: card-enter 420ms ease both;
+}
+
+/* 进场渐次浮现；每张卡片的入场延迟由 NavCard.jsx 内联 animation-delay 控制 */
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { animation: none; }
 }
 
 /* 2. 渐变边框光晕 — 用伪元素做底层发光边框，更微妙 */
@@ -27,7 +38,7 @@
 }
 
 .card:hover::before {
-  opacity: 0.35;
+  opacity: 0.55;
 }
 
 /* 3. 背景图容器 — 用于视差缩放 */
@@ -48,10 +59,10 @@
 }
 
 .card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
+    0 12px 32px rgba(0, 0, 0, 0.18),
+    0 0 0 1px var(--accent-bg-hover);
 }
 
 .card:focus-visible {
@@ -119,6 +130,7 @@
 
 .title {
   margin: 0;
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'STSong', serif;
   font-size: 28px;
   font-weight: 700;
   color: #fff;
@@ -137,34 +149,11 @@
   text-overflow: ellipsis;
 }
 
-/* ===== 模式标签 & 操作按钮 ===== */
-.mode {
-  position: absolute;
-  top: 50%;
-  right: 14px;
-  transform: translateY(-50%);
-  z-index: 3;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 6px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.card:hover .mode {
-  opacity: 1;
-}
-
+/* ===== 操作按钮（编辑/删除，hover 浮现） ===== */
 .actions {
   position: absolute;
   top: 50%;
-  right: 100px;
+  right: 14px;
   transform: translateY(-50%);
   z-index: 3;
   display: flex;

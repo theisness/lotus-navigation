@@ -1,7 +1,7 @@
-import { IconEdit, IconDelete, IconExternalLink, IconIframe } from './Icons.jsx';
+import { IconEdit, IconDelete } from './Icons.jsx';
 import styles from '../css/components/NavCard.module.css';
 
-export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit, compact }) {
+export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit, compact, index = 0 }) {
   const { url, title, description, emoji, icon, display_mode, bg_image, bg_position } = item;
 
   const bgStyle = bg_image
@@ -9,6 +9,8 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit,
     : {};
 
   const cardClass = `${styles.card} ${!bg_image ? styles.cardThemed : ''} ${compact ? styles.compact : ''}`;
+  // 卡片进场渐次浮现：每张延后 80ms，减少动态效果偏好下由 CSS 关闭动画
+  const enterStyle = { animationDelay: `${Math.min(index, 24) * 80}ms` };
   const handleClick = () => {
     if (display_mode === 'redirect') {
       window.open(url, '_blank', 'noopener,noreferrer');
@@ -32,6 +34,7 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit,
   return (
     <div
       className={cardClass}
+      style={enterStyle}
       onClick={handleClick}
       role="link"
       tabIndex={0}
@@ -45,13 +48,6 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit,
           <h3 className={styles.title}>{title}</h3>
           {description && <p className={styles.desc}>{description}</p>}
         </div>
-      </div>
-      <div className={styles.mode}>
-        {display_mode === 'redirect' ? (
-          <><IconExternalLink size={11} /> 新标签页</>
-        ) : (
-          <><IconIframe size={11} /> iframe</>
-        )}
       </div>
       {canEdit && (
         <div className={styles.actions}>
