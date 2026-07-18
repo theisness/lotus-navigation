@@ -8,8 +8,8 @@
   animation: slideIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   display: flex;
   flex-direction: column;
+  /* 注意别加 overflow:hidden——收起按钮伸出右缘 13px 会被裁掉 */
   transition: background 0.4s ease, border-color 0.4s ease;
-  overflow: hidden;
 }
 
 /* 侧边栏背景微光纹理 */
@@ -124,13 +124,21 @@
   transform: scale(1.1);
 }
 
-/* ===== 当前页面信息卡 ===== */
+/* ===== 当前页面信息卡：毛玻璃 + 莲花水印 ===== */
 .currentBox {
   margin-top: 14px;
-  padding: 12px 14px;
-  background: var(--surface);
-  border-radius: 12px;
+  padding: 13px 15px;
+  /* 毛玻璃：半透明底 + backdrop 模糊提纯，主题色微光从左上渗入 */
+  background:
+    radial-gradient(120% 90% at 0% 0%, var(--accent-bg) 0%, transparent 55%),
+    var(--surface);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  border-radius: 14px;
   border: 1px solid var(--surface-border);
+  box-shadow:
+    inset 0 1px 0 var(--metal-shine, rgba(255, 255, 255, 0.1)),
+    0 4px 14px rgba(10, 12, 30, 0.08);
   transition: all 0.3s ease;
   width: 100%;
   box-sizing: border-box;
@@ -138,6 +146,7 @@
   overflow: hidden;
 }
 
+/* 顶部鎏金细线 */
 .currentBox::before {
   content: '';
   position: absolute;
@@ -145,13 +154,38 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent), transparent);
+  background: linear-gradient(90deg, var(--accent), transparent 75%);
   opacity: 0.7;
+  z-index: 1;
+}
+
+/* 右下角莲花水印，若隐若现 */
+.currentBox::after {
+  content: '';
+  position: absolute;
+  right: -18px;
+  bottom: -22px;
+  width: 92px;
+  height: 92px;
+  background-color: var(--accent);
+  mask: url('/blue-lotus.png') center / contain no-repeat;
+  -webkit-mask: url('/blue-lotus.png') center / contain no-repeat;
+  opacity: 0.14;
+  transform: rotate(-8deg);
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
 }
 
 .currentBox:hover {
-  background: var(--surface-hover);
-  box-shadow: 0 4px 16px var(--metal-glow, rgba(0,0,0,0.1));
+  border-color: var(--metal-border, rgba(255, 255, 255, 0.14));
+  box-shadow:
+    inset 0 1px 0 var(--metal-shine, rgba(255, 255, 255, 0.14)),
+    0 6px 20px var(--metal-glow, rgba(10, 12, 30, 0.12));
+}
+
+.currentBox:hover::after {
+  opacity: 0.24;
+  transform: rotate(0deg) scale(1.06);
 }
 
 .currentTitle {
@@ -175,6 +209,9 @@
   align-items: center;
   gap: 6px;
   margin-top: 10px;
+  /* 压在莲花水印之上 */
+  position: relative;
+  z-index: 1;
 }
 
 .iconBtn {

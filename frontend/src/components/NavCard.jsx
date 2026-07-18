@@ -1,5 +1,6 @@
 import { IconEdit, IconDelete } from './Icons.jsx';
 import { useTilt } from '../hooks/useTilt.js';
+import { runCardTransition } from '../utils/cardTransition.js';
 import styles from '../css/components/NavCard.module.css';
 
 export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit, compact, index = 0 }) {
@@ -16,7 +17,11 @@ export default function NavCard({ item, onIframeOpen, onEdit, onDelete, canEdit,
 
   const handleClick = () => {
     if (display_mode === 'redirect') {
+      // 新标签必须在用户手势同步栈里开（否则被弹窗拦截），转场当欢送动画
       window.open(url, '_blank', 'noopener,noreferrer');
+      if (ref.current) runCardTransition(ref.current, item, null);
+    } else if (ref.current) {
+      runCardTransition(ref.current, item, () => onIframeOpen?.(item));
     } else {
       onIframeOpen?.(item);
     }

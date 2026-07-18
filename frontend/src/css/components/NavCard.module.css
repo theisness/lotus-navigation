@@ -30,6 +30,10 @@
   min-height: 220px;
   transform-style: preserve-3d;
   will-change: transform;
+  /* 静息态双层柔影：贴地小影 + 环境大影 */
+  box-shadow:
+    0 2px 6px rgba(10, 12, 30, 0.14),
+    0 12px 32px rgba(10, 12, 30, 0.12);
 }
 
 /* ===== 金属光泽/边框层 ===== */
@@ -68,8 +72,12 @@
   z-index: 0;
 }
 
+.card::after {
+  opacity: 0.3;
+}
+
 .card:hover::after {
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .card:hover::before {
@@ -114,14 +122,14 @@
       105deg,
       rgba(255, 255, 255, 0.10) 0%,
       rgba(255, 255, 255, 0.02) 18%,
-      rgba(0, 0, 0, 0.10) 32%,
+      rgba(0, 0, 0, 0.05) 32%,
       rgba(255, 255, 255, 0.14) 48%,
-      rgba(0, 0, 0, 0.08) 65%,
-      rgba(255, 255, 255, 0.06) 82%,
-      rgba(0, 0, 0, 0.12) 100%
+      rgba(0, 0, 0, 0.04) 65%,
+      rgba(255, 255, 255, 0.07) 82%,
+      rgba(0, 0, 0, 0.06) 100%
     );
   mix-blend-mode: overlay;
-  opacity: 0.55;
+  opacity: 0.4;
   transition: opacity 0.35s ease;
   /* 内侧倒角：上左受光、下右背光 */
   box-shadow:
@@ -132,7 +140,7 @@
 }
 
 .card:hover .metalLayer {
-  opacity: 0.85;
+  opacity: 0.7;
 }
 
 /* ===== 背景图容器 ===== */
@@ -141,7 +149,13 @@
   inset: 0;
   background-size: cover;
   background-position: center;
-  transform: translateZ(-20px) scale(1.06);
+  /* 更深的 Z 轴让倾斜时画面与卡框产生视差景深 */
+  transform: translateZ(-32px) scale(1.1);
+  transition: filter 0.4s ease;
+}
+
+.card:hover .bgLayer {
+  filter: saturate(1.12) brightness(1.04);
 }
 
 /* ===== 无背景图的主题卡片金属面 ===== */
@@ -154,9 +168,10 @@
 
 .card:hover {
   box-shadow:
-    0 20px 48px rgba(0, 0, 0, 0.28),
+    0 4px 10px rgba(10, 12, 30, 0.2),
+    0 24px 56px rgba(10, 12, 30, 0.3),
     0 0 0 1px var(--metal-border, rgba(255,255,255,0.12)),
-    0 0 32px var(--metal-glow, rgba(255,255,255,0.12));
+    0 0 40px var(--metal-glow, rgba(255,255,255,0.12));
 }
 
 .card:focus-visible {
@@ -168,7 +183,13 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: transparent;
+  /* 左侧文字纱幕：压住花哨背景图保证标题可读，右侧渐隐不遮画面 */
+  background: linear-gradient(
+    100deg,
+    rgba(8, 10, 26, 0.26) 0%,
+    rgba(8, 10, 26, 0.08) 38%,
+    rgba(8, 10, 26, 0) 55%
+  );
   transition: background 0.3s ease;
   z-index: 1;
   transform: translateZ(10px);
@@ -225,16 +246,38 @@
   font-size: 28px;
   font-weight: 700;
   color: #fff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.4);
   white-space: nowrap;
-  letter-spacing: 0.5px;
+  letter-spacing: 2px;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+/* 标题下的鎏金细线：静息半长，hover 展开 */
+.title::after {
+  content: '';
+  position: absolute;
+  left: 1px;
+  bottom: 0;
+  height: 2px;
+  width: 34px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, #e9cf8f 0%, rgba(233, 207, 143, 0.35) 70%, transparent 100%);
+  box-shadow: 0 0 8px rgba(233, 207, 143, 0.5);
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card:hover .title::after {
+  width: 100%;
 }
 
 .desc {
-  margin: 4px 0 0;
-  font-size: 20px;
-  color: rgba(255, 255, 255, 0.78);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  margin: 7px 0 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.6px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
