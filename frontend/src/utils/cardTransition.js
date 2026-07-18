@@ -102,9 +102,11 @@ export function runCardTransition(cardEl, item, onArrive) {
     { duration: EXPAND_MS + 200, delay: 120, easing: 'ease-in-out' }
   );
 
+  // 转场一开始就挂载目标页：iframe 在转场层下方并行加载，揭幕时基本就绪
+  requestAnimationFrame(() => onArrive?.());
+
   expand.onfinish = () => {
-    onArrive?.();
-    // 目标页在转场层下方挂载/加载，稍候揭幕
+    // 展开完成后稍作停留再揭幕，给下方页面留加载时间
     setTimeout(() => {
       const fade = ov.animate(
         [{ opacity: 1 }, { opacity: 0 }],
