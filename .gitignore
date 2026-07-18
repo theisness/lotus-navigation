@@ -8,3 +8,5 @@ dist
 backend/config.json
 backend/images
 *.zip
+# 本地验证截图（不提交）
+docs/assets/2026-07-18-index-redesign/verify/

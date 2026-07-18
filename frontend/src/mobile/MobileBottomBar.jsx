@@ -20,7 +20,7 @@ export default function MobileBottomBar({ navItems = [], activeId, onGoHome, onS
         >
           <span className={styles.icon}>
             {item.icon
-              ? <img src={`/images/${item.icon}`} alt="" className={styles.iconImg} />
+              ? <span className={styles.iconImg} style={{ maskImage: `url(/images/${item.icon})`, WebkitMaskImage: `url(/images/${item.icon})` }} />
               : <IconLink size={18} />
             }
           </span>

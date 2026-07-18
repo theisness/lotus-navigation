@@ -124,7 +124,7 @@ export default function Sidebar({
                       >
                         <span className={styles.linkIcon}>
                           {item.icon
-                            ? <img src={`/images/${item.icon}`} alt="" className={styles.linkIconImg} />
+                            ? <span className={styles.linkIconImg} style={{ maskImage: `url(/images/${item.icon})`, WebkitMaskImage: `url(/images/${item.icon})` }} />
                             : <IconLink size={20} />
                           }
                         </span>
@@ -150,7 +150,7 @@ export default function Sidebar({
               >
                 <span className={styles.linkIcon}>
                   {item.icon
-                    ? <img src={`/images/${item.icon}`} alt="" className={styles.linkIconImg} />
+                    ? <span className={styles.linkIconImg} style={{ maskImage: `url(/images/${item.icon})`, WebkitMaskImage: `url(/images/${item.icon})` }} />
                     : <IconLink size={20} />
                   }
                 </span>

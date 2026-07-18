@@ -22,7 +22,7 @@ export function usePortal({ onLogout: onLogoutCallback } = {}) {
   const [activeId, setActiveId] = useState(null);
   const [loaderVisible, setLoaderVisible] = useState(false);
   // 默认深色（不再按小时自动切换）；本地手动切换过的持久化在 localStorage，优先生效
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
   // colorTheme 个人本地覆盖优先于服务端全站设置：localStorage 有值用它，
   // 否则用 'lotus' 作为初始值，稍后被 settingsApi.getTheme() 的站内全局值覆盖（见下方 init）
   const [colorTheme, setColorTheme] = useState(() => localStorage.getItem('colorTheme') || 'lotus');

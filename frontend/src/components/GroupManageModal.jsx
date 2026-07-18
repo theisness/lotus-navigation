@@ -176,7 +176,7 @@ export default function GroupManageModal({ visible, onClose, navItems = [], onSu
                   <div key={item._id} className={styles.itemRow}>
                     <span className={styles.itemIcon}>
                       {item.icon
-                        ? <img src={`/images/${item.icon}`} alt="" className={styles.itemIconImg} />
+                        ? <span className={styles.itemIconImg} style={{ maskImage: `url(/images/${item.icon})`, WebkitMaskImage: `url(/images/${item.icon})` }} />
                         : '🔗'
                       }
                     </span>
