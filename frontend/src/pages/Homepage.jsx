@@ -53,18 +53,22 @@ export default function Homepage({
   const now = useMemo(() => new Date(), []);
   const displayName = user?.nickname || (user?.email ? user.email.split('@')[0] : '');
 
-  // 按 nav_group_id 分区块渲染；未分组的项单独归一组（沿用 Sidebar 里同样的判定：无 nav_group_id 即未分组）
+  // 按 nav_group_id 分区块渲染；无可见项的分组标签不展示；未分组的项单独归一组
   const sections = useMemo(() => {
-    const list = groups.map(g => ({
-      id: g._id,
-      title: g.title,
-      items: navItems.filter(it => it.nav_group_id === g._id),
-    }));
-    const ungrouped = navItems.filter(it => !it.nav_group_id);
+    const sameId = (a, b) => a != null && b != null && String(a) === String(b);
+    const list = groups
+      .map((g) => ({
+        id: g._id,
+        title: g.title,
+        items: navItems.filter((it) => sameId(it.nav_group_id, g._id)),
+      }))
+      .filter((s) => s.items.length > 0);
+    const ungrouped = navItems.filter((it) => !it.nav_group_id);
     if (ungrouped.length > 0) {
-      list.push({ id: '__ungrouped__', title: groups.length > 0 ? '未分组' : '', items: ungrouped });
+      // 仅当还有其他可见分组时才标「未分组」，避免只剩未分组却挂着空标签感
+      list.push({ id: '__ungrouped__', title: list.length > 0 ? '未分组' : '', items: ungrouped });
     }
-    return list.filter(s => s.items.length > 0);
+    return list;
   }, [navItems, groups]);
 
   let cardCursor = 0;

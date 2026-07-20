@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import ThemePicker from './ThemePicker.jsx';
 import {
   IconHome, IconPalette, IconSun, IconMoon,
@@ -8,6 +8,12 @@ import {
 } from './Icons.jsx';
 import ColumnPicker from './ColumnPicker.jsx';
 import styles from '../css/components/Sidebar.module.css';
+
+/** 统一成字符串再比，避免 ObjectId / 字符串混用导致匹配失败 */
+function sameId(a, b) {
+  if (a == null || b == null) return false;
+  return String(a) === String(b);
+}
 
 export default function Sidebar({
   navItems = [],
@@ -53,6 +59,21 @@ export default function Sidebar({
     return () => document.removeEventListener('click', handleClick);
   }, []);
 
+  // 只展示「当前用户可见项」非空的分组；无权限导致整组为空时，分组标签一并隐藏
+  const visibleGroups = useMemo(() => {
+    return groups
+      .map((group) => ({
+        group,
+        items: navItems.filter((it) => sameId(it.nav_group_id, group._id)),
+      }))
+      .filter(({ items }) => items.length > 0);
+  }, [groups, navItems]);
+
+  const ungroupedItems = useMemo(
+    () => navItems.filter((it) => !it.nav_group_id),
+    [navItems]
+  );
+
   const handleItemClick = (e, item) => {
     e.preventDefault();
     if (item.display_mode === 'redirect') {
@@ -97,9 +118,8 @@ export default function Sidebar({
       </div>
 
       <nav className={styles.nav}>
-        {/* 分组列表 */}
-        {groups.map(group => {
-          const groupItems = navItems.filter(it => it.nav_group_id === group._id);
+        {/* 分组列表：无可见项的分组不渲染标签 */}
+        {visibleGroups.map(({ group, items: groupItems }) => {
           const isCollapsed = collapsedGroups[group._id];
           return (
             <div key={group._id} className={styles.groupSection}>
@@ -137,11 +157,11 @@ export default function Sidebar({
             </div>
           );
         })}
-        {/* 未分组 */}
-        {navItems.filter(it => !it.nav_group_id).length > 0 && (
+        {/* 未分组：仅当还有其他可见分组时才显示「未分组」标签 */}
+        {ungroupedItems.length > 0 && (
           <div className={styles.ungroupedSection}>
-            {groups.length > 0 && <div className={styles.ungroupedTitle}>未分组</div>}
-            {navItems.filter(it => !it.nav_group_id).map(item => (
+            {visibleGroups.length > 0 && <div className={styles.ungroupedTitle}>未分组</div>}
+            {ungroupedItems.map(item => (
               <a
                 key={item._id}
                 href="#"
@@ -161,8 +181,8 @@ export default function Sidebar({
         )}
       </nav>
 
-      {/* 分组操作按钮 */}
-      {groups.length > 0 && (
+      {/* 分组操作按钮：仅当存在可见分组时显示 */}
+      {visibleGroups.length > 0 && (
         <div className={styles.groupActions}>
           <button className={styles.groupActionBtn} onClick={onExpandAll} title="全部展开">
             <IconExpandAll size={14} />
