@@ -31,9 +31,16 @@ public class WebViewSwipeRefreshLayout extends SwipeRefreshLayout {
     public static final String INJECT_JS = "(function(){"
             + "if(window.__lotusScrollWatch)return;window.__lotusScrollWatch=1;"
             + "var scrolled=new Set();"
+            // 跨域 iframe（如影院 ssbx.site）内部滚动位置拿不到：
+            // 只要有大 iframe 覆盖视口就禁掉下拉刷新，手势全部让给页面滚动
+            + "function iframeCovers(){"
+            + "  var fs=document.querySelectorAll('iframe');"
+            + "  for(var i=0;i<fs.length;i++){var r=fs[i].getBoundingClientRect();"
+            + "    if(r.width>window.innerWidth*0.8&&r.height>window.innerHeight*0.6&&r.top<window.innerHeight*0.5&&r.bottom>window.innerHeight*0.5)return true;}"
+            + "  return false;}"
             + "function report(){"
             + "  scrolled.forEach(function(e){if(!e.isConnected||e.scrollTop<=0)scrolled.delete(e);});"
-            + "  var up=(window.scrollY>0)||scrolled.size>0;"
+            + "  var up=(window.scrollY>0)||scrolled.size>0||iframeCovers();"
             + "  if(window.NativeScroll)NativeScroll.setCanScrollUp(up);"
             + "}"
             + "document.addEventListener('scroll',function(ev){"
@@ -42,7 +49,7 @@ public class WebViewSwipeRefreshLayout extends SwipeRefreshLayout {
             + "  if(t&&t.nodeType===1){if(t.scrollTop>0){scrolled.add(t);}else{scrolled.delete(t);}}"
             + "  report();"
             + "},true);"
-            + "setInterval(report,2000);"
+            + "setInterval(report,1500);"
             + "report();"
             + "})();";
 
