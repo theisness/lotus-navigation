@@ -1,6 +1,6 @@
 {
-  "versionCode": 3,
-  "versionName": "1.0.2",
-  "notes": "1) 网页字号与 Chrome 对齐（抵消系统字体缩放）\n2) 打开 App 自动检查更新，弹窗确认后下载安装",
+  "versionCode": 4,
+  "versionName": "1.0.3",
+  "notes": "Android App 网页字体调整为浏览器默认字号的 110%，阅读更清晰",
   "force": false
 }

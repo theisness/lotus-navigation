@@ -94,9 +94,9 @@ public class MainActivity extends Activity {
         s.setLoadWithOverviewMode(true);
         s.setUseWideViewPort(true);
         s.setBuiltInZoomControls(false);
-        // 与 Chrome 网页字号对齐：WebView 会叠乘系统 font_scale（本机常见 1.25），
-        // Chrome 默认不吃系统字体缩放。用 textZoom 抵消。
-        applyChromeLikeTextZoom(s);
+        // Android App 固定为 Chrome 网页字号的 110%；WebView 会叠乘系统 font_scale，
+        // 因此用 textZoom 先抵消系统字体缩放，再保留 1.10 倍产品字号。
+        applyAppTextZoom(s);
         s.setUserAgentString(s.getUserAgentString() + " LotusNavApp/" + versionName());
         // 禁止 WebView 算法/强制暗色：避免把浅色站整页反色
         disableWebViewForceDark(s);
@@ -190,14 +190,14 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * 让 WebView 正文字号接近 Chrome 默认（100% 网页缩放）。
+     * 让 WebView 正文字号保持为 Chrome 默认的 110%。
      * 系统「显示大小/字体大小」会进 Configuration.fontScale；WebView 再叠 textZoom，
      * 不抵消时会比 Chrome 明显偏大。
      */
-    private void applyChromeLikeTextZoom(WebSettings s) {
+    private void applyAppTextZoom(WebSettings s) {
         float fontScale = getResources().getConfiguration().fontScale;
         if (fontScale <= 0.01f) fontScale = 1f;
-        int zoom = Math.round(100f / fontScale);
+        int zoom = Math.round(110f / fontScale);
         if (zoom < 50) zoom = 50;
         if (zoom > 200) zoom = 200;
         s.setTextZoom(zoom);
@@ -221,7 +221,7 @@ public class MainActivity extends Activity {
         super.onConfigurationChanged(newConfig);
         // 用户改了系统字体大小后，重新对齐网页字号
         if (webView != null) {
-            applyChromeLikeTextZoom(webView.getSettings());
+            applyAppTextZoom(webView.getSettings());
         }
     }
 
