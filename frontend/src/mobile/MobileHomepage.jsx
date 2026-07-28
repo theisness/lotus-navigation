@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import ThemePicker from '../components/ThemePicker.jsx';
-import { IconEdit, IconDelete, IconSun, IconMoon, IconDownload } from '../components/Icons.jsx';
+import { IconEdit, IconDelete, IconSun, IconMoon, IconDownload, IconPalette, IconGrid, IconList } from '../components/Icons.jsx';
 import styles from './css/MobileHomepage.module.css';
 
 function DefaultAvatar({ name }) {
@@ -172,8 +172,10 @@ export default function MobileHomepage({
             <button
               className={styles.settingBtn}
               onClick={() => setShowPicker(v => !v)}
+              aria-label="主题颜色"
+              title="主题颜色"
             >
-              主题颜色
+              <IconPalette size={18} />
             </button>
             <ThemePicker
               visible={showPicker}
@@ -183,14 +185,24 @@ export default function MobileHomepage({
             />
           </div>
         )}
-        <button className={styles.settingBtn} onClick={toggleColMode}>
-          {colMode === 1 ? '双列视图' : '单列视图'}
+        <button
+          className={styles.settingBtn}
+          onClick={toggleColMode}
+          aria-label={colMode === 1 ? '切换双列视图' : '切换单列视图'}
+          title={colMode === 1 ? '双列视图' : '单列视图'}
+        >
+          {colMode === 1 ? <IconGrid size={18} /> : <IconList size={18} />}
         </button>
-        <button className={styles.settingBtn} onClick={onToggleTheme}>
-          {theme === 'dark' ? '日间模式' : '夜间模式'}
+        <button
+          className={styles.settingBtn}
+          onClick={onToggleTheme}
+          aria-label={theme === 'dark' ? '切换日间模式' : '切换夜间模式'}
+          title={theme === 'dark' ? '日间模式' : '夜间模式'}
+        >
+          {theme === 'dark' ? <IconSun size={18} /> : <IconMoon size={18} />}
         </button>
-        <button className={styles.settingBtn} onClick={onOpenDownload}>
-          下载客户端
+        <button className={styles.settingBtn} onClick={onOpenDownload} aria-label="下载客户端" title="下载客户端">
+          <IconDownload size={18} />
         </button>
       </div>
     </div>

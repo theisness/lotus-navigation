@@ -311,26 +311,34 @@
 
 .bottomSettings {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  gap: 12px;
+  gap: 8px;
   margin-top: 24px;
-  padding: 16px 0;
+  padding: 16px 12px;
 }
 
 .pickerWrap {
   position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
 }
 
 .settingBtn {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: 10px;
-  padding: 10px 16px;
-  font-size: 13px;
+  padding: 0;
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .settingBtn:active {
