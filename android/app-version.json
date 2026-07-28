@@ -1,6 +1,6 @@
 {
-  "versionCode": 2,
-  "versionName": "1.0.1",
-  "notes": "修复：内嵌 Discourse 误用暗色主题；site-logo 因 http 明文被 WebView 拦截无法加载（App 改 Light theme + 关 force dark；blog 站 force_https）",
+  "versionCode": 3,
+  "versionName": "1.0.2",
+  "notes": "1) 网页字号与 Chrome 对齐（抵消系统字体缩放）\n2) 打开 App 自动检查更新，弹窗确认后下载安装",
   "force": false
 }

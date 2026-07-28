@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -37,6 +38,7 @@ public class MainActivity extends Activity {
     private static final String HOME_URL = "https://index.ssbx.site/";
     private static final String ERROR_URL = "file:///android_asset/error.html";
     private static final int REQ_FILE_CHOOSER = 1001;
+    static final int REQ_INSTALL_PERMISSION = 1002;
 
     private WebView webView;
     private WebViewSwipeRefreshLayout swipeLayout;
@@ -92,6 +94,9 @@ public class MainActivity extends Activity {
         s.setLoadWithOverviewMode(true);
         s.setUseWideViewPort(true);
         s.setBuiltInZoomControls(false);
+        // 与 Chrome 网页字号对齐：WebView 会叠乘系统 font_scale（本机常见 1.25），
+        // Chrome 默认不吃系统字体缩放。用 textZoom 抵消。
+        applyChromeLikeTextZoom(s);
         s.setUserAgentString(s.getUserAgentString() + " LotusNavApp/" + versionName());
         // 禁止 WebView 算法/强制暗色：避免把浅色站整页反色
         disableWebViewForceDark(s);
@@ -184,6 +189,20 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    /**
+     * 让 WebView 正文字号接近 Chrome 默认（100% 网页缩放）。
+     * 系统「显示大小/字体大小」会进 Configuration.fontScale；WebView 再叠 textZoom，
+     * 不抵消时会比 Chrome 明显偏大。
+     */
+    private void applyChromeLikeTextZoom(WebSettings s) {
+        float fontScale = getResources().getConfiguration().fontScale;
+        if (fontScale <= 0.01f) fontScale = 1f;
+        int zoom = Math.round(100f / fontScale);
+        if (zoom < 50) zoom = 50;
+        if (zoom > 200) zoom = 200;
+        s.setTextZoom(zoom);
+    }
+
     /** WebView 暗色：跟 App theme 的 isLightTheme 走 prefers-color-scheme；再叠加 FORCE_DARK 会双杀。 */
     private void disableWebViewForceDark(WebSettings s) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -194,6 +213,15 @@ public class MainActivity extends Activity {
                 s.getClass().getMethod("setForceDark", int.class).invoke(s, 0);
             } catch (Exception ignored) {
             }
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // 用户改了系统字体大小后，重新对齐网页字号
+        if (webView != null) {
+            applyChromeLikeTextZoom(webView.getSettings());
         }
     }
 
@@ -215,6 +243,9 @@ public class MainActivity extends Activity {
                 filePathCallback.onReceiveValue(results);
                 filePathCallback = null;
             }
+        } else if (requestCode == REQ_INSTALL_PERMISSION) {
+            // 从「安装未知应用」设置页返回：有权限则继续装已下好的 APK
+            if (updateChecker != null) updateChecker.retryPendingInstall();
         }
     }
 
@@ -222,7 +253,10 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         webView.onResume();
-        if (updateChecker != null) updateChecker.checkOnResume();
+        if (updateChecker != null) {
+            updateChecker.retryPendingInstall();
+            updateChecker.checkOnResume();
+        }
     }
 
     @Override
