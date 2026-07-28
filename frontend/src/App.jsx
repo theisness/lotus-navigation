@@ -1,8 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Portal from './pages/Portal.jsx';
 import MobilePortal from './mobile/MobilePortal.jsx';
 import GuestPortal from './pages/GuestPortal.jsx';
+import DownloadPage from './components/DownloadPage.jsx';
 import { getToken } from './api.js';
 import './css/common.css';
 // 衬线字体全局引入一次：登录态卡片标题/顶栏问候语、游客门户品牌字都用得到
@@ -20,6 +21,12 @@ function useIsMobile(breakpoint = 768) {
   return isMobile;
 }
 
+// 游客可直接访问的下载页（App 下载链接公开，/api/download/* 后端本来就没鉴权）
+function GuestDownload() {
+  const navigate = useNavigate();
+  return <DownloadPage onEnterWeb={() => navigate('/')} />;
+}
+
 export default function App() {
   const isMobile = useIsMobile();
   // 是否曾登录过（有本地 token）。只在首次挂载判定一次，
@@ -31,6 +38,7 @@ export default function App() {
     return (
       <BrowserRouter>
         <Routes>
+          <Route path="/download" element={<GuestDownload />} />
           <Route path="*" element={<GuestPortal onLoginSuccess={() => setHasToken(true)} />} />
         </Routes>
       </BrowserRouter>

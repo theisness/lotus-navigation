@@ -167,6 +167,23 @@
   transform: translateY(-2px);
 }
 
+/* 登录按钮下方的 App 下载入口（游客可见） */
+.downloadLink {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--gp-gold);
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity var(--gp-transition);
+}
+
+.downloadLink:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
 /* ===== 页脚 ===== */
 .footer {
   position: relative;

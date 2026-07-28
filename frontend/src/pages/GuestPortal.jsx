@@ -36,6 +36,9 @@ export default function GuestPortal({ onLoginSuccess }) {
           <button type="button" className={styles.loginBtn} onClick={() => setShowAuth(true)}>
             登录
           </button>
+          <a href="/download" className={styles.downloadLink}>
+            下载安卓 App
+          </a>
         </div>
       </section>
 
