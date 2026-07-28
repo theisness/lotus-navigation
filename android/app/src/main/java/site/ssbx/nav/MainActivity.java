@@ -68,7 +68,13 @@ public class MainActivity extends Activity {
         if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState);
         } else {
-            webView.loadUrl(HOME_URL);
+            // 支持 adb / 外部 Intent 打开指定 https 链接（验收内嵌站时用）
+            Uri launch = getIntent() != null ? getIntent().getData() : null;
+            if (launch != null && ("http".equals(launch.getScheme()) || "https".equals(launch.getScheme()))) {
+                webView.loadUrl(launch.toString());
+            } else {
+                webView.loadUrl(HOME_URL);
+            }
         }
 
         updateChecker = new UpdateChecker(this);
@@ -87,6 +93,8 @@ public class MainActivity extends Activity {
         s.setUseWideViewPort(true);
         s.setBuiltInZoomControls(false);
         s.setUserAgentString(s.getUserAgentString() + " LotusNavApp/" + versionName());
+        // 禁止 WebView 算法/强制暗色：避免把浅色站整页反色
+        disableWebViewForceDark(s);
 
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
@@ -174,6 +182,19 @@ public class MainActivity extends Activity {
         } catch (ActivityNotFoundException ignored) {
         }
         return true;
+    }
+
+    /** WebView 暗色：跟 App theme 的 isLightTheme 走 prefers-color-scheme；再叠加 FORCE_DARK 会双杀。 */
+    private void disableWebViewForceDark(WebSettings s) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            s.setAlgorithmicDarkeningAllowed(false);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // FORCE_DARK_OFF = 0；API 29-32
+            try {
+                s.getClass().getMethod("setForceDark", int.class).invoke(s, 0);
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     private String versionName() {

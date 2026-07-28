@@ -15,12 +15,15 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:forceDarkAllowed="false"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- 不声明 BROWSABLE 全站劫持；显式组件启动仍可带 -d URL：
+                 adb shell am start -n site.ssbx.nav/.MainActivity -d 'https://blog.ssbx.site/' -->
         </activity>
 
         <provider

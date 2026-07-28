@@ -3,9 +3,13 @@
     <color name="lotus_bg">#14163F</color>
     <color name="ic_launcher_background">#FFFFFF</color>
 
-    <style name="Theme.LotusNav" parent="android:Theme.Material.NoActionBar">
+    <!-- 必须用 Light 父主题：WebView 的 prefers-color-scheme 跟 App isLightTheme 走。
+         用 Material.NoActionBar（暗色）会让 Discourse 等站强制暗色 scheme。 -->
+    <style name="Theme.LotusNav" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:statusBarColor">@color/lotus_bg</item>
         <item name="android:navigationBarColor">@color/lotus_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
 </resources>
