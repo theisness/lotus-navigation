@@ -23,8 +23,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 /**
  * 莲花导航 WebView 壳
  * - 加载 https://index.ssbx.site
@@ -41,7 +39,7 @@ public class MainActivity extends Activity {
     private static final int REQ_FILE_CHOOSER = 1001;
 
     private WebView webView;
-    private SwipeRefreshLayout swipeLayout;
+    private WebViewSwipeRefreshLayout swipeLayout;
     private UpdateChecker updateChecker;
     private ValueCallback<Uri[]> filePathCallback;
     private boolean errorPageShown = false;
@@ -54,7 +52,7 @@ public class MainActivity extends Activity {
         webView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        swipeLayout = new SwipeRefreshLayout(this);
+        swipeLayout = new WebViewSwipeRefreshLayout(this, webView);
         swipeLayout.addView(webView);
         swipeLayout.setColorSchemeColors(Color.parseColor("#667eea"));
         swipeLayout.setOnRefreshListener(() -> {
@@ -62,6 +60,8 @@ public class MainActivity extends Activity {
             webView.reload();
         });
         setContentView(swipeLayout);
+
+        webView.addJavascriptInterface(swipeLayout.new ScrollBridge(), "NativeScroll");
 
         setupWebView();
 
@@ -114,6 +114,8 @@ public class MainActivity extends Activity {
             public void onPageFinished(WebView view, String url) {
                 swipeLayout.setRefreshing(false);
                 if (!ERROR_URL.equals(url)) errorPageShown = false;
+                // 注入滚动监听：内部 div 滚动时禁用下拉刷新，回顶才允许
+                view.evaluateJavascript(WebViewSwipeRefreshLayout.INJECT_JS, null);
             }
         });
 
