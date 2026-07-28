@@ -1,0 +1,15 @@
+# 构建产物
+build/
+app/build/
+*.apk
+*.aab
+
+# 签名（绝不进 git）
+keystore/
+signing.properties
+
+# IDE / 本地
+.idea/
+*.iml
+local.properties
+.gradle/

@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.application'
+}
+
+// 签名配置放在 signing.properties（不进 git）
+def signingProps = new Properties()
+def signingFile = rootProject.file('signing.properties')
+if (signingFile.exists()) {
+    signingFile.withInputStream { signingProps.load(it) }
+}
+
+android {
+    namespace 'site.ssbx.nav'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'site.ssbx.nav'
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    signingConfigs {
+        release {
+            storeFile rootProject.file(signingProps.getProperty('storeFile', 'keystore/lotus-nav.jks'))
+            storePassword signingProps.getProperty('storePassword', '')
+            keyAlias signingProps.getProperty('keyAlias', 'lotus-nav')
+            keyPassword signingProps.getProperty('keyPassword', '')
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (signingFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+}

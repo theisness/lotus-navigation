@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>莲花导航 · 离线</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        color: #e5e7eb;
+        font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+      img { width: 96px; height: 96px; }
+      h1 { font-size: 20px; margin: 0; }
+      p { font-size: 14px; color: #9ca3af; margin: 0; }
+      button {
+        margin-top: 8px;
+        padding: 10px 28px;
+        border: none;
+        border-radius: 10px;
+        background: #667eea;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="/pwa-192.png" alt="莲花导航" />
+    <h1>当前网络不可用</h1>
+    <p>请检查网络连接后重试</p>
+    <button onclick="location.reload()">重新加载</button>
+  </body>
+</html>

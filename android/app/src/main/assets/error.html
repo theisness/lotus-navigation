@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>网络错误</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        background: #14163f;
+        color: #e5e7eb;
+        font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+      .icon { font-size: 56px; }
+      h1 { font-size: 20px; margin: 0; }
+      p { font-size: 14px; color: #9ca3af; margin: 0; }
+      button {
+        margin-top: 8px;
+        padding: 12px 32px;
+        border: none;
+        border-radius: 10px;
+        background: #667eea;
+        color: #fff;
+        font-size: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="icon">🪷</div>
+    <h1>网络连接失败</h1>
+    <p>请检查网络后点击重试</p>
+    <button onclick="window.location.href='https://index.ssbx.site/'">重试</button>
+  </body>
+</html>

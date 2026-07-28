@@ -1,0 +1,6 @@
+{
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "notes": "首个版本：莲花导航安卓客户端（WebView 壳 + 自动更新 + PWA 优化）",
+  "force": false
+}

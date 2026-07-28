@@ -40,4 +40,22 @@ router.get('/latest-apk', (_req, res) => downloadLatest('.apk', '安卓', res));
 // GET /api/download/latest-ipa
 router.get('/latest-ipa', (_req, res) => downloadLatest('.ipa', 'iOS', res));
 
+// GET /api/download/app-version
+// App 自动更新用：返回 DOWNLOAD_DIR 下 app-version.json
+// {"versionCode":2,"versionName":"1.1.0","notes":"更新说明","force":false}
+// no-store 防 CDN / 中间层缓存旧版本信息
+router.get('/app-version', (_req, res) => {
+  try {
+    const file = path.join(DOWNLOAD_DIR, 'app-version.json');
+    if (!fs.existsSync(file)) {
+      return res.status(404).json({ error: '暂无版本信息' });
+    }
+    res.set('Cache-Control', 'no-store');
+    res.type('application/json').send(fs.readFileSync(file, 'utf-8'));
+  } catch (err) {
+    console.error('读取版本信息失败:', err);
+    res.status(500).json({ error: '读取版本信息失败' });
+  }
+});
+
 module.exports = router;

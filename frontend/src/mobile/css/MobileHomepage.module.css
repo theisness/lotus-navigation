@@ -171,6 +171,40 @@
   gap: 12px;
 }
 
+.list.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.twoCol .card {
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+}
+
+.twoCol .cardContent {
+  padding: 10px 12px;
+}
+
+.twoCol .cardTitle {
+  font-size: 16px;
+}
+
+.twoCol .cardDesc {
+  font-size: 12px;
+}
+
+.twoCol .cardActions {
+  top: 6px;
+  right: 6px;
+  gap: 4px;
+}
+
+.twoCol .cardActionBtn {
+  width: 24px;
+  height: 24px;
+}
+
 .card {
   position: relative;
   aspect-ratio: 16 / 9;

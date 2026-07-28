@@ -31,8 +31,17 @@ export default function MobileHomepage({
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
+  const [colMode, setColMode] = useState(() =>
+    Number(localStorage.getItem('mobileColMode')) === 2 ? 2 : 1
+  );
   const menuRef = useRef(null);
   const pickerRef = useRef(null);
+
+  const toggleColMode = () => {
+    const next = colMode === 1 ? 2 : 1;
+    setColMode(next);
+    localStorage.setItem('mobileColMode', String(next));
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -115,7 +124,7 @@ export default function MobileHomepage({
         <button className={styles.addBtn} onClick={onAddNav}>＋ 添加导航</button>
       )}
 
-      <div className={styles.list}>
+      <div className={`${styles.list} ${colMode === 2 ? styles.twoCol : ''}`}>
         {navItems.map((item) => {
           const bgStyle = item.bg_image
             ? { backgroundImage: `url(/images/${item.bg_image})`, backgroundPosition: item.bg_position || 'center' }
@@ -174,6 +183,9 @@ export default function MobileHomepage({
             />
           </div>
         )}
+        <button className={styles.settingBtn} onClick={toggleColMode}>
+          {colMode === 1 ? '双列视图' : '单列视图'}
+        </button>
         <button className={styles.settingBtn} onClick={onToggleTheme}>
           {theme === 'dark' ? '日间模式' : '夜间模式'}
         </button>

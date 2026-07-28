@@ -1,0 +1,16 @@
+{
+  "name": "莲花导航",
+  "short_name": "莲花导航",
+  "description": "一站聚合，万象归莲。极简优雅的多站导航门户。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#14163f",
+  "theme_color": "#14163f",
+  "icons": [
+    { "src": "/pwa-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/pwa-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
