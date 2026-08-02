@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileHomepage from './MobileHomepage.jsx';
 import MobileBottomBar from './MobileBottomBar.jsx';
+import MobileProfileSheet from './MobileProfileSheet.jsx';
 import Loader from '../components/Loader.jsx';
 import IframeView from '../components/IframeView.jsx';
 import AuthForm from '../components/AuthForm.jsx';
@@ -21,6 +23,7 @@ export default function MobilePortal({ onLoggedOut }) {
   const {
     user,
     navItems,
+    groups,
     openedItems,
     activeId,
     loaderVisible,
@@ -60,6 +63,27 @@ export default function MobilePortal({ onLoggedOut }) {
 
   const handleGroupChange = () => { fetchNavItems(); fetchGroups(); };
 
+  // ===== 底栏三 tab 需要的本地状态 =====
+  const [sheetOpen, setSheetOpen] = useState(false);
+  // 首页单/双列开关原先在 MobileHomepage 内部，随设置一并移到「我的」弹层，故提到这里
+  const [colMode, setColMode] = useState(() =>
+    Number(localStorage.getItem('mobileColMode')) === 2 ? 2 : 1
+  );
+  const toggleColMode = () => {
+    const next = colMode === 1 ? 2 : 1;
+    setColMode(next);
+    localStorage.setItem('mobileColMode', String(next));
+  };
+
+  // 第二个 tab = 当前正在看的导航项；回主页后仍保留最近一项，方便一键切回去
+  const [lastItem, setLastItem] = useState(null);
+  useEffect(() => {
+    if (!activeId) return;
+    const it = navItems.find((i) => i._id === activeId);
+    if (it) setLastItem(it);
+  }, [activeId, navItems]);
+  const currentItem = (activeId && navItems.find((i) => i._id === activeId)) || lastItem;
+
   return (
     <div className={styles.app}>
       <div className={styles.content}>
@@ -72,6 +96,7 @@ export default function MobilePortal({ onLoggedOut }) {
         {isHomepage && (
           <MobileHomepage
             navItems={navItems}
+            groups={groups}
             user={user}
             onLogin={() => setShowAuth(true)}
             onLogout={handleLogout}
@@ -79,17 +104,7 @@ export default function MobilePortal({ onLoggedOut }) {
             onIframeOpen={handleSelectItem}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            onOpenProfile={() => setShowProfile(true)}
-            onOpenMemberManage={() => setShowMemberManage(true)}
-            onOpenGroupManage={() => setShowGroupManage(true)}
-            onOpenPermGroupManage={() => setShowPermGroupManage(true)}
-            onOpenNavSort={() => setShowNavSort(true)}
-            theme={theme}
-            onToggleTheme={handleToggleTheme}
-            colorTheme={colorTheme}
-            onColorThemeChange={handleColorThemeChange}
-            isAdmin={user?.is_admin || false}
-            onOpenDownload={() => navigate('/download')}
+            colMode={colMode}
           />
         )}
 
@@ -103,11 +118,35 @@ export default function MobilePortal({ onLoggedOut }) {
       </div>
 
       <MobileBottomBar
-        navItems={navItems}
+        currentItem={currentItem}
         activeId={activeId}
-        onGoHome={handleGoHome}
-        onSelect={handleSelectItem}
+        onGoHome={() => { setSheetOpen(false); handleGoHome(); }}
+        onSelect={(item) => { setSheetOpen(false); handleSelectItem(item); }}
         isHomepage={isHomepage}
+        user={user}
+        sheetOpen={sheetOpen}
+        onOpenSheet={() => setSheetOpen((v) => !v)}
+      />
+
+      <MobileProfileSheet
+        visible={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        user={user}
+        isAdmin={user?.is_admin || false}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
+        colorTheme={colorTheme}
+        onColorThemeChange={handleColorThemeChange}
+        colMode={colMode}
+        onToggleColMode={toggleColMode}
+        onLogin={() => setShowAuth(true)}
+        onLogout={handleLogout}
+        onOpenProfile={() => setShowProfile(true)}
+        onOpenMemberManage={() => setShowMemberManage(true)}
+        onOpenGroupManage={() => setShowGroupManage(true)}
+        onOpenPermGroupManage={() => setShowPermGroupManage(true)}
+        onOpenNavSort={() => setShowNavSort(true)}
+        onOpenDownload={() => navigate('/download')}
       />
 
       <AuthForm

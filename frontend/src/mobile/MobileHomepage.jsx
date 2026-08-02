@@ -1,56 +1,34 @@
-import { useState, useRef, useEffect } from 'react';
-import ThemePicker from '../components/ThemePicker.jsx';
-import { IconEdit, IconDelete, IconSun, IconMoon, IconDownload, IconPalette, IconGrid, IconList } from '../components/Icons.jsx';
+import { useMemo } from 'react';
+import { IconEdit, IconDelete } from '../components/Icons.jsx';
 import styles from './css/MobileHomepage.module.css';
 
-function DefaultAvatar({ name }) {
-  const letter = (name && name.trim() ? name : '?').charAt(0).toUpperCase();
-  return <span className={styles.defaultAvatar}>{letter}</span>;
-}
-
+// 用户菜单与设置开关已移到底栏「我的」tab（MobileProfileSheet），此处只管导航内容
 export default function MobileHomepage({
   navItems = [],
+  groups = [],
   user,
-  onLogin,
-  onLogout,
   onAddNav,
   onIframeOpen,
   onEdit,
   onDelete,
-  onOpenProfile,
-  onOpenMemberManage,
-  onOpenGroupManage,
-  onOpenPermGroupManage,
-  onOpenNavSort,
-  theme,
-  onToggleTheme,
-  colorTheme,
-  onColorThemeChange,
-  isAdmin,
-  onOpenDownload,
+  colMode = 1,
 }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [showPicker, setShowPicker] = useState(false);
-  const [colMode, setColMode] = useState(() =>
-    Number(localStorage.getItem('mobileColMode')) === 2 ? 2 : 1
-  );
-  const menuRef = useRef(null);
-  const pickerRef = useRef(null);
-
-  const toggleColMode = () => {
-    const next = colMode === 1 ? 2 : 1;
-    setColMode(next);
-    localStorage.setItem('mobileColMode', String(next));
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
-      if (pickerRef.current && !pickerRef.current.contains(e.target)) setShowPicker(false);
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
+  // 与桌面首页同一套分区规则：按 nav_group_id 分块，空分组不出标题，未分组归一组
+  const sections = useMemo(() => {
+    const sameId = (a, b) => a != null && b != null && String(a) === String(b);
+    const list = groups
+      .map((g) => ({
+        id: g._id,
+        title: g.title,
+        items: navItems.filter((it) => sameId(it.nav_group_id, g._id)),
+      }))
+      .filter((s) => s.items.length > 0);
+    const ungrouped = navItems.filter((it) => !it.nav_group_id);
+    if (ungrouped.length > 0) {
+      list.push({ id: '__ungrouped__', title: list.length > 0 ? '未分组' : '', items: ungrouped });
+    }
+    return list;
+  }, [navItems, groups]);
 
   return (
     <div className={styles.wrap}>
@@ -65,146 +43,66 @@ export default function MobileHomepage({
             <span className={styles.brandEn}>Lotus Navigation</span>
           </div>
         </div>
-        <div className={styles.userArea} ref={menuRef}>
-          {user ? (
-            <>
-              <button
-                type="button"
-                className={styles.avatarBtn}
-                onClick={() => setMenuOpen((v) => !v)}
-                aria-haspopup="true"
-                aria-expanded={menuOpen}
-                aria-label="用户菜单"
-              >
-                {user.avatar ? (
-                  <img
-                    src={user.avatar.startsWith('/') ? user.avatar : `/images/${user.avatar}`}
-                    alt=""
-                    className={styles.avatarImg}
-                  />
-                ) : (
-                  <DefaultAvatar name={user.nickname || user.email} />
-                )}
-              </button>
-              {menuOpen && (
-                <div className={styles.dropdown}>
-                  <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onOpenProfile?.(); }}>
-                    个人信息
-                  </button>
-                  {user.is_admin && (
-                    <>
-                      <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onOpenMemberManage?.(); }}>
-                        成员管理
-                      </button>
-                      <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onOpenGroupManage?.(); }}>
-                        菜单栏分组
-                      </button>
-                      <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onOpenPermGroupManage?.(); }}>
-                        权限分组
-                      </button>
-                      <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onOpenNavSort?.(); }}>
-                        导航排序
-                      </button>
-                    </>
-                  )}
-                  <div className={styles.menuDivider} />
-                  <button className={styles.menuItem} onClick={() => { setMenuOpen(false); onLogout(); }}>
-                    登出
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <button className={styles.loginBtn} onClick={onLogin}>登录</button>
-          )}
-        </div>
       </header>
 
       {user && (
         <button className={styles.addBtn} onClick={onAddNav}>＋ 添加导航</button>
       )}
 
-      <div className={`${styles.list} ${colMode === 2 ? styles.twoCol : ''}`}>
-        {navItems.map((item) => {
-          const bgStyle = item.bg_image
-            ? { backgroundImage: `url(/images/${item.bg_image})`, backgroundPosition: item.bg_position || 'center' }
-            : {};
-          const cardClass = `${styles.card} ${!item.bg_image ? styles.cardThemed : ''}`;
-          return (
-            <div
-              key={item._id}
-              className={cardClass}
-              style={bgStyle}
-              onClick={() => {
-                if (item.display_mode === 'redirect') {
-                  window.open(item.url, '_blank', 'noopener,noreferrer');
-                } else {
-                  onIframeOpen?.(item);
-                }
-              }}
-              role="link"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onIframeOpen?.(item); } }}
-              aria-label={`${item.title} - ${item.description || ''}`}
-            >
-              <div className={styles.cardOverlay} />
-              <div className={styles.cardContent}>
-                <h3 className={styles.cardTitle}>{item.title}</h3>
-                {item.description && <p className={styles.cardDesc}>{item.description}</p>}
-              </div>
-              {user && (user.is_admin || (item.user_id && item.user_id === user.id)) && (
-                <div className={styles.cardActions}>
-                  <button className={styles.cardActionBtn} onClick={(e) => { e.stopPropagation(); onEdit?.(item); }} aria-label="编辑"><IconEdit size={13} /></button>
-                  <button className={`${styles.cardActionBtn} ${styles.deleteBtn}`} onClick={(e) => { e.stopPropagation(); if (confirm('确定删除该导航项？')) onDelete?.(item._id); }} aria-label="删除"><IconDelete size={13} /></button>
+      {sections.map((section) => (
+        <section key={section.id} className={styles.section}>
+          {section.title && (
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.sectionLine} />
+              <span className={styles.sectionLabel}>{section.title}</span>
+              <span className={styles.sectionLine} />
+            </h2>
+          )}
+          <div className={`${styles.list} ${colMode === 2 ? styles.twoCol : ''}`}>
+            {section.items.map((item) => {
+              const bgStyle = item.bg_image
+                ? { backgroundImage: `url(/images/${item.bg_image})`, backgroundPosition: item.bg_position || 'center' }
+                : {};
+              const cardClass = `${styles.card} ${!item.bg_image ? styles.cardThemed : ''}`;
+              return (
+                <div
+                  key={item._id}
+                  className={cardClass}
+                  style={bgStyle}
+                  onClick={() => {
+                    if (item.display_mode === 'redirect') {
+                      window.open(item.url, '_blank', 'noopener,noreferrer');
+                    } else {
+                      onIframeOpen?.(item);
+                    }
+                  }}
+                  role="link"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onIframeOpen?.(item); } }}
+                  aria-label={`${item.title} - ${item.description || ''}`}
+                >
+                  <div className={styles.cardOverlay} />
+                  <div className={styles.cardContent}>
+                    <h3 className={styles.cardTitle}>{item.title}</h3>
+                    {item.description && <p className={styles.cardDesc}>{item.description}</p>}
+                  </div>
+                  {user && (user.is_admin || (item.user_id && item.user_id === user.id)) && (
+                    <div className={styles.cardActions}>
+                      <button className={styles.cardActionBtn} onClick={(e) => { e.stopPropagation(); onEdit?.(item); }} aria-label="编辑"><IconEdit size={13} /></button>
+                      <button className={`${styles.cardActionBtn} ${styles.deleteBtn}`} onClick={(e) => { e.stopPropagation(); if (confirm('确定删除该导航项？')) onDelete?.(item._id); }} aria-label="删除"><IconDelete size={13} /></button>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          );
-        })}
-        {navItems.length === 0 && (
-          <div className={styles.empty}>暂无导航项</div>
-        )}
-      </div>
-
-      <div className={styles.bottomSettings}>
-        {isAdmin && (
-          <div className={styles.pickerWrap} ref={pickerRef}>
-            <button
-              className={styles.settingBtn}
-              onClick={() => setShowPicker(v => !v)}
-              aria-label="主题颜色"
-              title="主题颜色"
-            >
-              <IconPalette size={18} />
-            </button>
-            <ThemePicker
-              visible={showPicker}
-              currentColorTheme={colorTheme}
-              onSelect={(key) => { onColorThemeChange?.(key); setShowPicker(false); }}
-              onClose={() => setShowPicker(false)}
-            />
+              );
+            })}
           </div>
-        )}
-        <button
-          className={styles.settingBtn}
-          onClick={toggleColMode}
-          aria-label={colMode === 1 ? '切换双列视图' : '切换单列视图'}
-          title={colMode === 1 ? '双列视图' : '单列视图'}
-        >
-          {colMode === 1 ? <IconGrid size={18} /> : <IconList size={18} />}
-        </button>
-        <button
-          className={styles.settingBtn}
-          onClick={onToggleTheme}
-          aria-label={theme === 'dark' ? '切换日间模式' : '切换夜间模式'}
-          title={theme === 'dark' ? '日间模式' : '夜间模式'}
-        >
-          {theme === 'dark' ? <IconSun size={18} /> : <IconMoon size={18} />}
-        </button>
-        <button className={styles.settingBtn} onClick={onOpenDownload} aria-label="下载客户端" title="下载客户端">
-          <IconDownload size={18} />
-        </button>
-      </div>
+        </section>
+      ))}
+
+      {sections.length === 0 && (
+        <div className={styles.empty}>暂无导航项</div>
+      )}
+
     </div>
   );
 }

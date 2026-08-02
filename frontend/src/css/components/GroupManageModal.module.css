@@ -107,6 +107,8 @@
 
 .input {
   flex: 1;
+  /* 不加 min-width:0 时 placeholder 会把输入框撑宽，把「新建」按钮挤出面板 */
+  min-width: 0;
   padding: 8px 12px;
   border: 1px solid var(--surface-border);
   border-radius: 8px;
@@ -233,6 +235,24 @@
   letter-spacing: 0;
 }
 
+.hintTap {
+  display: none;
+}
+
+.btnIconEdit {
+  display: none;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  border-radius: 6px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .groupTitle {
   flex: 1;
   font-size: 14px;
@@ -347,4 +367,121 @@
 
 .groupSelect:focus {
   border-color: var(--accent);
+}
+
+/* ===== 移动端：左右分栏改成上下堆叠的底部弹层，触摸目标放大 ===== */
+@media (max-width: 768px) {
+  .overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92vh;
+    border-radius: 16px 16px 0 0;
+    border-bottom: none;
+  }
+
+  .title {
+    font-size: 17px;
+    padding: 18px 18px 14px;
+  }
+
+  .closeBtn {
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  /* 两栏堆叠，滚动交给 body 统一处理 */
+  .body {
+    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .leftPanel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--surface-border);
+    overflow: visible;
+  }
+
+  .rightPanel {
+    overflow: visible;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .itemList {
+    overflow: visible;
+  }
+
+  /* iOS 上 <16px 的输入控件会触发自动放大 */
+  .input,
+  .inputInline,
+  .groupSelect {
+    font-size: 16px;
+  }
+
+  .input {
+    padding: 10px 12px;
+  }
+
+  .btnPrimary {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  /* 触屏拖不动 HTML5 drag，手柄收起，只留上下移箭头 */
+  .groupDrag {
+    display: none;
+  }
+
+  .hintDrag {
+    display: none;
+  }
+
+  .hintTap {
+    display: inline;
+  }
+
+  .groupRow,
+  .itemRow {
+    padding: 10px 8px;
+    gap: 8px;
+  }
+
+  .btnIconMove {
+    width: 26px;
+    height: 20px;
+  }
+
+  .btnIconEdit {
+    display: flex;
+  }
+
+  .btnIconDanger {
+    width: 30px;
+    height: 30px;
+  }
+
+  .groupTitle,
+  .itemTitle {
+    font-size: 15px;
+  }
+
+  /* 导航项一行放不下「图标+标题+下拉」，改成上下两行 */
+  .itemRow {
+    flex-wrap: wrap;
+  }
+
+  .groupSelect {
+    flex: 1 0 100%;
+    min-width: 0;
+    padding: 8px 10px;
+  }
 }

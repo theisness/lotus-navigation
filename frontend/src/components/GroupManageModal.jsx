@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { navGroupApi } from '../api.js';
-import { IconChevronRight, IconGripVertical, IconPlus, IconTrash } from './Icons.jsx';
+import { IconChevronRight, IconGripVertical, IconPlus, IconTrash, IconEdit } from './Icons.jsx';
 import styles from '../css/components/GroupManageModal.module.css';
 
 /** 把 list 里第 from 项挪到 to 位，返回新数组（order 字段一并重排） */
@@ -173,7 +173,10 @@ export default function GroupManageModal({ visible, onClose, navItems = [], onSu
               <div className={styles.empty}>暂无分组</div>
             ) : (
               <>
-              <div className={styles.sectionHint}>拖动手柄或点箭头调整顺序，菜单栏即时生效</div>
+              <div className={styles.sectionHint}>
+                <span className={styles.hintDrag}>拖动手柄或点箭头调整顺序，菜单栏即时生效</span>
+                <span className={styles.hintTap}>点箭头调整顺序，点铅笔改名，菜单栏即时生效</span>
+              </div>
               <div className={styles.groupList}>
                 {groups.map((group, idx) => {
                   const gid = group._id;
@@ -239,6 +242,16 @@ export default function GroupManageModal({ visible, onClose, navItems = [], onSu
                         </span>
                       )}
                       <span className={styles.groupCount}>{items.length}</span>
+                      {/* 触屏没有双击改名，给一个显式的改名按钮（桌面隐藏） */}
+                      <button
+                        type="button"
+                        className={styles.btnIconEdit}
+                        onClick={() => { setEditingGroupId(gid); setEditingTitle(group.title); }}
+                        title="改名"
+                        aria-label="改名"
+                      >
+                        <IconEdit size={13} />
+                      </button>
                       <button
                         type="button"
                         className={styles.btnIconDanger}

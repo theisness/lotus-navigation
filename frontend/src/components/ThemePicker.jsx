@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from '../css/components/ThemePicker.module.css';
 
-const COLOR_THEMES = [
+export const COLOR_THEMES = [
   { key: 'purple', color: '#667eea', label: '紫色' },
   { key: 'blue', color: '#3b82f6', label: '蓝色' },
   { key: 'green', color: '#10b981', label: '绿色' },
