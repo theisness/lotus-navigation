@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <g fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 消息气泡 -->
+    <path d="M52 52 H176 A16 16 0 0 1 192 68 V150 A16 16 0 0 1 176 166 H104 L72 196 V166 H52 A16 16 0 0 1 36 150 V68 A16 16 0 0 1 52 52 Z"/>
+    <!-- 气泡内莲花：中心瓣 + 左右两层侧瓣 -->
+    <g transform="translate(114 138)">
+      <path d="M0 0 C-13 -14 -13 -34 0 -48 C13 -34 13 -14 0 0 Z"/>
+      <path d="M0 0 C-23 -6 -33 -22 -30 -40 C-13 -36 -3 -20 0 0 Z"/>
+      <path d="M0 0 C23 -6 33 -22 30 -40 C13 -36 3 -20 0 0 Z"/>
+      <path d="M0 0 C-24 4 -42 -4 -48 -18 C-32 -24 -12 -16 0 0 Z"/>
+      <path d="M0 0 C24 4 42 -4 48 -18 C32 -24 12 -16 0 0 Z"/>
+    </g>
+    <!-- 右上推送波纹 -->
+    <path d="M185 47 A44 44 0 0 1 211 73"/>
+    <path d="M193 26 A66 66 0 0 1 232 65"/>
+  </g>
+</svg>

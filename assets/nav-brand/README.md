@@ -15,3 +15,17 @@ free.ssbx.site:/var/project/lotus-nav/backend/images/
 | 命理网站（重设计） | cover-destiny.jpg | a4965643-f620-4c79-9704-c47b580f05b4.jpg |
 
 favicon（莲花注）：lianhuazhu-favicon.svg（源）→ lianhuazhu-favicon.png(512²) → 线上 4b12b6f9-3fac-402d-aa2b-2dc40d423e0d.png
+
+## 2026-08-02 新增三站（封面 + icon）
+
+封面源 2560×1311 jpg（gpt-image-2 2k 生成，`img-openai --backend c2a`），线上投 **1600×820 webp**（q72）。
+icon 为手绘 SVG → 256² 透明 PNG 白线稿，配合前端 CSS mask 主题化上色，风格对齐既有线稿 icon。
+
+| 导航项 | 封面源 | 线上 bg_image | icon 源 | 线上 icon |
+|---|---|---|---|---|
+| 菩提制片人预览板 | cover-bodhi.jpg | 543e58a3-0a76-410e-a31c-09d82144752e.webp | icon-bodhi.svg/.png | 5ea83f9f-126f-47d4-a172-f9333efab916.png |
+| 管理蓝莲花推送 | cover-lz-push.jpg | a5ef23b6-d4a6-480e-860b-d5f25d28cf47.webp | icon-lz-push.svg/.png | 424cfe23-65fb-4449-af8f-fe952ba90135.png |
+| 莲花集福 | cover-laifu.jpg | 117f6296-5c73-40d9-b64d-db88bf3516b6.webp | icon-laifu.svg/.png | 69b71c8d-dc62-4145-871a-47bc323530de.png |
+
+「管理蓝莲花推送」原 icon `1da03330-aee2-4152-9669-9371162758c9.png`（齿轮+报表）已被替换，文件仍保留在服务器上。
+SVG → PNG 渲染：`google-chrome --headless --default-background-color=00000000 --window-size=256,256 --screenshot=out.png in.svg`

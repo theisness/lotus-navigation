@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <g fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 预览板外框 -->
+    <rect x="26" y="44" width="204" height="140" rx="14"/>
+    <!-- 底座 -->
+    <path d="M128 184 V206"/>
+    <path d="M92 210 H164"/>
+    <!-- 屏内菩提叶 -->
+    <path d="M128 162 C102 146 90 130 90 112 C90 92 107 76 128 72 C149 76 166 92 166 112 C166 130 154 146 128 162 Z"/>
+    <path d="M128 162 V174"/>
+    <path d="M128 80 V160"/>
+    <path d="M128 112 L148 98"/>
+    <path d="M128 112 L108 98"/>
+    <path d="M128 134 L146 122"/>
+    <path d="M128 134 L110 122"/>
+  </g>
+</svg>

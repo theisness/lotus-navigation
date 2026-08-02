@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <g fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 念珠环：圆点虚线模拟一串佛珠 -->
+    <circle cx="128" cy="128" r="94" stroke-width="10" stroke-dasharray="0.01 29.5"/>
+    <!-- 母珠 -->
+    <circle cx="128" cy="34" r="11" stroke-width="5"/>
+    <!-- 莲花：中心瓣 + 两层侧瓣 -->
+    <g transform="translate(128 172)">
+      <path d="M0 0 C-16 -18 -16 -44 0 -62 C16 -44 16 -18 0 0 Z"/>
+      <path d="M0 0 C-30 -8 -43 -29 -39 -52 C-17 -47 -4 -26 0 0 Z"/>
+      <path d="M0 0 C30 -8 43 -29 39 -52 C17 -47 4 -26 0 0 Z"/>
+      <path d="M0 0 C-32 6 -55 -5 -63 -23 C-42 -31 -16 -21 0 0 Z"/>
+      <path d="M0 0 C32 6 55 -5 63 -23 C42 -31 16 -21 0 0 Z"/>
+    </g>
+  </g>
+</svg>
