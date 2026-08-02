@@ -3,6 +3,15 @@ import { navGroupApi } from '../api.js';
 import { IconChevronRight, IconGripVertical, IconPlus, IconTrash } from './Icons.jsx';
 import styles from '../css/components/GroupManageModal.module.css';
 
+/** 把 list 里第 from 项挪到 to 位，返回新数组（order 字段一并重排） */
+function moveInList(list, from, to) {
+  if (from === to || from < 0 || to < 0 || from >= list.length || to >= list.length) return list;
+  const copy = [...list];
+  const [moved] = copy.splice(from, 1);
+  copy.splice(to, 0, moved);
+  return copy.map((g, i) => ({ ...g, order: i }));
+}
+
 export default function GroupManageModal({ visible, onClose, navItems = [], onSuccess }) {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -10,7 +19,13 @@ export default function GroupManageModal({ visible, onClose, navItems = [], onSu
   const [editingGroupId, setEditingGroupId] = useState(null);
   const [editingTitle, setEditingTitle] = useState('');
   const [newGroupTitle, setNewGroupTitle] = useState('');
+  const [draggingId, setDraggingId] = useState(null);
   const overlayRef = useRef(null);
+  const dragIndexRef = useRef(null);
+  const dragMovedRef = useRef(false);
+  // 拖拽结束时要读到最新顺序，用 ref 镜像一份，避免闭包拿到旧 state
+  const groupsRef = useRef([]);
+  useEffect(() => { groupsRef.current = groups; }, [groups]);
 
   const fetchGroups = useCallback(async () => {
     setLoading(true);
@@ -75,6 +90,49 @@ export default function GroupManageModal({ visible, onClose, navItems = [], onSu
     }
   }, [fetchGroups, onSuccess]);
 
+  const persistOrder = useCallback(async (list) => {
+    try {
+      await navGroupApi.reorderGroups(list.map((g, i) => ({ id: g._id, order: i })));
+      onSuccess?.();
+    } catch (err) {
+      setError(err.message || '排序保存失败');
+      fetchGroups();
+    }
+  }, [onSuccess, fetchGroups]);
+
+  const handleDragStart = useCallback((idx, e) => {
+    dragIndexRef.current = idx;
+    dragMovedRef.current = false;
+    setDraggingId(groupsRef.current[idx]?._id ?? null);
+    e.dataTransfer.effectAllowed = 'move';
+    // Firefox 必须写入 dataTransfer 才会真正开始拖拽
+    try { e.dataTransfer.setData('text/plain', String(idx)); } catch { /* 忽略 */ }
+  }, []);
+
+  const handleDragEnter = useCallback((idx) => {
+    const from = dragIndexRef.current;
+    if (from === null || from === idx) return;
+    setGroups(prev => moveInList(prev, from, idx));
+    dragIndexRef.current = idx;
+    dragMovedRef.current = true;
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    dragIndexRef.current = null;
+    setDraggingId(null);
+    if (!dragMovedRef.current) return;
+    dragMovedRef.current = false;
+    persistOrder(groupsRef.current);
+  }, [persistOrder]);
+
+  // 触屏用不了 HTML5 拖拽，留一组上下移按钮兜底
+  const handleMoveGroup = useCallback((idx, dir) => {
+    const next = moveInList(groupsRef.current, idx, idx + dir);
+    if (next === groupsRef.current) return;
+    setGroups(next);
+    persistOrder(next);
+  }, [persistOrder]);
+
   const handleOverlayClick = useCallback((e) => {
     if (e.target === overlayRef.current) onClose?.();
   }, [onClose]);
@@ -114,16 +172,47 @@ export default function GroupManageModal({ visible, onClose, navItems = [], onSu
             ) : groups.length === 0 ? (
               <div className={styles.empty}>暂无分组</div>
             ) : (
+              <>
+              <div className={styles.sectionHint}>拖动手柄或点箭头调整顺序，菜单栏即时生效</div>
               <div className={styles.groupList}>
-                {groups.map(group => {
+                {groups.map((group, idx) => {
                   const gid = group._id;
                   const items = getGroupItems(gid);
                   const isEditing = editingGroupId === gid;
 
                   return (
-                    <div key={gid} className={styles.groupRow}>
-                      <div className={styles.groupDrag}>
+                    <div
+                      key={gid}
+                      className={`${styles.groupRow} ${draggingId === gid ? styles.groupRowDragging : ''}`}
+                      draggable={!isEditing}
+                      onDragStart={(e) => handleDragStart(idx, e)}
+                      onDragEnter={() => handleDragEnter(idx)}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => e.preventDefault()}
+                      onDragEnd={handleDragEnd}
+                    >
+                      <div className={styles.groupDrag} title="拖动调整顺序">
                         <IconGripVertical size={14} />
+                      </div>
+                      <div className={styles.groupMove}>
+                        <button
+                          type="button"
+                          className={styles.btnIconMove}
+                          onClick={() => handleMoveGroup(idx, -1)}
+                          disabled={idx === 0}
+                          title="上移"
+                        >
+                          <span className={styles.arrowUp}><IconChevronRight size={11} /></span>
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.btnIconMove}
+                          onClick={() => handleMoveGroup(idx, 1)}
+                          disabled={idx === groups.length - 1}
+                          title="下移"
+                        >
+                          <span className={styles.arrowDown}><IconChevronRight size={11} /></span>
+                        </button>
                       </div>
                       {isEditing ? (
                         <input
@@ -162,6 +251,7 @@ export default function GroupManageModal({ visible, onClose, navItems = [], onSu
                   );
                 })}
               </div>
+              </>
             )}
           </div>
 
