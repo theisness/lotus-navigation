@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <g fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 胶片框 -->
+    <rect x="46" y="62" width="164" height="132" rx="8"/>
+    <!-- 齿孔 -->
+    <circle cx="62" cy="86" r="5"/>
+    <circle cx="62" cy="128" r="5"/>
+    <circle cx="62" cy="170" r="5"/>
+    <circle cx="194" cy="86" r="5"/>
+    <circle cx="194" cy="128" r="5"/>
+    <circle cx="194" cy="170" r="5"/>
+    <!-- 画面中的莲瓣 -->
+    <g transform="translate(128 148)">
+      <path d="M0 0 C-14 -16 -14 -38 0 -54 C14 -38 14 -16 0 0 Z"/>
+      <path d="M0 0 C-26 -6 -38 -24 -34 -44 C-16 -40 -4 -22 0 0 Z"/>
+      <path d="M0 0 C26 -6 38 -24 34 -44 C16 -40 4 -22 0 0 Z"/>
+    </g>
+  </g>
+</svg>
