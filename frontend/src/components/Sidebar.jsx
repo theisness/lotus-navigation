@@ -7,6 +7,7 @@ import {
   IconCollapse, IconExpandAll, IconCollapseAll
 } from './Icons.jsx';
 import ColumnPicker from './ColumnPicker.jsx';
+import { rewriteSsoUrl } from '../utils/ssoRewrite.js';
 import styles from '../css/components/Sidebar.module.css';
 
 /** 统一成字符串再比，避免 ObjectId / 字符串混用导致匹配失败 */
@@ -77,7 +78,7 @@ export default function Sidebar({
   const handleItemClick = (e, item) => {
     e.preventDefault();
     if (item.display_mode === 'redirect') {
-      window.open(item.url, '_blank', 'noopener,noreferrer');
+      window.open(rewriteSsoUrl(item.url), '_blank', 'noopener,noreferrer');
     } else {
       onSelect?.(item);
     }

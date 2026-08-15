@@ -1,4 +1,5 @@
 import styles from '../css/components/IframeView.module.css';
+import { rewriteSsoUrl } from '../utils/ssoRewrite.js';
 
 export default function IframeView({ openedItems, activeId, onLoad }) {
   return (
@@ -9,7 +10,7 @@ export default function IframeView({ openedItems, activeId, onLoad }) {
           className={`${styles.frame} ${item._id === activeId ? styles.frameActive : styles.frameHidden}`}
         >
           <iframe
-            src={item.url}
+            src={rewriteSsoUrl(item.url)}
             className={styles.iframe}
             frameBorder="0"
             allowFullScreen

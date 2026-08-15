@@ -10,6 +10,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false })); // /api/oauth/token 兼容表单提交
 
 // 请求/响应日志中间件
 app.use((req, res, next) => {
@@ -42,6 +43,7 @@ app.use('/api/settings', require('./routes/siteSetting'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/download', require('./routes/download'));
 app.use('/api/nav-groups', require('./routes/navGroup'));
+app.use('/api/oauth', require('./routes/oauth'));
 
 // Redis 客户端
 const redisClient = createClient({

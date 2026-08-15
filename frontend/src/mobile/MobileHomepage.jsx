@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { IconEdit, IconDelete } from '../components/Icons.jsx';
 import styles from './css/MobileHomepage.module.css';
+import { rewriteSsoUrl } from '../utils/ssoRewrite.js';
 
 // 用户菜单与设置开关已移到底栏「我的」tab（MobileProfileSheet），此处只管导航内容
 export default function MobileHomepage({
@@ -71,7 +72,7 @@ export default function MobileHomepage({
                   style={bgStyle}
                   onClick={() => {
                     if (item.display_mode === 'redirect') {
-                      window.open(item.url, '_blank', 'noopener,noreferrer');
+                      window.open(rewriteSsoUrl(item.url), '_blank', 'noopener,noreferrer');
                     } else {
                       onIframeOpen?.(item);
                     }

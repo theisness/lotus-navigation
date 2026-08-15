@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
+const ssoController = require('../controllers/ssoController');
 const { authMiddleware } = require('../middleware/auth');
 
 // POST /api/auth/send-code - 发送验证码
@@ -20,5 +21,11 @@ router.get('/me', authMiddleware, authController.getMe);
 
 // PUT /api/auth/profile - 更新当前用户个人信息（需登录）
 router.put('/profile', authMiddleware, authController.updateProfile);
+
+// POST /api/auth/sso/mediacms - 影院 HMAC 跳转签发（需登录）
+router.post('/sso/mediacms', authMiddleware, ssoController.mediacms);
+
+// POST /api/auth/sso/chat - 蓝莲花 chat HMAC 断言签发（需登录）
+router.post('/sso/chat', authMiddleware, ssoController.chat);
 
 module.exports = router;

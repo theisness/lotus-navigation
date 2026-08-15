@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { authApi, navApi, settingsApi, navGroupApi, getToken, removeToken } from '../api.js';
+import { rewriteSsoUrl } from '../utils/ssoRewrite.js';
 
 export function urlToSlug(url) {
   try {
@@ -144,7 +145,7 @@ export function usePortal({ onLogout: onLogoutCallback } = {}) {
   // ===== Handlers =====
   const handleSelectItem = useCallback((item) => {
     if (item.display_mode === 'redirect') {
-      window.open(item.url, '_blank', 'noopener,noreferrer');
+      window.open(rewriteSsoUrl(item.url), '_blank', 'noopener,noreferrer');
       return;
     }
     setOpenedItems(prev => {

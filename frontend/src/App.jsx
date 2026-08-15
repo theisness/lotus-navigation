@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Portal from './pages/Portal.jsx';
 import MobilePortal from './mobile/MobilePortal.jsx';
 import GuestPortal from './pages/GuestPortal.jsx';
+import SsoBridge from './pages/SsoBridge.jsx';
 import DownloadPage from './components/DownloadPage.jsx';
 import { getToken } from './api.js';
 import './css/common.css';
@@ -39,6 +40,10 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/download" element={<GuestDownload />} />
+          {/* SSO 桥页未登录也可达：桥页内嵌 AuthForm，登完继续，query 不丢 */}
+          <Route path="/oauth/authorize" element={<SsoBridge />} />
+          <Route path="/sso/mediacms" element={<SsoBridge />} />
+          <Route path="/sso/chat" element={<SsoBridge />} />
           <Route path="*" element={<GuestPortal onLoginSuccess={() => setHasToken(true)} />} />
         </Routes>
       </BrowserRouter>
@@ -54,6 +59,9 @@ export default function App() {
         <Route path="/" element={<Page onLoggedOut={onLoggedOut} />} />
         <Route path="/download" element={<Page onLoggedOut={onLoggedOut} />} />
         <Route path="/nav/:navId/*" element={<Page onLoggedOut={onLoggedOut} />} />
+        <Route path="/oauth/authorize" element={<SsoBridge />} />
+        <Route path="/sso/mediacms" element={<SsoBridge />} />
+        <Route path="/sso/chat" element={<SsoBridge />} />
       </Routes>
     </BrowserRouter>
   );

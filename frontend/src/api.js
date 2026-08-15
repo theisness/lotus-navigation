@@ -196,3 +196,25 @@ export const navGroupApi = {
 };
 
 export { getToken, setToken, removeToken };
+
+// SSO 桥页 API（社区 OAuth 授权码 / 影院 HMAC 签发）
+export const ssoApi = {
+  oauthAuthorize(payload) {
+    return request('/api/oauth/authorize', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+  mediacms(payload) {
+    return request('/api/auth/sso/mediacms', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+  chat() {
+    return request('/api/auth/sso/chat', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+  },
+};

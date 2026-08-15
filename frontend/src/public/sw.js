@@ -37,7 +37,10 @@ self.addEventListener('fetch', (event) => {
       fetch(request)
         .then((resp) => {
           const copy = resp.clone();
-          caches.open(STATIC_CACHE).then((cache) => cache.put('/', copy));
+          // 仅根路径才更新首页缓存，避免 /oauth/authorize 等桥页把首页缓存污染
+          if (url.pathname === '/') {
+            caches.open(STATIC_CACHE).then((cache) => cache.put('/', copy));
+          }
           return resp;
         })
         .catch(async () => (await caches.match(request)) || (await caches.match('/')) || caches.match(OFFLINE_URL))
