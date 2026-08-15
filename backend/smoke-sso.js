@@ -64,6 +64,33 @@ async function main() {
   const { token: jwt } = await j(r);
   console.log('register+login ok');
 
+  // --- 站点开通闸（siteAccessService）：插三张非公开卡 + 授权组 G；主号入组，二号无组应全 403 ---
+  const mongoose = require('mongoose');
+  await mongoose.connect('mongodb://localhost:27017/nav_portal');
+  const db = mongoose.connection.db;
+  const me = await db.collection('users').findOne({ email });
+  const gid = new mongoose.Types.ObjectId();
+  await db.collection('groups').insertOne({ _id: gid, name: 'smoke-group', created_at: new Date() });
+  await db.collection('usergroups').insertOne({ user_id: me._id, group_id: gid });
+  const mkCard = (url) => ({
+    url, title: '卡-' + url, display_mode: 'iframe', is_public: false,
+    user_id: null, visible_group_ids: [gid], sort_order: 0, created_at: new Date(),
+  });
+  await db.collection('navitems').insertMany([
+    mkCard('http://127.0.0.1:8090/'),                 // 对应 dev OAuth client redirect host
+    mkCard('https://cinema.example.invalid/'),        // 对应 mediacms returnUrl host
+    mkCard('https://chat.dev.invalid/'),              // 对应 dev config sso.chatSiteHost
+  ]);
+  console.log('access cards seeded');
+
+  // 二号（无组，未开通任何站）
+  await rc.set('verify_code:sso-noaccess@lotus.dev', '123456');
+  r = await post('/api/auth/register', { email: 'sso-noaccess@lotus.dev', password: 'Passw0rd!', code: '123456' });
+  if (r.status !== 201) throw new Error('二号注册失败 ' + r.status);
+  r = await post('/api/auth/login', { email: 'sso-noaccess@lotus.dev', password: 'Passw0rd!' });
+  const { token: jwt2 } = await j(r);
+  console.log('no-access user ok');
+
   // --- OAuth: authorize ---
   r = await post('/api/oauth/authorize', {
     client_id: 'discourse-dev',
@@ -148,6 +175,26 @@ async function main() {
   r = await post('/api/oauth/authorize', { client_id: 'discourse-dev', redirect_uri: 'http://127.0.0.1:8090/auth/oauth2_basic/callback', response_type: 'code' });
   if (r.status !== 401) throw new Error('未登录应 401，实得 ' + r.status);
   console.log('unauth authorize rejected: 401');
+
+  // --- chat 断言正例（主号有组）---
+  r = await post('/api/auth/sso/chat', {}, jwt);
+  const chatData = await j(r);
+  if (!chatData.assertion || !chatData.sig) throw new Error('chat 断言缺失 ' + JSON.stringify(chatData));
+  const chatSecret = JSON.parse(fs.readFileSync(cfgPath, 'utf8')).sso.chatSecret;
+  const expectChatSig = crypto.createHmac('sha256', chatSecret).update(chatData.assertion).digest('hex');
+  if (chatData.sig !== expectChatSig) throw new Error('chat 断言 sig 验不过');
+  console.log('chat assertion ok');
+
+  // --- 站点开通闸负例：二号（无组）三端必须 403 ---
+  r = await post('/api/oauth/authorize', { client_id: 'discourse-dev', redirect_uri: 'http://127.0.0.1:8090/auth/oauth2_basic/callback', response_type: 'code' }, jwt2);
+  if (r.status !== 403) throw new Error('未开通 authorize 应 403，实得 ' + r.status + ' ' + JSON.stringify(await j(r)));
+  r = await post('/api/auth/sso/mediacms', { nonce, return: returnUrl, sig }, jwt2);
+  if (r.status !== 403) throw new Error('未开通 mediacms 应 403，实得 ' + r.status);
+  r = await post('/api/auth/sso/chat', {}, jwt2);
+  if (r.status !== 403) throw new Error('未开通 chat 应 403，实得 ' + r.status);
+  const denyMsg = JSON.stringify(await j(r));
+  if (!denyMsg.includes('尚未开通')) throw new Error('拒绝文案不对 ' + denyMsg);
+  console.log('access gate: 未开通三端全 403（含中文文案）');
 
   console.log('ALL_SMOKE_OK');
   await cleanup(0);

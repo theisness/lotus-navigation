@@ -1,4 +1,5 @@
 const oauthService = require('../services/oauthService');
+const siteAccess = require('../services/siteAccessService');
 
 // POST /api/oauth/authorize - 已登录用户签发授权码（Bearer JWT 由 authMiddleware 保证）
 async function authorize(req, res) {
@@ -9,6 +10,12 @@ async function authorize(req, res) {
     }
     if (!oauthService.validateClient(client_id, redirect_uri)) {
       return res.status(400).json({ error: '客户端未登记或 redirect_uri 不匹配' });
+    }
+    // 站点开通闸：redirect_uri 已精确匹配 client 登记值，其 host 即目标站
+    const access = await siteAccess.canAccessHost(req.user.userId, new URL(redirect_uri).host);
+    if (!access.ok) {
+      const err = siteAccess.deniedError(access.siteTitle);
+      return res.status(err.status).json({ error: err.message });
     }
     const redisClient = req.app.locals.redisClient;
     if (await oauthService.hitRateLimit(redisClient, `authz:${client_id}`)) {

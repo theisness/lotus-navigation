@@ -66,7 +66,7 @@ async function issueMediacmsRedirect({ nonce, returnUrl, userId }) {
   return { redirect: `${returnUrl}${sep}sso=${encodeURIComponent(sso)}&sig=${sig}` };
 }
 
-module.exports = { verifyRequest, issueMediacmsRedirect, issueChatAssertion };
+module.exports = { verifyRequest, issueMediacmsRedirect, issueChatAssertion, chatSiteHost };
 
 // ---- 蓝莲花 chat：HMAC 断言（方案 §5.3，F 阶段） ----
 // payload 行：ts / nonce / email / external_id / nickname；sig = HMAC(assertion)。
@@ -74,6 +74,11 @@ module.exports = { verifyRequest, issueMediacmsRedirect, issueChatAssertion };
 
 function getChatSecret() {
   return (config.sso && config.sso.chatSecret) || '';
+}
+
+// chat 站 host（站点开通闸用）；生产 config.sso.chatSiteHost
+function chatSiteHost() {
+  return (config.sso && config.sso.chatSiteHost) || '';
 }
 
 // 为当前登录用户签发 chat 断言；邮箱只从库读。有效期 5 分钟（ts 窗口由 chat 侧验）。

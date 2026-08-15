@@ -13,16 +13,36 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false })); // /api/oauth/token 兼容表单提交
 
 // 请求/响应日志中间件
+// 敏感字段（凭证/签名/授权码/令牌）一律不落日志（2026-08-15 SSO 安全审查）
+const SENSITIVE_KEYS = new Set([
+  'client_secret', 'secret', 'code', 'access_token', 'refresh_token',
+  'assertion', 'sig', 'sso', 'password', 'token', 'authorization',
+]);
+function redact(v) {
+  if (Array.isArray(v)) return v.map(redact);
+  if (v && typeof v === 'object') {
+    const o = {};
+    for (const [k, val] of Object.entries(v)) {
+      o[k] = SENSITIVE_KEYS.has(k.toLowerCase()) ? '[redacted]' : redact(val);
+    }
+    return o;
+  }
+  // URL query 里拼的敏感参数（如 redirect 里的 sso=/sig=）也脱敏
+  if (typeof v === 'string') {
+    return v.replace(/((?:sso|sig|assertion|code|access_token|client_secret)=)[^&\s"']+/gi, '$1[redacted]');
+  }
+  return v;
+}
 app.use((req, res, next) => {
   const start = Date.now();
   const { method, originalUrl, body } = req;
 
-  console.log(`--> ${method} ${originalUrl}`, Object.keys(body || {}).length ? JSON.stringify(body) : '');
+  console.log(`--> ${method} ${originalUrl}`, Object.keys(body || {}).length ? JSON.stringify(redact(body)) : '');
 
   const originalJson = res.json.bind(res);
   res.json = (data) => {
     const duration = Date.now() - start;
-    console.log(`<-- ${method} ${originalUrl} ${res.statusCode} ${duration}ms`, JSON.stringify(data));
+    console.log(`<-- ${method} ${originalUrl} ${res.statusCode} ${duration}ms`, JSON.stringify(redact(data)));
     return originalJson(data);
   };
 
