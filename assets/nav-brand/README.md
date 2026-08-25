@@ -31,15 +31,16 @@ icon 为手绘 SVG → 256² 透明 PNG 白线稿，配合前端 CSS mask 主题
 「管理蓝莲花推送」原 icon `1da03330-aee2-4152-9669-9371162758c9.png`（齿轮+报表）已被替换，文件仍保留在服务器上。
 SVG → PNG 渲染：`google-chrome --headless --default-background-color=00000000 --window-size=256,256 --screenshot=out.png in.svg`
 
-## 2026-08-25 施家远布社区封面重制
+## 2026-08-25 施家远布社区封面重制（蓝色主题）
 
 原封面（蓝天白云 + 单个僧人像，`6d2d7085-da35-47e5-a529-d57c7cb8c769.webp`）重新生成。
-新图意象＝「法音远布」：晨光逆射的巨大菩提树立于静水之上，水面莲花灯一圈圈荡开直到天际线。
-生成：`img-openai --ratio 16:9`（gpt-image-2，1280×720）→ Lanczos 放大 1600×900 + 轻锐化 → webp q72。
-⚠️ `--size 2k` 在 toapi 侧连续两次 `task processing failed`，故走 1k 生成再放大。
+新图意象＝「法音远布」：月华下的巨大菩提树立于静水之上，冷白莲花灯一圈圈荡开直到天际线；
+整体深靛蓝冷色调（蓝色主题，刻意不用金色）。
+生成：`img-openai --ratio 16:9`（gpt-image-2，1280×720 原生，1k 即可）→ webp q80。
+⚠️ `--size 2k` 在 toapi 侧连续 `task processing failed`，2k 走不通。
 
 | 导航项 | 封面源 | 线上 bg_image |
 |---|---|---|
-| 施家远布 | cover-blog.png（1280×720 原始） / cover-blog-1600.webp（上线版） | 55ef782a-fa99-4e84-bd5e-3e54a500a89e.webp |
+| 施家远布 | cover-blog.png（1280×720 原始） / cover-blog-1280.webp（上线版） | 7234121f-305f-4512-9c78-6427715537cd.webp |
 
-旧文件 `6d2d7085-…webp` 仍保留在服务器上未删。
+旧文件 `6d2d7085-…webp` 与中途那版金色 `55ef782a-…webp` 均保留在服务器上未删。
